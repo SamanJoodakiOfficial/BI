@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -11,7 +12,7 @@ const port = process.env.PORT || 5000;
 // Express configuration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.set(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', './views');
 
 // Template engine
@@ -45,6 +46,10 @@ mongoose.connect(process.env.DATABASE_URI)
         process.exit(1);
     });
 
+
+app.get("/", (req, res) => {
+    res.render("questions", { title: "بانک سوالات" });
+});
 
 // 404 - Page not found
 app.use((req, res) => {
