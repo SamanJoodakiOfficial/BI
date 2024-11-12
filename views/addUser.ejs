@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <%- include("./partials/head") %>
+
+  <body class="bg-primaryBackground">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-full lg:w-64 bg-white p-4 shadow-lg flex flex-col items-center lg:block transition-all duration-300 ease-in-out"
+      >
+        <div
+          class="w-full text-sm font-bold text-center flex flex-col gap-2 items-center"
+        >
+          <div>
+            <p class="text-202020">خوش آمدید</p>
+            <span class="text-xs text-primary"
+              >samanjoodakiofficial@gmail.com</span
+            >
+          </div>
+          <div class="w-min break-words p-1 bg-primary text-white rounded-lg">
+            کاربر
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="space-y-4 flex flex-col gap-2 mt-8">
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-dashboard-line"></i>پیشخوان</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-database-line"></i>بانک سوالات</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-bar-chart-2-line"></i>بیک پیکچر - هوش مصنوعی</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-chat-1-line"></i>مدیریت پاسخ‌ها</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-group-2-line"></i>مدیریت گروه‌ها</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-user-community-line"></i>مدیریت زیرگروه‌ها</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-group-line"></i>مدیریت کاربران</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+              ><i class="ri-user-settings-line"></i>جزئیات حساب کاربری</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="w-full flex gap-4 text-[16px] text-error transition-colors items-center"
+              ><i class="ri-logout-box-line"></i>خروج از حساب کاربری</a
+            >
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 lg:p-6">
+        <header
+          class="w-full flex items-center justify-between flex-wrap gap-2"
+        >
+          <h2 class="font-bold text-202020 text-lg lg:text-xl">
+            اضافه کردن کاربر جدید توسط ادمین
+            <p class="text-primary">samanjoodakiofficial</p>
+          </h2>
+        </header>
+
+        <form
+          action="#"
+          class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
+        >
+          <h2 class="font-bold text-lg text-202020">کاربر جدید</h2>
+
+          <!-- Errors -->
+          <div
+            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            ایمیل نامعتبر
+          </div>
+
+          <div class="w-full flex flex-col gap-1 mt-3">
+            <label for="email" class="text-404040 text-xs"
+              >ایمیل کاربری جدید</label
+            >
+            <input
+              class="w-full h-12 border rounded-lg text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-right outline-none p-4"
+              type="email"
+              name="email"
+              id="email"
+              placeholder="ایمیل کاربر"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="w-full flex flex-col gap-1 mt-3">
+            <label for="password" class="text-404040 text-xs"
+              >ایمیل کاربری جدید</label
+            >
+            <input
+              class="w-full h-12 border rounded-lg text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-right outline-none p-4"
+              type="password"
+              name="password"
+              id="password"
+              placeholder="کلمه عبور"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="w-full flex flex-col gap-1 mt-3">
+            <label for="role" class="text-404040 text-xs">نقش کاربر</label>
+            <div class="w-full flex flex-col sm:flex-row gap-2">
+              <select
+                name="group"
+                class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
+                id="role"
+              >
+                <option value="group">نقش کاربر</option>
+                <option value="group">کاربر</option>
+                <option value="group">ادمین</option>
+              </select>
+            </div>
+          </div>
+
+          <div
+            class="w-full flex flex-col sm:flex-row items-center gap-4 sm:gap-2"
+          >
+            <button
+              type="submit"
+              class="w-full sm:w-1/2 h-12 px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              ثبت کاربر
+            </button>
+            <button
+              type="button"
+              class="w-full sm:w-1/2 h-12 px-6 bg-disabledButton text-606060 flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              لغو فرایند
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>
+</html>

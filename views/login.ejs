@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <%- include("./partials/head") %>
+
+  <body class="bg-primaryBackground">
+    <div class="w-full min-h-screen container flex items-center justify-center">
+      <form
+        action="/auth/login"
+        method="post"
+        class="w-[400px] max-w-[400px] p-4 bg-white rounded-lg shadow-lg flex flex-col items-center justify-between gap-4"
+      >
+        <!-- Input errros -->
+        <% var errors = errors || ""; %> <% if (errors && errors.length > 0) {
+        %>
+        <div
+          class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex flex-col p-4 gap-2"
+        >
+          <% errors.forEach(error => { %>
+          <div class="flex items-center gap-1">
+            <i class="ri-error-warning-line"></i>
+            <span><%= error.msg %></span>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+
+        <!-- Message from api -->  
+        <% var message = message || "" %> <% if (message) { %>
+        <div
+          class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= message %>
+        </div>
+        <% } %>
+
+        <h2 class="font-bold text-lg text-202020">ورود به حساب کاربری</h2>
+
+        <div class="w-full flex flex-col items-center gap-4 m-4">
+          <div class="w-full flex flex-col gap-1">
+            <label for="email" class="text-404040 text-xs">ایمیل کاربری</label>
+            <input
+              class="w-full h-12 border rounded-lg text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-center outline-none px-4"
+              type="email"
+              name="email"
+              id="email"
+              <% var filledFields = filledFields || "" %>
+              <% if (filledFields) { %>
+              value="<%= filledFields.email || '' %>"
+              <% } %>
+              placeholder="ایمیل کاربری"
+              autocomplete="off"
+              required
+            />
+          </div>
+
+          <div class="w-full flex flex-col gap-1 relative">
+            <label for="password" class="text-404040 text-xs">کلمه عبور</label>
+            <input
+              class="w-full h-12 border rounded-lg border-CBCBCB text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-center outline-none px-4"
+              type="password"
+              name="password"
+              id="password"
+              placeholder="کلمه عبور"
+              autocomplete="off"
+            />
+            <div
+              class="w-8 h-8 cursor-pointer flex items-center justify-center absolute top-1/2 left-4 transform -translate-y-1"
+            >
+              <i class="ri-eye-line text-xl text-606060"></i>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full h-10 rounded-lg bg-primary text-white hover:-translate-y-1 transition-all shadow-lg shadow-primary/30 hover:shadow-xl"
+        >
+          ورود
+        </button>
+        <span class="text-xs text-202020"
+          >هنوز حساب کاربری ثبت نکردید؟
+          <a href="/auth/register" class="text-primary underline"
+            >ثبت‌ نام کنید</a
+          ></span
+        >
+      </form>
+    </div>
+  </body>
+</html>
