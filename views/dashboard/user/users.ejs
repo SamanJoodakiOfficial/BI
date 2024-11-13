@@ -1,94 +1,11 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <%- include("./partials/head") %>
+  <%- include("../../partials/head") %>
 
   <body class="bg-primaryBackground">
     <div class="flex flex-col lg:flex-row min-h-screen">
       <!-- Sidebar -->
-      <aside
-        class="w-full lg:w-64 bg-white p-4 shadow-lg flex flex-col items-center lg:block transition-all duration-300 ease-in-out"
-      >
-        <div
-          class="w-full text-sm font-bold text-center flex flex-col gap-2 items-center"
-        >
-          <div>
-            <p class="text-202020">خوش آمدید</p>
-            <span class="text-xs text-primary"
-              >samanjoodakiofficial@gmail.com</span
-            >
-          </div>
-          <div class="w-min break-words p-1 bg-primary text-white rounded-lg">
-            کاربر
-          </div>
-        </div>
-
-        <!-- Navigation Links -->
-        <ul class="space-y-4 flex flex-col gap-2 mt-8">
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-dashboard-line"></i>پیشخوان</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-database-line"></i>بانک سوالات</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-bar-chart-2-line"></i>بیک پیکچر - هوش مصنوعی</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-chat-1-line"></i>مدیریت پاسخ‌ها</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-user-2-line"></i>مدیریت گروه‌ها</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-user-community-line"></i>مدیریت زیرگروه‌ها</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-user-line"></i>مدیریت کاربران</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-              ><i class="ri-user-settings-line"></i>جزئیات حساب کاربری</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="w-full flex gap-4 text-[16px] text-error transition-colors items-center text-404040"
-              ><i class="ri-logout-box-line"></i>خروج از حساب کاربری</a
-            >
-          </li>
-        </ul>
-      </aside>
+      <%- include('../../partials/sidebar') %>
 
       <!-- Main Content -->
       <main class="flex-1 p-4 lg:p-6">

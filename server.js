@@ -5,6 +5,10 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
 const path = require('path');
+const flash = require('connect-flash');
+
+const { redirectToDashboardIfLoggedIn } = require('./middlewares/redirectToDashboardIfLoggedIn');
+const { ensureAuthenticated } = require('./middlewares/ensureAuthenticated');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -30,8 +34,17 @@ app.use(session({
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // 1 day
+        httpOnly: true
     },
 }));
+
+// Flash session configuration
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.successMessage = req.flash('success');
+    res.locals.errorMessage = req.flash('error');
+    next();
+});
 
 // Database connection
 mongoose.connect(process.env.DATABASE_URI)
@@ -46,10 +59,11 @@ mongoose.connect(process.env.DATABASE_URI)
         process.exit(1);
     });
 
+// Auth routes
+app.use('/auth', require('./routes/auth'));
 
-app.get("/", (req, res) => {
-    res.render("questions", { title: "بانک سوالات" });
-});
+// Dashboard routes
+app.use('/dashboard', redirectToDashboardIfLoggedIn, require('./routes/dashboard'));
 
 // 404 - Page not found
 app.use((req, res) => {
