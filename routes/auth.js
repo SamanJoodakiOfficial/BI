@@ -21,6 +21,6 @@ router.post('/login',
     body("password").isLength({ min: 6, max: 20 }).withMessage("تعداد کاراکتر کلمه عبور می‌بایست بین 6 تا 20 کاراکتر باشد"), authController.handleLogin);
 
 // Logout
-router.get('/logout', ensureAuthenticated, authController.handleLogout);
+router.get('/logout', authController.handleLogout);
 
 module.exports = router;

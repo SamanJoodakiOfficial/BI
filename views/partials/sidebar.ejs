@@ -7,11 +7,24 @@
   >
     <div>
       <p class="text-202020">خوش آمدید</p>
-      <span class="text-xs text-primary">samanjoodakiofficial@gmail.com</span>
+      <% var user = user || '' %> <% if (user && user.email) { %>
+      <span class="text-xs text-primary"><%= user.email %></span>
+      <% } else { %> <% } %>
     </div>
+
+    <% if (user && user.role) { %>
     <div class="w-min break-words p-1 bg-primary text-white rounded-lg">
-      کاربر
+      <span class="text-xs text-primary">
+        <% if (user.role === 'user') { %>
+        <span class="text-xs text-white"><%= 'کاربر' %></span>
+        <% } else if (user.role === 'admin') { %>
+        <span class="text-xs text-white"><%= 'ادمین' %></span>
+        <% } else { %>
+        <span class="text-xs text-white"><%= 'نقش نامعتبر است' %></span>
+        <% } %>
+      </span>
     </div>
+    <% } else { %> <% } %>
   </div>
 
   <!-- Sidebar Links -->

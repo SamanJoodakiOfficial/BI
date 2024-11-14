@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const flash = require('connect-flash');
 
+const User = require('./models/User');
+
 const { redirectToDashboardIfLoggedIn } = require('./middlewares/redirectToDashboardIfLoggedIn');
 const { ensureAuthenticated } = require('./middlewares/ensureAuthenticated');
 
@@ -61,6 +63,20 @@ mongoose.connect(process.env.DATABASE_URI)
 
 // Auth routes
 app.use('/auth', require('./routes/auth'));
+
+// Get user information
+app.use(async (req, res, next) => {
+    if (req.session.userId) {
+        try {
+            const user = await User.findById(req.session.userId);
+            res.locals.user = user;
+        } catch (error) {
+            console.error('خطا در خواندن کاربر فعال', error.message);
+        }
+    }
+    next();
+});
+
 
 // Dashboard routes
 app.use('/dashboard', redirectToDashboardIfLoggedIn, require('./routes/dashboard'));
