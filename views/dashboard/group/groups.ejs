@@ -50,7 +50,10 @@
 
             <p class="flex items-center gap-1 text-404040">
               نام سازنده گروه:
-              <span class="text-primary"><%= group.userID ? group.userID.email : 'نام کاربر پیدا نشد' %></span>
+              <span class="text-primary"
+                ><%= group.userID ? group.userID.email : 'نام کاربر پیدا نشد'
+                %></span
+              >
             </p>
 
             <!-- Group actions -->
@@ -68,7 +71,7 @@
               >
             </div>
           </div>
-          <% })%> <% } else { %>
+          <% }) } else { %>
           <p class="text-lg mt-4 text-primary"><%= text %></p>
           <% } %>
         </div>

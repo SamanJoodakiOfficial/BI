@@ -13,18 +13,17 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> اضافه کردن گروه جدید توسط <%= user.role
-            %>
+            <% var user = user || ''%> ویرایش زیرگروه جدید توسط <%= user.role %>
             <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="/dashboard/subGroups/addSubGroup"
+          action="/dashboard/subGroups/updateSubGroup/<% var subGroup = subGroup || '' %><%= subGroup._id %>"
           method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
-          <h2 class="font-bold text-lg text-202020">زیرگروه جدید</h2>
+          <h2 class="font-bold text-lg text-202020">ویرایش زیرگروه</h2>
 
           <!-- Errors -->
           <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
@@ -87,7 +86,7 @@
               name="name"
               id="subgroup"
               placeholder="نام زیرگروه"
-              autocomplete="off"
+              value="<%= subGroup.name %>"
             />
           </div>
 

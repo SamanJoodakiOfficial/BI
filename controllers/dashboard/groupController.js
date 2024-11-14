@@ -51,14 +51,13 @@ exports.renderUpdateGroup = async (req, res) => {
     const groupId = req.params.groupId;
 
     try {
-        const exisitingGroup = await Group.findById(groupId);
+        const existingGroup = await Group.findById(groupId);
 
-        if (!exisitingGroup) {
+        if (!existingGroup) {
             return res.render("./dashboard/group/groups", { title: "مدیریت گروه‌ها" });
         }
 
-
-        res.render('./dashboard/group/updateGroup', { title: `ویرایش گروه ${exisitingGroup.name}`, group: exisitingGroup });
+        res.render('./dashboard/group/updateGroup', { title: `ویرایش گروه ${existingGroup.name}`, group: existingGroup });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/groups');
@@ -72,7 +71,12 @@ exports.handleUpdateGroup = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render(`./dashboard/group/updateGroup`, { title: `ویرایش گروه ${name}`, errors: errors.array() });
+        const existingGroup = await Group.findById(groupId);
+        return res.render(`./dashboard/group/updateGroup`, {
+            title: `ویرایش گروه ${existingGroup ? existingGroup.name : ''}`,
+            group: existingGroup,
+            errors: errors.array()
+        });
     }
 
     try {
@@ -83,12 +87,13 @@ exports.handleUpdateGroup = async (req, res) => {
         }
 
         req.flash('success', `گروه ${name} با موفقیت ویرایش شد`);
-        res.redirect("/dashboard/groups");
+        res.redirect('/dashboard/groups');
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/groups');
     }
 };
+
 
 exports.handleDeleteGroup = async (req, res) => {
     const groupId = req.params.groupId;

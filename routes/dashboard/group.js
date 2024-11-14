@@ -18,4 +18,5 @@ router.post('/updateGroup/:groupId',
     groupController.handleUpdateGroup
 );
 router.get('/deleteGroup/:groupId', groupController.handleDeleteGroup);
+
 module.exports = router;

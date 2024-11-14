@@ -3,25 +3,10 @@ const dashboardController = require('../controllers/dashboardController');
 
 const router = express.Router();
 
-// Questions
-router.get('/questions', dashboardController.renderQuestions);
-
-// // Groups
-// router.get('/groups', dashboardController.renderGroups);
-
-// SubGroups
-router.get('/subGroups', dashboardController.renderSubGroups);
-
-// Responses
-router.get('/responses', dashboardController.renderResponses);
-
-// Users
-router.get('/users', dashboardController.renderUsers);
-
-// Profile
-router.get('/profile', dashboardController.renderProfile);
-
-// Routers
+// Groups
 router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
+
+// Sub Groups
+router.use('/subGroups', require('../middlewares/isAdmin'), require('./dashboard/subGroup'));
 
 module.exports = router;
