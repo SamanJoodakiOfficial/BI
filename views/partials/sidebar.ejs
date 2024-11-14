@@ -52,6 +52,14 @@
     </li>
     <li>
       <a
+        href="/dashboard/profile"
+        class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
+        ><i class="ri-user-settings-line"></i>جزئیات حساب کاربری</a
+      >
+    </li>
+    <% if (user.role === 'admin') { %>
+    <li>
+      <a
         href="/dashboard/responses"
         class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
         ><i class="ri-chat-1-line"></i>مدیریت پاسخ‌ها</a
@@ -78,13 +86,7 @@
         ><i class="ri-group-line"></i>مدیریت کاربران</a
       >
     </li>
-    <li>
-      <a
-        href="/dashboard/profile"
-        class="w-full flex gap-4 text-[16px] hover:text-primary transition-colors items-center text-404040"
-        ><i class="ri-user-settings-line"></i>جزئیات حساب کاربری</a
-      >
-    </li>
+    <% } %>
     <li>
       <a
         href="/auth/logout"

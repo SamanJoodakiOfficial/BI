@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "startDev": "nodemon server.js"
+    "startDev": "nodemon server.js",
+    "compileTailwind": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +23,8 @@
     "express-session": "^1.18.1",
     "express-validator": "^7.2.0",
     "mongoose": "^8.8.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.14"
   }
 }

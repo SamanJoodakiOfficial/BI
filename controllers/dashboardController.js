@@ -2,10 +2,6 @@ exports.renderQuestions = async (req, res) => {
     res.render('./dashboard/question/questions', { title: 'مدیریت بانک سوالات' });
 };
 
-exports.renderGroups = async (req, res) => {
-    res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها' });
-};
-
 exports.renderSubGroups = async (req, res) => {
     res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها' });
 };

@@ -16,175 +16,62 @@
             گروه‌های ثبت شده
           </h2>
           <a
-            href="#"
+            href="/dashboard/groups/addGroup"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت گروه جدید</span></a
           >
         </header>
 
-        <!-- Search Form
-        <form
-          action="#"
-          class="w-full rounded-lg mt-8 flex flex-col gap-4 items-center justify-end"
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
         >
-          <input
-            class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
-            type="text"
-            name=""
-            id=""
-            placeholder="جست و جو بین 1،000 سوال طرح شده"
-          />
-
-          <div class="w-full flex flex-col sm:flex-row gap-2">
-            <select
-              name="group"
-              class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
-            >
-              <option value="group">گروه</option>
-              <option value="group">شبکه</option>
-              <option value="group">نرم افزار</option>
-              <option value="group">سخت افزار</option>
-              <option value="group">برنامه نویسی</option>
-            </select>
-
-            <select
-              name="subGroup"
-              class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
-            >
-              <option value="group">زیرگروه</option>
-              <option value="group">شبکه</option>
-              <option value="group">نرم افزار</option>
-              <option value="group">سخت افزار</option>
-              <option value="group">برنامه نویسی</option>
-            </select>
-
-            <button
-              type="submit"
-              class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-            >
-              <i class="ri-search-line"></i>
-              جست و جو
-            </button>
-          </div>
-        </form> -->
+          <i class="ri-error-warning-line"></i>
+          <%= successMessage %>
+        </div>
+        <% } %>
 
         <!-- Group Boxes -->
         <div
-          class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          class="w-full grid items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
+          <% var groups = groups || '' %> <% if (groups && groups.length >= 1) {
+          %> <% groups.forEach((group) => { %>
           <!-- Group Box -->
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
           >
             <!-- Group name -->
             <p class="flex items-center gap-1 text-404040">
-              نام گروه: <span class="text-primary">امنیت</span>
+              نام گروه: <span class="text-primary"><%= group.name %></span>
             </p>
 
-            <!-- Group actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-            </div>
-          </div>
-
-          <!-- Group Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Group name -->
             <p class="flex items-center gap-1 text-404040">
-              نام گروه: <span class="text-primary">امنیت</span>
+              نام سازنده گروه:
+              <span class="text-primary"><%= group.userID ? group.userID.email : 'نام کاربر پیدا نشد' %></span>
             </p>
 
             <!-- Group actions -->
             <div class="flex items-center gap-2 flex-wrap">
               <a
-                href="#"
+                href="/dashboard/groups/updateGroup/<%= group._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
                 >ویرایش گروه</a
               >
 
               <a
-                href="#"
+                href="/dashboard/groups/deleteGroup/<%= group._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
+                >حذف گروه</a
               >
             </div>
           </div>
-
-          <!-- Group Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Group name -->
-            <p class="flex items-center gap-1 text-404040">
-              نام گروه: <span class="text-primary">امنیت</span>
-            </p>
-
-            <!-- Group actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-            </div>
-          </div>
-
-          <!-- Group Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Group name -->
-            <p class="flex items-center gap-1 text-404040">
-              نام گروه: <span class="text-primary">امنیت</span>
-            </p>
-
-            <!-- Group actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-                >ویرایش گروه</a
-              >
-            </div>
-          </div>
+          <% })%> <% } else { %>
+          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <% } %>
         </div>
-
-        <!-- <footer
-          class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
-        >
-          <a href="#" class="text-404040">بعدی</a>
-          <a href="#" class="underline text-primary">1</a>
-          <a href="#" class="underline">2</a>
-          <a href="#" class="underline">3</a>
-          <a href="#" class="underline">4</a>
-          <a href="#" class="underline">5</a>
-          <a href="#" class="text-404040">قبلی</a>
-        </footer> -->
       </main>
     </div>
   </body>

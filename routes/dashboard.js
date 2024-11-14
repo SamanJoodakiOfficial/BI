@@ -6,8 +6,8 @@ const router = express.Router();
 // Questions
 router.get('/questions', dashboardController.renderQuestions);
 
-// Groups
-router.get('/groups', dashboardController.renderGroups);
+// // Groups
+// router.get('/groups', dashboardController.renderGroups);
 
 // SubGroups
 router.get('/subGroups', dashboardController.renderSubGroups);
@@ -20,5 +20,8 @@ router.get('/users', dashboardController.renderUsers);
 
 // Profile
 router.get('/profile', dashboardController.renderProfile);
+
+// Routers
+router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
 
 module.exports = router;

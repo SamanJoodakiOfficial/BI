@@ -13,18 +13,19 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> اضافه کردن گروه جدید توسط <%= user.role
-            %>
+            <% var user = user || ''%> ویرایش گروه توسط <%= user.role %>
             <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="/dashboard/groups/addGroup"
+          action="/dashboard/groups/updateGroup/<% var group = group || '' %><%= group._id %>"
           method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
-          <h2 class="font-bold text-lg text-202020">گروه جدید</h2>
+          <h2 class="font-bold text-lg text-202020">
+            ویرایش گروه <%= group.name %>
+          </h2>
 
           <!-- Errors -->
           <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
@@ -49,7 +50,7 @@
           <!--Success-->
           <% if (successMessage && successMessage.length > 0) { %>
           <div
-            class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+            class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
             <%= successMessage %>
@@ -64,7 +65,7 @@
               name="name"
               id="group"
               placeholder="نام گروه"
-              autocomplete="off"
+              value="<%= group.name %>"
             />
           </div>
 
@@ -75,7 +76,7 @@
               type="submit"
               class="w-full sm:w-1/2 h-12 px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             >
-              ثبت گروه
+              ویرایش گروه
             </button>
             <a
               href="/dashboard/groups"
