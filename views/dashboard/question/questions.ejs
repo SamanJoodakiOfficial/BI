@@ -14,7 +14,7 @@
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">بانک سوالات</h2>
           <a
-            href="#"
+            href="/dashboard/questions/addQuestion"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت سوال جدید</span></a
@@ -67,8 +67,19 @@
           </div>
         </form>
 
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= successMessage %>
+          </div>
+          <% } %>
         <!-- Question Boxes -->
         <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <% var questions = questions || '' %> <% if (questions &&
+          questions.length >= 1) { %> <% questions.forEach((question) => { %>
           <!-- Question Box -->
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
@@ -76,14 +87,14 @@
             <!-- Question actions -->
             <div class="flex items-center gap-4 absolute left-4 sm:left-6">
               <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
+              <a href="/dashboard/questions/updateQuestion/<%= question._id %>" class="cursor-pointer text-lg text-404040">
                 <i class="ri-edit-line"></i>
-              </div>
+              </a>
 
               <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
+              <a href="/dashboard/questions/deleteQuestion/<%= question._id %>" class="cursor-pointer text-lg text-404040">
                 <i class="ri-delete-bin-6-line"></i>
-              </div>
+              </a>
             </div>
 
             <!-- Question details - Group, Sub Group, Text -->
@@ -91,35 +102,27 @@
               <div class="flex items-center gap-1">
                 گروه:
                 <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
+                  <%= question.groupID ? question.groupID.name : 'نام گروه پیدا نشد'%>
                 </div>
               </div>
 
               <div class="flex items-center gap-1">
                 زیرگروه:
                 <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
+                  <%= question.subGroupID ? question.subGroupID.name : 'نام زیرگروه پیدا نشد'%>
                 </div>
               </div>
             </div>
 
             <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
+            <p class="text-404040 text-sm sm:text-base"><%= question.text %></p>
 
             <!-- Question answer & count of answers -->
             <div
               class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
             >
               <a
-                href="#"
+                href="/dashboard/questions/<%= question._id %>/responses"
                 class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
               >
                 ثبت پاسخ جدید
@@ -135,341 +138,9 @@
               </div>
             </div>
           </div>
-
-          <!-- Question Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
-
-              <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </div>
-            </div>
-
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
-
-            <!-- Question answer & count of answers -->
-            <div
-              class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
-            >
-              <a
-                href="#"
-                class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
-              >
-                ثبت پاسخ جدید
-              </a>
-
-              <div class="flex items-center gap-1">
-                تعداد پاسخ:
-                <span
-                  class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
-                >
-                  20
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Question Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
-
-              <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </div>
-            </div>
-
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
-
-            <!-- Question answer & count of answers -->
-            <div
-              class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
-            >
-              <a
-                href="#"
-                class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
-              >
-                ثبت پاسخ جدید
-              </a>
-
-              <div class="flex items-center gap-1">
-                تعداد پاسخ:
-                <span
-                  class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
-                >
-                  20
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Question Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
-
-              <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </div>
-            </div>
-
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
-
-            <!-- Question answer & count of answers -->
-            <div
-              class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
-            >
-              <a
-                href="#"
-                class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
-              >
-                ثبت پاسخ جدید
-              </a>
-
-              <div class="flex items-center gap-1">
-                تعداد پاسخ:
-                <span
-                  class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
-                >
-                  20
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Question Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
-
-              <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </div>
-            </div>
-
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
-
-            <!-- Question answer & count of answers -->
-            <div
-              class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
-            >
-              <a
-                href="#"
-                class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
-              >
-                ثبت پاسخ جدید
-              </a>
-
-              <div class="flex items-center gap-1">
-                تعداد پاسخ:
-                <span
-                  class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
-                >
-                  20
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Question Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
-
-              <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </div>
-            </div>
-
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
-            </p>
-
-            <!-- Question answer & count of answers -->
-            <div
-              class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
-            >
-              <a
-                href="#"
-                class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
-              >
-                ثبت پاسخ جدید
-              </a>
-
-              <div class="flex items-center gap-1">
-                تعداد پاسخ:
-                <span
-                  class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
-                >
-                  20
-                </span>
-              </div>
-            </div>
-          </div>
+          <% }) } else { %>
+          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <% } %>
         </div>
 
         <footer

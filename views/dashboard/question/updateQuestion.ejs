@@ -13,18 +13,17 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> اضافه کردن سوال جدید توسط <%= user.role
-            %>
+            <% var user = user || ''%> ویرایش سوال توسط <%= user.role %>
             <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="/dashboard/questions/addQuestion"
+          action="/dashboard/questions/updateQuestion/<%= question._id %>"
           method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
-          <h2 class="font-bold text-lg text-202020">سوال جدید</h2>
+          <h2 class="font-bold text-lg text-202020">ویرایش سوال</h2>
 
           <!-- Errors -->
           <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
@@ -73,17 +72,16 @@
               </select>
               <% } else { %>
               <p>گروهی یافت نشد</p>
-              <% } %>
-              
-              
-              <% var subGroups = subGroups || '' %><% if (subGroups &&
+              <% } %> <% var subGroups = subGroups || '' %><% if (subGroups &&
               subGroups.length > 0) { %>
               <select
                 name="subGroup"
                 class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
               >
                 <% subGroups.forEach((subGroup) => { %>
-                <option value="<%= subGroup._id %>"><%= subGroup.name %></option>
+                <option value="<%= subGroup._id %>">
+                  <%= subGroup.name %>
+                </option>
                 <% }) %>
               </select>
               <% } else { %>
@@ -100,7 +98,7 @@
               name="text"
               id="text"
               placeholder="متن سوال"
-            ></textarea>
+            ><%= question.text %></textarea>
           </div>
 
           <div class="w-full flex flex-col gap-1">
@@ -113,6 +111,7 @@
               name="description"
               id="description"
               placeholder="توضیحات سوال"
+              value="<%= question.description %>"
             />
           </div>
 

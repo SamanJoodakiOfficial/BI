@@ -84,7 +84,7 @@ exports.renderUpdateSubGroup = async (req, res) => {
         res.render('./dashboard/subGroup/updateSubGroup', { title: `ویرایش زیرگروه ${subGroup.name}`, groups, subGroup });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups/updateSubGroup');
+        res.redirect('/dashboard/subGroups');
     }
 };
 

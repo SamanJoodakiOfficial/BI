@@ -13,6 +13,7 @@ exports.renderGroups = async (req, res) => {
         res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها', groups, text });
     } catch (error) {
         console.error(error.message);
+        res.redirect('/dashboard/groups');
     }
 };
 

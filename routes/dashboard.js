@@ -1,5 +1,4 @@
 const express = require('express');
-const dashboardController = require('../controllers/dashboardController');
 
 const router = express.Router();
 
@@ -8,5 +7,8 @@ router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/gr
 
 // Sub Groups
 router.use('/subGroups', require('../middlewares/isAdmin'), require('./dashboard/subGroup'));
+
+// Questions
+router.use('/questions', require('./dashboard/question'));
 
 module.exports = router;
