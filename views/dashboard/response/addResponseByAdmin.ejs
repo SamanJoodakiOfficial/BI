@@ -5,7 +5,7 @@
   <body class="bg-primaryBackground">
     <div class="flex flex-col lg:flex-row min-h-screen">
       <!-- Sidebar -->
-      <%- include('../../partials/sidebar) %>
+      <%- include('../../partials/sidebar') %>
 
       <!-- Main Content -->
       <main class="flex-1 p-4 lg:p-6">
@@ -14,34 +14,58 @@
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
             اضافه کردن پاسخ جدید به یک سوال خاص توسط
-            <p>کاربر</p>
-            <p class="text-primary">saman22@gmail.com</p>
+            <p><%= user.role %></p>
+            <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="#"
+          action="/dashboard/responses/addResponseByAdmin"
+          method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-4 justify-start"
         >
           <h2 class="font-bold text-lg text-202020">پاسخ جدید</h2>
 
           <!-- Errors -->
+          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+          errors.forEach((error) => { %>
           <div
             class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
-            ایمیل نامعتبر
+            <%= error.msg %>
           </div>
+          <% }) %> <% } %>
+          <!-- Error -->
+          <% var error = error || '' %> <% if (error) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= error %>
+          </div>
+          <% } %>
+
+          <!--Success-->
+          <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= successMessage %>
+          </div>
+          <% } %>
 
           <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
               <label for="questionId" class="text-sm">آیدی سوال</label>
               <input
-                type="number"
+                type="text"
                 class="w-full h-12 border rounded-lg border-CBCBCB text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-center outline-none px-4"
                 placeholder="آبجکت مونگوس"
                 min="0"
                 max="100"
+                name="questionId"
                 id="questionId"
               />
             </div>
@@ -54,6 +78,7 @@
                 placeholder="0 - 100"
                 min="0"
                 max="100"
+                name="score"
                 id="answer"
               />
               <span class="text-warning text-sm">0 نشانه خیر است</span>
@@ -65,6 +90,7 @@
                 class="w-full min-h-20 border rounded-lg border-CBCBCB text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-right outline-none p-4"
                 placeholder="توضیحات شما"
                 id="description"
+                name="description"
               ></textarea>
             </div>
 

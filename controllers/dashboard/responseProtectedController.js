@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
 const { validationResult } = require('express-validator');
@@ -109,12 +110,60 @@ exports.handleUpdateResponse = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         req.flash('error', 'خطای سرور رخ داد.');
-        res.redirect('/dashboard/questions');
+        res.redirect('/dashboard/resonses');
     }
 };
 
 exports.renderAddResponseByAdmin = async (req, res) => {
     res.render('./dashboard/response/addResponseByAdmin', { title: 'اضافه کردن پاسخ توسط ادمین' });
+};
+
+exports.handleAddResponseByAdmin = async (req, res) => {
+    const { questionId, score, description, file } = req.body;
+    const userId = req.session.userId;
+
+    const parsedScore = parseInt(score);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.render(`./dashboard/response/addResponseByAdmin`, { title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`, errors: errors.array() });
+    }
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(questionId)) {
+            return res.render(`./dashboard/response/addResponseByAdmin`,
+                {
+                    title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
+                    errors: errors.array(),
+                    error: `شناسه سوال ${questionId} نامعتبر است`
+                });
+        }
+
+        const newResponse = new Response({
+            userID: userId,
+            questionID: questionId,
+            score: parsedScore,
+            description,
+            documents: file ? [file] : []
+        });
+
+        if (!newResponse) {
+            return res.render('./dashboard/response/addResponseByAdmin',
+                {
+                    title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
+                    errors: errors.array(),
+                    erorr: 'خطایی رخ داده است هنگام ساخت پاسخ'
+                }
+            );
+        }
+
+        await newResponse.save();
+        req.flash('success', `جواب ${score} برای سوال ${questionId} با موفقیت ثبت شد`);
+        res.redirect('/dashboard/responses');
+    } catch (error) {
+        console.error(error.message);
+        res.redirect('/dashboard/responses');
+    }
 };
 
 exports.handleDeleteResponse = async (req, res) => {

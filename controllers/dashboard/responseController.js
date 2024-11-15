@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
 const { validationResult } = require('express-validator');
@@ -15,7 +16,7 @@ exports.renderAddResponse = async (req, res) => {
         res.render('./dashboard/response/addResponse', { title: `اضافه کردن پاسخ جدید برای سوال ${question._id}`, question });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
+        res.redirect('/dashboard/responses');
     }
 };
 
@@ -42,9 +43,9 @@ exports.handleAddResponse = async (req, res) => {
         });
         await newResponse.save();
         req.flash('success', `جواب ${score} برای سوال ${questionId} با موفقیت ثبت شد`);
-        res.redirect('/dashboard/questions');
+        res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
+        res.redirect('/dashboard/responses');
     }
 };
