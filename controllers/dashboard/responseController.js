@@ -1,4 +1,3 @@
-const { default: mongoose } = require('mongoose');
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
 const { validationResult } = require('express-validator');
@@ -30,20 +29,32 @@ exports.handleAddResponse = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const question = await Question.findById(questionId).populate('groupID', 'name').populate('subGroupID', 'name').populate('userID', 'email');
-        return res.render(`./dashboard/questions`, { title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`, errors: errors.array(), question });
+        return res.render(`./dashboard/response/addResponse`, { title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`, errors: errors.array(), question });
     }
 
     try {
-        const newResponse = new Response({
-            userID: userId,
-            questionID: questionId,
-            score: parsedScore,
-            description,
-            documents: file ? [file] : []
-        });
-        await newResponse.save();
-        req.flash('success', `جواب ${score} برای سوال ${questionId} با موفقیت ثبت شد`);
-        res.redirect('/dashboard/responses');
+        const existingResponse = await Response.findOne({ userID: userId, questionID: questionId });
+
+        if (existingResponse) {
+            existingResponse.score = parsedScore ? parsedScore : existingResponse.score;
+            existingResponse.description = description ? description : existingResponse.description;
+            existingResponse.documents = file ? [file] : existingResponse.documents;
+
+            await existingResponse.save();
+            req.flash('success', `جواب شما برای سوال ${questionId} با موفقیت بروزرسانی شد`);
+            return res.redirect('/dashboard/questions');
+        } else {
+            const newResponse = new Response({
+                userID: userId,
+                questionID: questionId,
+                score: parsedScore,
+                description,
+                documents: file ? [file] : []
+            });
+            await newResponse.save();
+            req.flash('success', `جواب ${parsedScore} برای سوال ${questionId} با موفقیت ثبت شد`);
+            return res.redirect('/dashboard/questions');
+        }
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/responses');

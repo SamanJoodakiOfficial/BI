@@ -69,10 +69,30 @@
           </div>
         </form>
 
-        <!--Success-->
-        <% if (successMessage && successMessage.length > 0) { %>
+                  <!-- Errors -->
+          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+          errors.forEach((error) => { %>
           <div
-            class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= error.msg %>
+          </div>
+          <% }) %> <% } %>
+          <!-- Error -->
+          <% var error = error || '' %> <% if (error) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= error %>
+          </div>
+          <% } %>
+
+          <!--Success-->
+          <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
             <%= successMessage %>
@@ -137,10 +157,44 @@
                 <span
                   class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
                 >
-                  20
+                  <%= question.responseCount %>
                 </span>
               </div>
             </div>
+
+<div class="p-4 bg-slate-300 rounded-lg">
+  <% if (question.userResponse) { %>
+    <p class="text-404040 text-bold">پاسخ دهنده: 
+      <span class="text-606060">
+        <%= question.userResponse.userID ? question.userResponse.userID.email : 'داده‌ای یافت نشد' %>
+      </span>
+    </p>
+    <p class="text-404040 text-bold">پاسخ : 
+      <span class="text-606060 text-bold">
+        <%= question.userResponse.score !== undefined ? question.userResponse.score : 'داده‌ای یافت نشد' %> درصد
+      </span>
+    </p>
+    <p class="text-404040">توضیحات : 
+      <span class="text-606060 text-bold">
+        <%= question.userResponse.description ? question.userResponse.description : 'داده‌ای یافت نشد' %>
+      </span>
+    </p>
+    <p class="text-404040 text-bold">لینک مستندات : 
+      <p class="flex flex-col gap-1">
+        <% if (question.userResponse.documents && question.userResponse.documents.length > 0) { %>
+          <% question.userResponse.documents.forEach((document) => { %>
+            <a href="#" class="text-blue-500"><%= document %></a> 
+          <% }) %>
+        <% } else { %>
+          <p class="text-606060 ">مستندی یافت نشد</p>
+            <% } %>
+      </p>
+    </p>
+  <% } else { %>
+    <p class="text-404040">پاسخی برای این سوال از جانب ثبت نشده است.</p>
+  <% } %>
+</div>
+
           </div>
           <% }) } else { %>
           <p class="text-lg mt-4 text-primary"><%= text %></p>

@@ -1,6 +1,7 @@
 const Group = require('../../models/Group');
 const SubGroup = require('../../models/SubGroup');
 const Question = require('../../models/Question');
+const Response = require('../../models/Response');
 const { validationResult } = require('express-validator');
 const {
     v1: uuidv1,
@@ -8,8 +9,27 @@ const {
 } = require('uuid');
 
 exports.renderQuestions = async (req, res) => {
+    const userId = req.session.userId;
+
     try {
         const questions = await Question.find({}).populate('groupID', 'name').populate('subGroupID', 'name').populate('userID', 'name');
+
+        if (questions.length >= 1) {
+            for (let question of questions) {
+                const responseCount = await Response.countDocuments({ questionID: question._id });
+
+                question.responseCount = responseCount;
+
+                const response = await Response.findOne({ userID: userId, questionID: question._id })
+                    .populate('userID', 'email');
+
+                if (response) {
+                    question.userResponse = response;
+                } else {
+                    question.userResponse = null;
+                }
+            }
+        }
 
         let text = '';
         if (questions.length <= 0) {

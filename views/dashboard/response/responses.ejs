@@ -79,71 +79,104 @@
           </div>
           <% } %>
         
-        <!-- Response Boxes -->
-        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <% var responses = responses || '' %>
-          <% if (responses && responses.length >= 1) { %>
-            <% responses.forEach((response) => { %>
-          <!-- Response Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
-          >
-            <!-- Question actions -->
-            <div class="flex items-center gap-4 absolute left-4 sm:left-6">
-              <!-- Edit question -->
-              <a href="/dashboard/responses/updateResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>  
-              </ش>
+<!-- Response Boxes -->
+<div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <% var responses = responses || '' %>
+  <% if (responses && responses.length >= 1) { %>
+    <% responses.forEach((response) => { %>
+      <!-- Response Box -->
+      <div class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2">
+        <!-- Question actions -->
+        <div class="flex items-center gap-4 absolute left-4 sm:left-6">
+          <!-- Edit question -->
+          <a href="/dashboard/responses/updateResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
+            <i class="ri-edit-line"></i>  
+          </a>
 
-              <!-- Delete question -->
-              <a href="/dashboard/responses/deleteResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
-                <i class="ri-delete-bin-6-line"></i>
-              </a>
-            </div>
+          <!-- Delete question -->
+          <a href="/dashboard/responses/deleteResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
+            <i class="ri-delete-bin-6-line"></i>
+          </a>
+        </div>
 
-            <!-- Question details - Group, Sub Group, Text -->
-            <div class="flex flex-wrap items-center gap-1">
-              <div class="flex items-center gap-1">
-                گروه:
-                <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  <%= response.questionID.groupID.name %>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-1">
-                زیرگروه:
-                <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  <%= response.questionID.subGroupID.name ? response.questionID.subGroupID.name : 'داده‌ای یافت نشد' %>
-                </div>
-              </div>
-            </div>
-
-            <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base">
-              <%= response.questionID.text ? response.questionID.text : 'داده‌ای یافت نشد' %>
-            </p>
-
-            <div class="p-4 bg-slate-300 rounded-lg">
-              <p class="text-404040">پاسخ دهنده: <span class="text-606060"><%= response.userID.email ? response.userID.email : 'داده‌ای یافت نشد' %></span></p>
-            <p class="text-404040">پاسخ : <span class="text-606060"><%= response.score ? response.score : 'داده‌ای یافت نشد' %></span> درصد</p>
-            <p class="text-404040">توضیحات : <span class="text-606060"><%= response.description ? response.description : 'داده‌ای یافت نشد' %></span></p>
-            <p class="text-404040">لینک مستندات : 
-              <p class="flex flex-col gap-1">
-                <% if (response.documents && response.documents.length > 0) { %>
-                <% response.documents.forEach((document) => { %>
-                <a href="#" class="text-blue-500"><%= document %></a> 
-                <% }) } else { %>
-                  مستندی یافت نشد
-                  <% } %>
-              </p>
-            </p>
+        <!-- Question details - Group, Sub Group, Text -->
+        <div class="flex flex-wrap items-center gap-1">
+          <div class="flex items-center gap-1">
+            گروه:
+            <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
+              <% if (response.questionID && response.questionID.groupID) { %>
+                <%= response.questionID.groupID.name %>
+              <% } else { %>
+                داده‌ای یافت نشد
+              <% } %>
             </div>
           </div>
 
-          <% }) } else { %>
-            <p class="text-lg mt-4 text-primary"><%= text %></p>
-            <% } %>
+          <div class="flex items-center gap-1">
+            زیرگروه:
+            <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
+              <% if (response.questionID && response.questionID.subGroupID && response.questionID.subGroupID.name) { %>
+                <%= response.questionID.subGroupID.name %>
+              <% } else { %>
+                داده‌ای یافت نشد
+              <% } %>
+            </div>
+          </div>
         </div>
+
+        <!-- Question text -->
+        <p class="text-404040 text-sm sm:text-base">
+          <% if (response.questionID && response.questionID.text) { %>
+            <%= response.questionID.text %>
+          <% } else { %>
+            داده‌ای یافت نشد
+          <% } %>
+        </p>
+
+        <div class="p-4 bg-slate-300 rounded-lg">
+          <p class="text-404040">پاسخ دهنده: <span class="text-606060">
+            <% if (response.userID && response.userID.email) { %>
+              <%= response.userID.email %>
+            <% } else { %>
+              داده‌ای یافت نشد
+            <% } %>
+          </span></p>
+
+          <p class="text-404040">پاسخ : <span class="text-606060">
+            <% if (response.score) { %>
+              <%= response.score %>
+            <% } else { %>
+              داده‌ای یافت نشد
+            <% } %>
+          </span> درصد</p>
+
+          <p class="text-404040">توضیحات : <span class="text-606060">
+            <% if (response.description) { %>
+              <%= response.description %>
+            <% } else { %>
+              داده‌ای یافت نشد
+            <% } %>
+          </span></p>
+
+          <p class="text-404040">لینک مستندات : 
+            <p class="flex flex-col gap-1">
+              <% if (response.documents && response.documents.length > 0) { %>
+                <% response.documents.forEach((document) => { %>
+                  <a href="#" class="text-blue-500"><%= document %></a> 
+                <% }) %>
+              <% } else { %>
+                مستندی یافت نشد
+              <% } %>
+            </p>
+          </p>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="text-lg mt-4 text-primary"><%= text %></p>
+  <% } %>
+</div>
+
 
         <footer
           class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
