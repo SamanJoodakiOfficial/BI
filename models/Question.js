@@ -28,11 +28,6 @@ const questionSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-    },
-    status: {
-        type: String,
-        enum: ["enable", "disable"],
-        default: "enable",
     }
 }, { timestamps: true });
 

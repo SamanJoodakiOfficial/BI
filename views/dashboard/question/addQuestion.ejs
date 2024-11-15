@@ -58,32 +58,20 @@
 
           <div class="w-full flex flex-col gap-1 mt-3">
             <label for="subgroup" class="text-404040 text-xs"
-              >گروه و زیرگروه سوال انتخاب کنید:</label
+              >زیرگروه سوال را انتخاب کنید:</label
             >
             <div class="w-full flex flex-col sm:flex-row gap-2">
-              <% var groups = groups || '' %><% if (groups && groups.length > 0)
-              { %>
-              <select
-                name="group"
-                class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
-              >
-                <% groups.forEach((group) => { %>
-                <option value="<%= group._id %>"><%= group.name %></option>
-                <% }) %>
-              </select>
-              <% } else { %>
-              <p>گروهی یافت نشد</p>
-              <% } %>
-              
-              
               <% var subGroups = subGroups || '' %><% if (subGroups &&
               subGroups.length > 0) { %>
+              <p class="text-404040 text-xs">زیرگروه:</p>
               <select
                 name="subGroup"
                 class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
               >
                 <% subGroups.forEach((subGroup) => { %>
-                <option value="<%= subGroup._id %>"><%= subGroup.name %></option>
+                <option value="<%= subGroup._id %>">
+                  <%= subGroup.name %>
+                </option>
                 <% }) %>
               </select>
               <% } else { %>
@@ -114,32 +102,6 @@
               id="description"
               placeholder="توضیحات سوال"
             />
-          </div>
-
-          <div class="w-full flex flex-row items-center gap-2">
-            <label for="status" class="text-404040 text-xs">وضعیت سوال</label>
-            <div>
-              <label for="enable" class="text-404040">فعال</label>
-              <input
-                type="radio"
-                name="status"
-                id="enable"
-                value="enable"
-                placeholder="وضعیت سوال"
-                checked
-              />
-            </div>
-
-            <div>
-              <label for="disable" class="text-404040">غیر فعال</label>
-              <input
-                type="radio"
-                name="status"
-                id="disable"
-                value="disable"
-                placeholder="وضعیت سوال"
-              />
-            </div>
           </div>
 
           <div

@@ -48,8 +48,14 @@ exports.renderAddQuestion = async (req, res) => {
         const groups = await Group.find({});
         const subGroups = await SubGroup.find({});
 
-        if (groups.length <= 0 || subGroups.length <= 0) {
-            return res.render('./dashboard/group/groups', { title: 'بانک سوالات' });
+        if (groups.length <= 0) {
+            req.flash('error', 'ابتدا باید گروه‌ها را اضافه کنید');
+            return res.redirect('/dashboard/groups');
+        }
+
+        if (subGroups.length <= 0) {
+            req.flash('error', 'ابتدا باید زیرگروه‌ها را اضافه کنید');
+            return res.redirect('/dashboard/subGroups');
         }
 
         res.render('./dashboard/question/addQuestion', { title: 'اضافه کردن سوال جدید', groups, subGroups });
@@ -60,7 +66,7 @@ exports.renderAddQuestion = async (req, res) => {
 };
 
 exports.handleAddQuestion = async (req, res) => {
-    const { group, subGroup, text, description, status } = req.body;
+    const { subGroup, text, description } = req.body;
     const userId = req.session.userId;
 
     const errors = validationResult(req);
@@ -71,15 +77,20 @@ exports.handleAddQuestion = async (req, res) => {
     }
 
     try {
+        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id');
+
+        if (!subGroup) {
+            req.flash('error', 'گروه و زیرگروه تطابق ندارند');
+            return res.redirect('/dashboard/questions');
+        }
         const code = uuidv4();
         const newQuestion = new Question({
-            groupID: group,
+            groupID: subgroup.groupID._id,
             subGroupID: subGroup,
             userID: userId,
             code,
             text,
             description,
-            status
         });
 
         await newQuestion.save();
@@ -92,8 +103,6 @@ exports.handleAddQuestion = async (req, res) => {
 };
 
 exports.renderUpdateQuestion = async (req, res) => {
-    const { group, subGroup, text, description, status } = req.body;
-    const userId = req.session.userId;
     const questionId = req.params.questionId;
 
     const errors = validationResult(req);
@@ -121,7 +130,7 @@ exports.renderUpdateQuestion = async (req, res) => {
 };
 
 exports.handleUpdateQuestion = async (req, res) => {
-    const { group, subGroup, text, description, status } = req.body;
+    const { group, subGroup, text, description } = req.body;
     const userId = req.session.userId;
     const questionId = req.params.questionId;
 
@@ -129,23 +138,30 @@ exports.handleUpdateQuestion = async (req, res) => {
     if (!errors.isEmpty()) {
         const groups = await Group.find({});
         const subGroups = await SubGroup.find({});
-        return res.render('./dashboard/question/updateQuestion', { title: `ویرایش سوال ${question.text}`, errors: errors.array(), groups, subGroups });
+        const question = await Question.findById(questionId);
+        return res.render('./dashboard/question/updateQuestion', { title: `ویرایش سوال ${question.text}`, errors: errors.array(), groups, subGroups, question });
     }
 
     try {
+        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id');
+
+        if (!subGroup) {
+            req.flash('error', 'گروه و زیرگروه تطابق ندارند');
+            return res.redirect('/dashboard/questions');
+        }
+
         const code = uuidv4();
         const updatedQuestion = await Question.findByIdAndUpdate(questionId, {
-            groupID: group,
+            groupID: subgroup.groupID._id,
             subGroupID: subGroup,
             userID: userId,
-            code,
+            code: code ? code : code,
             text,
             description,
-            status
         }, { new: true });
 
         if (!updatedQuestion) {
-            return res.render('./dashboard/question/questions', { title: "بانک سوالات" });
+            return res.redirect('/dashboard/questions');
         }
 
         req.flash('success', `سوال با شناسه ${updatedQuestion._id} با موفقیت ویرایش شد`);
