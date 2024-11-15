@@ -13,24 +13,40 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            ویرایش اطلاعات کاربری حساب
-            <p class="text-primary">samanjoodakiofficial</p>
+            ویرایش اطلاعات حساب کاربری
+            <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="#"
+          action="/dashboard/profile/editProfile"
+          method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
-          <h2 class="font-bold text-lg text-202020">ویرایش اطلاعات</h2>
+          <h2 class="font-bold text-lg text-202020">
+            ویرایش اطلاعات <%= user.email %>
+          </h2>
 
           <!-- Errors -->
+          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+          errors.forEach((error) => { %>
           <div
             class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
-            ایمیل نامعتبر
+            <%= error.msg %>
           </div>
+          <% }) %> <% } %>
+
+          <!--Success-->
+          <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= successMessage %>
+          </div>
+          <% } %>
 
           <div class="w-full flex flex-col gap-1 mt-3">
             <label for="email" class="text-404040 text-xs">ایمیل کاربری </label>
@@ -40,7 +56,7 @@
               name="email"
               id="email"
               placeholder="ایمیل کاربر"
-              autocomplete="off"
+              value="<%= user.email %>"
             />
           </div>
 
@@ -54,7 +70,6 @@
               name="currentPassword"
               id="currentPassword"
               placeholder="کلمه عبور فعلی"
-              autocomplete="off"
             />
           </div>
 
@@ -68,7 +83,6 @@
               name="newPassword"
               id="newPassword"
               placeholder="کلمه عبور جدید"
-              autocomplete="off"
             />
           </div>
 
@@ -82,7 +96,6 @@
               name="confirmNewPassword"
               id="confirmNewPassword"
               placeholder="تایید کلمه عبور جدید"
-              autocomplete="off"
             />
           </div>
 
@@ -95,12 +108,13 @@
             >
               ویرایش اطلاعات
             </button>
-            <button
+            <a
+              href="/dashboard/questions"
               type="button"
               class="w-full sm:w-1/2 h-12 px-6 bg-disabledButton text-606060 flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             >
               لغو فرایند
-            </button>
+            </a>
           </div>
         </form>
       </main>

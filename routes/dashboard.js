@@ -14,4 +14,7 @@ router.use('/questions', require('./dashboard/question'));
 // Responses
 router.use('/responses', require('../middlewares/isAdmin'), require('./dashboard/responseProtected'));
 
+// Profile
+router.use('/profile', require('./dashboard/profile'));
+
 module.exports = router;
