@@ -16,7 +16,7 @@
             پاسخ‌های ثبت شده
           </h2>
           <a
-            href="#"
+            href="/dashboard/responses/addResponseByAdmin"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت پاسخ جدید</span></a
@@ -69,23 +69,36 @@
           </div>
         </form>
 
-        <!-- Question Boxes -->
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= successMessage %>
+          </div>
+          <% } %>
+        
+        <!-- Response Boxes -->
         <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Question Box -->
+          <% var responses = responses || '' %>
+          <% if (responses && responses.length >= 1) { %>
+            <% responses.forEach((response) => { %>
+          <!-- Response Box -->
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
           >
             <!-- Question actions -->
             <div class="flex items-center gap-4 absolute left-4 sm:left-6">
               <!-- Edit question -->
-              <div class="cursor-pointer text-lg text-404040">
-                <i class="ri-edit-line"></i>
-              </div>
+              <a href="/dashboard/responses/updateResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
+                <i class="ri-edit-line"></i>  
+              </ش>
 
               <!-- Delete question -->
-              <div class="cursor-pointer text-lg text-404040">
+              <a href="/dashboard/responses/deleteResponse/<%= response._id %>" class="cursor-pointer text-lg text-404040">
                 <i class="ri-delete-bin-6-line"></i>
-              </div>
+              </a>
             </div>
 
             <!-- Question details - Group, Sub Group, Text -->
@@ -93,40 +106,43 @@
               <div class="flex items-center gap-1">
                 گروه:
                 <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  شبکه
+                  <%= response.questionID.groupID.name %>
                 </div>
               </div>
 
               <div class="flex items-center gap-1">
                 زیرگروه:
                 <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  امنیت
+                  <%= response.questionID.subGroupID.name ? response.questionID.subGroupID.name : 'داده‌ای یافت نشد' %>
                 </div>
               </div>
             </div>
 
             <!-- Question text -->
             <p class="text-404040 text-sm sm:text-base">
-              به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-              نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر
-              شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما
-              سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به نظر شما سطح
-              امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100)
+              <%= response.questionID.text ? response.questionID.text : 'داده‌ای یافت نشد' %>
             </p>
 
             <div class="p-4 bg-slate-300 rounded-lg">
-              <p class="text-404040">پاسخ دهنده: <span class="text-606060">samanjoodakiofficial</span></p>
-            <p class="text-404040">پاسخ : <span class="text-606060">100</span> درصد</p>
-            <p class="text-404040">توضیحات : <span class="text-606060">در سازمان ما 100 درصد از استاندارد cis استفاده شده است</span></p>
+              <p class="text-404040">پاسخ دهنده: <span class="text-606060"><%= response.userID.email ? response.userID.email : 'داده‌ای یافت نشد' %></span></p>
+            <p class="text-404040">پاسخ : <span class="text-606060"><%= response.score ? response.score : 'داده‌ای یافت نشد' %></span> درصد</p>
+            <p class="text-404040">توضیحات : <span class="text-606060"><%= response.description ? response.description : 'داده‌ای یافت نشد' %></span></p>
             <p class="text-404040">لینک مستندات : 
               <p class="flex flex-col gap-1">
-                <a href="#" class="text-blue-500">https://www.documents.com/</a> <a href="#" class="text-blue-500">https://www.documents.com/</a> <a href="#" class="text-blue-500">https://www.documents.com/</a>
+                <% if (response.documents && response.documents.length > 0) { %>
+                <% response.documents.forEach((document) => { %>
+                <a href="#" class="text-blue-500"><%= document %></a> 
+                <% }) } else { %>
+                  مستندی یافت نشد
+                  <% } %>
               </p>
             </p>
             </div>
           </div>
+
+          <% }) } else { %>
+            <p class="text-lg mt-4 text-primary"><%= text %></p>
+            <% } %>
         </div>
 
         <footer

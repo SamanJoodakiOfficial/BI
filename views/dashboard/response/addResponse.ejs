@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <%- include("../../partials/head") %>
+  <%- include('../../partials/head') %>
 
   <body class="bg-primaryBackground">
     <div class="flex flex-col lg:flex-row min-h-screen">
       <!-- Sidebar -->
-      <%- include('../../partials/sidebar) %>
+      <%- include('../../partials/sidebar') %>
 
       <!-- Main Content -->
       <main class="flex-1 p-4 lg:p-6">
@@ -13,43 +13,73 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            اضافه کردن پاسخ جدید توسط
-            <p>کاربر</p>
-            <p class="text-primary">saman22@gmail.com</p>
+            اضافه کردن پاسخ جدید برای سوال<%= question._id %> توسط
+            <p><%= user.role%></p>
+            <p class="text-primary"><%= user.email %></p>
           </h2>
         </header>
 
         <form
-          action="#"
+          action="/dashboard/questions/<%= question._id %>/responses/addResponse"
+          method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-4 justify-start"
         >
-          <h2 class="font-bold text-lg text-202020">پاسخ جدید</h2>
+          <h2 class="font-bold text-lg text-202020">پاسخ جدید برای سوال <%= question._id %></h2>
 
           <!-- Errors -->
+          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+          errors.forEach((error) => { %>
           <div
             class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
-            ایمیل نامعتبر
+            <%= error.msg %>
           </div>
+          <% }) %> <% } %>
+          <!-- Error -->
+          <% var error = error || '' %> <% if (error) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= error %>
+          </div>
+          <% } %>
+
+          <!--Success-->
+          <% if (successMessage && successMessage.length > 0) { %>
+          <div
+            class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          >
+            <i class="ri-error-warning-line"></i>
+            <%= successMessage %>
+          </div>
+          <% } %>
 
           <div class="flex flex-col gap-4">
             <div class="bg-slate-400 rounded-lg p-4">
-              <p>
-                به نظر شما سطح امنیت شبکه سازمان چقدر است؟ (عدد بین 0 تا 100) به
-                نظر شما سطح امنیت شبکه سازمان چقدر است؟
+              <p class="font-bold">
+                متن سوال:
+                <p class="text-404040 mt-4">
+                  <%= question.text %>
+                  </p>
               </p>
             </div>
 
             <div class="bg-slate-300 rounded-lg p-4">
               <div class="flex items-center gap-2">
-                <span class="font-bold">گروه:</span>
-                <p class="text-primary">امنیت</p>
+                <span class="font-bold">گروه</span>
+                <p class="text-primary"><%= question.groupID.name %></p>
               </div>
 
               <div class="flex items-center gap-2">
                 <span class="font-bold">زیرگروه:</span>
-                <p class="text-primary">امنیت سایبری</p>
+                <p class="text-primary"><%= question.subGroupID.name %></p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="font-bold">سازنده سوال:</span>
+                <p class="text-primary"><%= question.userID.email %></p>
               </div>
             </div>
 
@@ -61,6 +91,7 @@
                 placeholder="0 - 100"
                 min="0"
                 max="100"
+                name="score"
                 id="answer"
               />
               <span class="text-warning text-sm">0 نشانه خیر است</span>
@@ -71,18 +102,13 @@
               <textarea
                 class="w-full min-h-20 border rounded-lg border-CBCBCB text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-right outline-none p-4"
                 placeholder="توضیحات شما"
+                name="description"
                 id="description"
               ></textarea>
             </div>
 
             <div class="flex flex-col gap-2">
-              <label for="documents" class="text-sm">آپلود مستندات</label>
-              <input type="file" name="file" id="documents" class="hidden" />
-              <div
-                class="w-14 h-14 flex items-center justify-center cursor-pointer rounded-lg border-CBCBCB text-606060 bg-primaryBackground"
-              >
-                <i class="ri-upload-line"></i>
-              </div>
+              <input type="file" name="file" id="documents" multiple />
             </div>
           </div>
 
@@ -95,12 +121,12 @@
             >
               ثبت پاسخ
             </button>
-            <button
+            <a href="/dashboard/questions"
               type="button"
               class="w-full sm:w-1/2 h-12 px-6 bg-disabledButton text-606060 flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             >
               لغو فرایند
-            </button>
+            </a>
           </div>
         </form>
       </main>

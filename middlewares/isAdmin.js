@@ -7,11 +7,11 @@ const isAdmin = async (req, res, next) => {
         const existingUser = await User.findById(userId);
 
         if (!existingUser) {
-            return res.render('./dashboard/question/questions', { title: 'بانک سوالات' });
+            return res.render('./dashboard/question/questions', { title: 'بانک سوالات', questions, text });
         }
 
         if (existingUser.role !== "admin") {
-            return res.render('./dashboard/question/questions', { title: 'بانک سوالات' });
+            return res.render('./dashboard/question/questions', { title: 'بانک سوالات', questions, text });
         }
         next();
     } catch (error) {

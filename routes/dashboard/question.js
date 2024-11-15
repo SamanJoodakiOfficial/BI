@@ -6,13 +6,16 @@ const questionController = require('../../controllers/dashboard/questionControll
 const router = express.Router();
 
 router.get('/', questionController.renderQuestions);
-router.get('/addQuestion', questionController.renderAddQuestion);
-router.post('/addQuestion',
+router.get('/addQuestion', require('../../middlewares/isAdmin'), questionController.renderAddQuestion);
+router.post('/addQuestion', require('../../middlewares/isAdmin'),
     body("text").notEmpty().withMessage("متن سوال اجباری است")
     , questionController.handleAddQuestion);
-router.get('/updateQuestion/:questionId', questionController.renderUpdateQuestion);
-router.post('/updateQuestion/:questionId',
+router.get('/updateQuestion/:questionId', require('../../middlewares/isAdmin'), questionController.renderUpdateQuestion);
+router.post('/updateQuestion/:questionId', require('../../middlewares/isAdmin'),
     body("text").notEmpty().withMessage("متن سوال اجباری است")
     , questionController.handleUpdateQuestion);
-router.get('/deleteQuestion/:questionId', questionController.handleDeleteQuestion);
+router.get('/deleteQuestion/:questionId', require('../../middlewares/isAdmin'), questionController.handleDeleteQuestion);
+
+router.use('/:questionId/responses', require('./response'));
+
 module.exports = router;

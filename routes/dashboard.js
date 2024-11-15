@@ -11,4 +11,7 @@ router.use('/subGroups', require('../middlewares/isAdmin'), require('./dashboard
 // Questions
 router.use('/questions', require('./dashboard/question'));
 
+// Responses
+router.use('/responses', require('../middlewares/isAdmin'), require('./dashboard/responseProtected'));
+
 module.exports = router;

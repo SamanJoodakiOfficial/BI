@@ -52,7 +52,7 @@ exports.handleAddQuestion = async (req, res) => {
 
     try {
         const code = uuidv4();
-        const newQuestion = Question({
+        const newQuestion = new Question({
             groupID: group,
             subGroupID: subGroup,
             userID: userId,

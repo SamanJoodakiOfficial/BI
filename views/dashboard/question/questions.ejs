@@ -13,12 +13,14 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">بانک سوالات</h2>
-          <a
+          <% if (user.role === 'admin') { %>
+            <a
             href="/dashboard/questions/addQuestion"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت سوال جدید</span></a
           >
+          <% } %>
         </header>
 
         <!-- Search Form -->
@@ -84,7 +86,8 @@
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
           >
-            <!-- Question actions -->
+            <% if (user.role === 'admin') { %>
+              <!-- Question actions -->
             <div class="flex items-center gap-4 absolute left-4 sm:left-6">
               <!-- Edit question -->
               <a href="/dashboard/questions/updateQuestion/<%= question._id %>" class="cursor-pointer text-lg text-404040">
@@ -96,6 +99,7 @@
                 <i class="ri-delete-bin-6-line"></i>
               </a>
             </div>
+            <% } %>
 
             <!-- Question details - Group, Sub Group, Text -->
             <div class="flex flex-wrap items-center gap-1">
@@ -122,7 +126,7 @@
               class="flex flex-wrap items-center justify-between gap-2 sm:gap-4"
             >
               <a
-                href="/dashboard/questions/<%= question._id %>/responses"
+                href="/dashboard/questions/<%= question._id %>/responses/addResponse"
                 class="w-full sm:w-auto h-10 px-8 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
               >
                 ثبت پاسخ جدید
