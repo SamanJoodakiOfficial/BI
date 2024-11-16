@@ -23,10 +23,12 @@ exports.handleEditProfile = async (req, res) => {
     const { email, currentPassword, newPassword, confirmNewPassword } = req.body;
     const userId = req.session.userId;
 
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('./dashboard/profile/editPersonalInformation', { title: 'ویرایش کاربر', errors: errors.array() });
+        return res.render('./dashboard/profile/editPersonalInformation', {
+            title: 'ویرایش کاربر',
+            errors: errors.array()
+        });
     }
 
     try {
@@ -34,7 +36,16 @@ exports.handleEditProfile = async (req, res) => {
 
         if (!currentUser) {
             req.flash('error', 'کاربر یافت نشد');
-            return res.redirect('/dashboard/profile/editProfile');
+            return res.redirect('/dashboard/profile');
+        }
+
+        // بررسی وجود ایمیل تکراری
+        const searchUser = await User.findOne({ email, _id: { $ne: userId } });
+        if (searchUser) {
+            return res.render('./dashboard/profile/editPersonalInformation', {
+                title: 'ویرایش اطلاعات کاربری',
+                errors: [{ msg: 'کاربری با این ایمیل از قبل وجود دارد' }]
+            });
         }
 
         if (email) {
@@ -42,7 +53,6 @@ exports.handleEditProfile = async (req, res) => {
         }
 
         const isPasswordCorrect = await bcrypt.compare(currentPassword, currentUser.password);
-
         if (!isPasswordCorrect) {
             return res.render('./dashboard/profile/editPersonalInformation', {
                 title: 'ویرایش اطلاعات کاربری',
@@ -67,6 +77,7 @@ exports.handleEditProfile = async (req, res) => {
         res.redirect('/dashboard/profile');
     } catch (error) {
         console.error(error.message);
-        res.render('/dashboard/profile/editProfile');
+        req.flash('error', 'خطایی رخ داد، لطفاً دوباره تلاش کنید');
+        res.redirect('/dashboard/profile');
     }
 };
