@@ -16,7 +16,7 @@
             کاربران ثبت شده
           </h2>
           <a
-            href="#"
+            href="/dashboard/users/addUser"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت کاربر جدید</span></a
@@ -56,10 +56,41 @@
           </div>
         </form>
 
+        <!-- Errors -->
+        <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+        errors.forEach((error) => { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= error.msg %>
+        </div>
+        <% }) %> <% } %>
+        <!-- Error -->
+        <% if (errorMessage && errorMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= errorMessage %>
+        </div>
+        <% } %>
+
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= successMessage %>
+        </div>
+        <% } %>
+
         <!-- users boxes -->
         <div
           class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         >
+          <% if (users.length >= 1) { %> <% users.forEach((usr) => { %>
           <!-- user Box -->
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
@@ -67,36 +98,48 @@
             <!-- user details -->
             <p class="flex items-center gap-1 text-404040">
               ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
+              <span class="text-primary"><%= usr.email %></span>
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
+              نقش کاربر: <span class="text-primary"><%= usr.role %></span>
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
+              تاریخ ثبت نام:
+              <span class="text-primary"
+                ><%= usr.createdAt.toLocaleDateString('fa-IR') %></span
+              >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
+              تاریخ آخرین بروزرسانی:
+              <span class="text-primary"
+                ><%= usr.updatedAt.toLocaleDateString('fa-IR') %></span
+              >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
+              تعداد پاسخ ثبت شده:
+              <span class="text-primary"><%= usr.responseCount %></span>
+            </p>
+
+            <p class="flex items-center gap-1 text-404040">
+              تعداد سوالات ثبت شده:
+              <span class="text-primary"><%= usr.questionCount %></span>
             </p>
 
             <!-- user actions -->
             <div class="flex items-center gap-2 flex-wrap">
               <a
-                href="#"
+                href="/dashboard/users/updateUser/<%= usr._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
               >
                 ویرایش کاربر
               </a>
 
               <a
-                href="#"
+                href="/dashboard/users/deleteUser/<%= usr._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
               >
                 حذف کاربر
@@ -104,225 +147,9 @@
             </div>
           </div>
 
-          <!-- user Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
-          >
-            <!-- user details -->
-            <p class="flex items-center gap-1 text-404040">
-              ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
-            </p>
-
-            <!-- user actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                ویرایش کاربر
-              </a>
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                حذف کاربر
-              </a>
-            </div>
-          </div>
-
-          <!-- user Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
-          >
-            <!-- user details -->
-            <p class="flex items-center gap-1 text-404040">
-              ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
-            </p>
-
-            <!-- user actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                ویرایش کاربر
-              </a>
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                حذف کاربر
-              </a>
-            </div>
-          </div>
-
-          <!-- user Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
-          >
-            <!-- user details -->
-            <p class="flex items-center gap-1 text-404040">
-              ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
-            </p>
-
-            <!-- user actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                ویرایش کاربر
-              </a>
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                حذف کاربر
-              </a>
-            </div>
-          </div>
-
-          <!-- user Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
-          >
-            <!-- user details -->
-            <p class="flex items-center gap-1 text-404040">
-              ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
-            </p>
-
-            <!-- user actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                ویرایش کاربر
-              </a>
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                حذف کاربر
-              </a>
-            </div>
-          </div>
-
-          <!-- user Box -->
-          <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-4"
-          >
-            <!-- user details -->
-            <p class="flex items-center gap-1 text-404040">
-              ایمیل کاربر:
-              <span class="text-primary">samanjoodakiofficial</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary">ادمین</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تاریخ ثبت نام: <span class="text-primary">1403-03-26</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد پاسخ ثبت شده: <span class="text-primary">10،000</span>
-            </p>
-
-            <p class="flex items-center gap-1 text-404040">
-              تعداد سوالات ثبت شده: <span class="text-primary">200</span>
-            </p>
-
-            <!-- user actions -->
-            <div class="flex items-center gap-2 flex-wrap">
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                ویرایش کاربر
-              </a>
-
-              <a
-                href="#"
-                class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-              >
-                حذف کاربر
-              </a>
-            </div>
-          </div>
+          <% }) } else { %>
+          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <% } %>
         </div>
 
         <footer

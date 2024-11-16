@@ -14,6 +14,9 @@ router.use('/questions', require('./dashboard/question'));
 // Responses
 router.use('/responses', require('../middlewares/isAdmin'), require('./dashboard/responseProtected'));
 
+// Users
+router.use('/users', require('../middlewares/isAdmin'), require('./dashboard/user'));
+
 // Profile
 router.use('/profile', require('./dashboard/profile'));
 

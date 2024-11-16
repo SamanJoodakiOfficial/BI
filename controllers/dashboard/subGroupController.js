@@ -21,7 +21,8 @@ exports.renderAddSubGroup = async (req, res) => {
         const groups = await Group.find({});
 
         if (groups.length <= 0) {
-            return res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها' });
+            req.flash('error', 'ابتدا باید گروه‌ها را اضافه کنید');
+            return res.redirect('/dashboard/groups');
         }
 
         res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه جدید', groups });

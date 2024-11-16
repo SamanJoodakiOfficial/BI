@@ -10,7 +10,6 @@ const flash = require('connect-flash');
 const User = require('./models/User');
 
 const { redirectToDashboardIfLoggedIn } = require('./middlewares/redirectToDashboardIfLoggedIn');
-const { ensureAuthenticated } = require('./middlewares/ensureAuthenticated');
 
 const app = express();
 const port = process.env.PORT || 5000;

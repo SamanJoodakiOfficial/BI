@@ -6,7 +6,7 @@ exports.renderAddResponse = async (req, res) => {
     const questionId = req.params.questionId;
 
     try {
-        const question = await Question.findById(questionId).populate('groupID', 'name').populate('subGroupID', 'name').populate('userID', 'email');
+        const question = await Question.findById(questionId).populate('subGroupID', 'name').populate('userID', 'email');
 
         if (!question) {
             return res.render('./dashboard/question/questions', { title: 'بانک سوالات' });
@@ -28,7 +28,7 @@ exports.handleAddResponse = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const question = await Question.findById(questionId).populate('groupID', 'name').populate('subGroupID', 'name').populate('userID', 'email');
+        const question = await Question.findById(questionId).populate('subGroupID', 'name').populate('userID', 'email');
         return res.render(`./dashboard/response/addResponse`, { title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`, errors: errors.array(), question });
     }
 

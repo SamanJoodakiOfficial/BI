@@ -14,11 +14,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["user", "admin"],
         default: "user"
-    },
-    groups: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Group"
-    }]
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);
