@@ -13,8 +13,8 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            اضافه کردن کاربر جدید توسط <%= user.role %>
-            <p class="text-primary"><%= user.email %></p>
+            اضافه کردن کاربر جدید توسط <%= user.role || 'داده‌ای یافت نشد' %>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 

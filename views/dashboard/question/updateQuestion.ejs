@@ -13,9 +13,9 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> ویرایش سوال <%= question._id %> توسط <%=
-            user.role %>
-            <p class="text-primary"><%= user.email %></p>
+            ویرایش سوال <%= question._id || 'داده‌ای یافت نشد' %> توسط <%=
+            user.role || 'داده‌ای یافت نشد' %>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 
@@ -25,11 +25,11 @@
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
           <h2 class="font-bold text-lg text-202020">
-            ویرایش سوال <%= question._id %>
+            ویرایش سوال <%= question._id || 'داده‌ای یافت نشد' %>
           </h2>
 
           <!-- Errors -->
-          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+          <% var errors = errors || [] %> <% if (errors.length >= 1) { %> <%
           errors.forEach((error) => { %>
           <div
             class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
@@ -38,6 +38,7 @@
             <%= error.msg %>
           </div>
           <% }) %> <% } %>
+
           <!-- Error -->
           <% var error = error || '' %> <% if (error) { %>
           <div
@@ -63,8 +64,8 @@
               >زیرگروه سوال را انتخاب کنید:</label
             >
             <div class="w-full flex flex-col sm:flex-row gap-2">
-              <% var subGroups = subGroups || '' %><% if (subGroups &&
-              subGroups.length > 0) { %>
+              <% var subGroups = subGroups || [] %> <% if (subGroups.length > 0)
+              { %>
               <p class="text-404040 text-xs">زیرگروه:</p>
               <select
                 name="subGroup"
@@ -72,7 +73,7 @@
               >
                 <% subGroups.forEach((subGroup) => { %>
                 <option value="<%= subGroup._id %>">
-                  <%= subGroup.name %>
+                  <%= subGroup.name || 'داده‌ای یافت نشد'%>
                 </option>
                 <% }) %>
               </select>
@@ -91,8 +92,8 @@
               id="text"
               placeholder="متن سوال"
             >
-<%= question.text %></textarea
-            >
+<%= question.text || 'داده‌ای یافت نشد' %>
+            </textarea>
           </div>
 
           <div class="w-full flex flex-col gap-1">
@@ -105,7 +106,7 @@
               name="description"
               id="description"
               placeholder="توضیحات سوال"
-              value="<%= question.description %>"
+              value="<%= question.description || 'داده‌ای یافت نشد' %>"
             />
           </div>
 

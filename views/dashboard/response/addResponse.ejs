@@ -13,9 +13,9 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            اضافه کردن پاسخ جدید برای سوال<%= question._id %> توسط
-            <p><%= user.role%></p>
-            <p class="text-primary"><%= user.email %></p>
+            اضافه کردن پاسخ جدید برای سوال<%= question._id || 'داده‌ای یافت نشد' %> توسط
+            <p><%= user.role || 'داده‌ای یافت نشد'%></p>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 
@@ -24,7 +24,7 @@
           method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-4 justify-start"
         >
-          <h2 class="font-bold text-lg text-202020">پاسخ جدید برای سوال <%= question._id %></h2>
+          <h2 class="font-bold text-lg text-202020">پاسخ جدید برای سوال <%= question._id || 'داده‌ای یافت نشد'%></h2>
 
           <!-- Errors -->
           <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
@@ -61,7 +61,7 @@
               <p class="font-bold">
                 متن سوال:
                 <p class="text-404040 mt-4">
-                  <%= question.text %>
+                  <%= question.text || 'داده‌ای یافت نشد'%>
                   </p>
               </p>
             </div>
@@ -69,12 +69,12 @@
             <div class="bg-slate-300 rounded-lg p-4">
               <div class="flex items-center gap-2">
                 <span class="font-bold">زیرگروه:</span>
-                <p class="text-primary"><%= question.subGroupID.name %></p>
+                <p class="text-primary"><%= question.subGroupID.name || 'داده‌ای یافت نشد' %></p>
               </div>
 
               <div class="flex items-center gap-2">
                 <span class="font-bold">سازنده سوال:</span>
-                <p class="text-primary"><%= question.userID.email %></p>
+                <p class="text-primary"><%= question.userID.email || 'داده‌ای یافت نشد' %></p>
               </div>
             </div>
 

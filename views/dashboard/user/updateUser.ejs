@@ -13,8 +13,8 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            ویرایش کاربر <%= selectedUser.email %> توسط <%= user.role %>
-            <p class="text-primary"><%= user.email %></p>
+            ویرایش کاربر <%= selectedUser.email  || 'داده‌ای یافت نشد'%> توسط <%= user.role || 'داده‌ای یافت نشد' %>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 
@@ -24,8 +24,8 @@
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
           <h2 class="font-bold text-lg text-202020">
-            ویرایش کاربر <%= selectedUser.email %> -
-            <span class="text-primary"><%= selectedUser.role %></span>
+            ویرایش کاربر <%= selectedUser.email || 'داده‌ای یافت نشد' %> -
+            <span class="text-primary"><%= selectedUser.role || 'داده‌ای یافت نشد' %></span>
           </h2>
 
           <!-- Errors -->
@@ -68,7 +68,7 @@
               name="email"
               id="email"
               placeholder="آدرس ایمیل"
-              value="<%= selectedUser.email %>"
+              value="<%= selectedUser.email || 'داده‌ای یافت نشد' %>"
               disabled
             />
           </div>

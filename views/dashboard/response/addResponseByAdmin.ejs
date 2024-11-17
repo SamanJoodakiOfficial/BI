@@ -14,8 +14,8 @@
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
             اضافه کردن پاسخ جدید به یک سوال خاص توسط
-            <p><%= user.role %></p>
-            <p class="text-primary"><%= user.email %></p>
+            <p><%= user.role || 'داده‌ای یافت نشد' %></p>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 

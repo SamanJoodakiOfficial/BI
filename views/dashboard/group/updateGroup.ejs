@@ -13,18 +13,24 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> ویرایش گروه <%= group.name %> توسط <%= user.role %>
-            <p class="text-primary"><%= user.email %></p>
+            <% if (group && group.name) { %> ویرایش گروه <%= group.name %> <% }
+            else { %> گروه نامشخص <% } %> توسط <% if (user && user.role) { %>
+            <%= user.role %> <% } else { %> نقش کاربر نامشخص <% } %>
+            <p class="text-primary">
+              <% if (user && user.email) { %> <%= user.email %> <% } else { %>
+              ایمیل کاربر یافت نشد <% } %>
+            </p>
           </h2>
         </header>
 
         <form
-          action="/dashboard/groups/updateGroup/<% var group = group || '' %><%= group ? group._id : '' %>"
+          action="/dashboard/groups/updateGroup/<%= group && group._id ? group._id : '' %>"
           method="post"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
           <h2 class="font-bold text-lg text-202020">
-            ویرایش گروه <%= group.name %>
+            <% if (group && group.name) { %> ویرایش گروه <%= group.name %> <% }
+            else { %>داده‌ای یافت نشد <% } %>
           </h2>
 
           <!-- Errors -->
@@ -37,26 +43,18 @@
             <%= error.msg %>
           </div>
           <% }) %> <% } %>
-          <!-- Error -->
-          <% var error = error || '' %> <% if (error) { %>
-          <div
-            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-          >
-            <i class="ri-error-warning-line"></i>
-            <%= error %>
-          </div>
-          <% } %>
 
           <!--Success-->
           <% if (successMessage && successMessage.length > 0) { %>
           <div
-            class="w-full min-h-8 mt-4 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+            class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
             <%= successMessage %>
           </div>
           <% } %>
 
+          <!-- Group Name -->
           <div class="w-full flex flex-col gap-1 mt-3">
             <label for="group" class="text-404040 text-xs">نام گروه</label>
             <input
@@ -65,10 +63,11 @@
               name="name"
               id="group"
               placeholder="نام گروه"
-              value="<%= group.name %>"
+              value="<%= group.name || 'داده‌ای یافت نشد' %>"
             />
           </div>
 
+          <!-- Actions -->
           <div
             class="w-full flex flex-col sm:flex-row items-center gap-4 sm:gap-2"
           >

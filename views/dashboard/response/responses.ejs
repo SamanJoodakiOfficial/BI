@@ -33,7 +33,7 @@
                   class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
                   type="text"
                   name="responseScore"
-                  placeholder="تعداد پاسخ ثبت شده: <%= totalResponses %> - بین 0 تا 100 انتخاب کنید برای جست‌و‌جو پاسخ‌ها..."
+                  placeholder="تعداد پاسخ ثبت شده: <%= totalResponses || 'داده‌ای یافت نشد' %> - بین 0 تا 100 انتخاب کنید برای جست‌و‌جو پاسخ‌ها..."
                 />
       
                 <div class="w-full flex flex-col sm:flex-row gap-2">
@@ -172,7 +172,7 @@
       </div>
     <% }) %>
   <% } else { %>
-    <p class="text-lg mt-4 text-primary"><%= text %></p>
+    <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد' %></p>
   <% } %>
 </div>
 

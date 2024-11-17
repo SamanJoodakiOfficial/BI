@@ -33,7 +33,7 @@
             class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
             type="text"
             name="subGroupName"
-            placeholder="جست‌وجو بین <%= totalSubGroups %> زیرگروه ثبت شده..."
+            placeholder="جست‌وجو بین <%= totalSubGroups || 'داده‌ای یافت نشد' %> زیرگروه ثبت شده..."
           />
 
           <div class="w-full flex flex-col sm:flex-row gap-2">
@@ -90,7 +90,9 @@
             <!-- Sub Group Name -->
             <p class="flex items-center gap-1 text-404040">
               نام زیرگروه:
-              <span class="text-primary"><%= subGroup.name %></span>
+              <span class="text-primary"
+                ><%= subGroup.name || 'داده‌ای یافت نشد' %></span
+              >
             </p>
 
             <!-- Group name -->
@@ -130,7 +132,7 @@
             </div>
           </div>
           <% }) } else { %>
-          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد' %></p>
           <% } %>
         </div>
 

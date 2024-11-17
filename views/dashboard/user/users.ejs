@@ -33,7 +33,7 @@
             class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
             type="text"
             name="userEmail"
-            placeholder="جست‌وجو بین <%= totalUsers %> کاربران ثبت نام شده..."
+            placeholder="جست‌وجو بین <%= totalUsers || 'داده‌ای یافت نشد' %> کاربران ثبت نام شده..."
           />
 
           <div class="w-full flex flex-col sm:flex-row gap-2">
@@ -89,35 +89,35 @@
             <!-- user details -->
             <p class="flex items-center gap-1 text-404040">
               ایمیل کاربر:
-              <span class="text-primary"><%= usr.email %></span>
+              <span class="text-primary"><%= usr.email || 'داده‌ای یافت نشد' %></span>
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary"><%= usr.role %></span>
+              نقش کاربر: <span class="text-primary"><%= usr.role || 'داده‌ای یافت نشد' %></span>
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تاریخ ثبت نام:
               <span class="text-primary"
-                ><%= usr.createdAt.toLocaleDateString('fa-IR') %></span
+                ><%= usr.createdAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت نشد' %></span
               >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تاریخ آخرین بروزرسانی:
               <span class="text-primary"
-                ><%= usr.updatedAt.toLocaleDateString('fa-IR') %></span
+                ><%= usr.updatedAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت نشد' %></span
               >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تعداد پاسخ ثبت شده:
-              <span class="text-primary"><%= usr.responseCount %></span>
+              <span class="text-primary"><%= usr.responseCount || 'داده‌ای یافت نشد' %></span>
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تعداد سوالات ثبت شده:
-              <span class="text-primary"><%= usr.questionCount %></span>
+              <span class="text-primary"><%= usr.questionCount || 'داده‌ای یافت نشد' %></span>
             </p>
 
             <!-- user actions -->
@@ -139,7 +139,7 @@
           </div>
 
           <% }) } else { %>
-          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد' %></p>
           <% } %>
         </div>
 

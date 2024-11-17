@@ -14,7 +14,7 @@
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
             ویرایش اطلاعات حساب کاربری
-            <p class="text-primary"><%= user.email %></p>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
 
@@ -24,7 +24,8 @@
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-3"
         >
           <h2 class="font-bold text-lg text-202020">
-            ویرایش اطلاعات <%= user.email %>
+            <% if (user && user.email) { %> ویرایش کاربر <%= user.email %> <% }
+            else { %> داده‌ای یافت نشد <% } %>
           </h2>
 
           <!-- Errors -->
@@ -56,7 +57,7 @@
               name="email"
               id="email"
               placeholder="ایمیل کاربر"
-              value="<%= user.email %>"
+              value="<%= user.email || 'داده‌ای یافت نشد'%>"
             />
           </div>
 

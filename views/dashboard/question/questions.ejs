@@ -33,7 +33,7 @@
             class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
             type="text"
             name="questionText"
-            placeholder="جست‌وجو بین <%= totalQuestions %> سوال ثبت شده..."
+            placeholder="جست‌وجو بین <%= totalQuestions || 'داده‌ای یافت نشد' %> سوال ثبت شده..."
           />
 
           <div class="w-full flex flex-col sm:flex-row gap-2">
@@ -85,7 +85,7 @@
           <div
             class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2"
           >
-            <% if (user.role === 'admin') { %>
+            <% if (user && (user.role === 'admin')) { %>
               <!-- Question actions -->
             <div class="flex items-center gap-4 absolute left-4 sm:left-6">
               <!-- Edit question -->
@@ -105,20 +105,20 @@
               <div class="flex items-center gap-1">
                 گروه:
                 <div class="w-fit text-xs bg-warning p-1 text-white rounded-lg">
-                  <%= question.groupID ? question.groupID.name : 'نام گروه پیدا نشد'%>
+                  <%= question.groupID ? question.groupID.name : 'داده‌ای یافت نشد'%>
                 </div>
               </div>
 
               <div class="flex items-center gap-1">
                 زیرگروه:
                 <div class="w-fit text-xs bg-success p-1 text-white rounded-lg">
-                  <%= question.subGroupID ? question.subGroupID.name : 'نام زیرگروه پیدا نشد'%>
+                  <%= question.subGroupID ? question.subGroupID.name : 'داده‌ای یافت نشد'%>
                 </div>
               </div>
             </div>
 
             <!-- Question text -->
-            <p class="text-404040 text-sm sm:text-base"><%= question.text %></p>
+            <p class="text-404040 text-sm sm:text-base"><%= question.text || 'داده‌ای یافت نشد' %></p>
 
             <!-- Question answer & count of answers -->
             <div
@@ -136,7 +136,7 @@
                 <span
                   class="w-8 h-8 flex items-center justify-center bg-CBCBCB text-606060 rounded-lg"
                 >
-                  <%= question.responseCount %>
+                  <%= question.responseCount || 'داده‌ای یافت نشد' %>
                 </span>
               </div>
             </div>
@@ -176,7 +176,7 @@
 
           </div>
           <% }) } else { %>
-          <p class="text-lg mt-4 text-primary"><%= text %></p>
+          <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد'%></p>
           <% } %>
         </div>
 

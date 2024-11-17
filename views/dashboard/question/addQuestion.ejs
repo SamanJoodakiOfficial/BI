@@ -13,9 +13,12 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            <% var user = user || ''%> اضافه کردن سوال جدید توسط <%= user.role
-            %>
-            <p class="text-primary"><%= user.email %></p>
+            <% if (user && user.role) { %> اضافه کردن سوال جدید توسط <%=
+            user.role %>
+            <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
+            <% } else { %>
+            <span>داده‌ای یافت نشد</span>
+            <% } %>
           </h2>
         </header>
 
@@ -61,8 +64,7 @@
               >زیرگروه سوال را انتخاب کنید:</label
             >
             <div class="w-full flex flex-col sm:flex-row gap-2">
-              <% var subGroups = subGroups || '' %><% if (subGroups &&
-              subGroups.length > 0) { %>
+              <% if (subGroups && subGroups.length > 0) { %>
               <p class="text-404040 text-xs">زیرگروه:</p>
               <select
                 name="subGroup"
@@ -70,7 +72,7 @@
               >
                 <% subGroups.forEach((subGroup) => { %>
                 <option value="<%= subGroup._id %>">
-                  <%= subGroup.name %>
+                  <%= subGroup.name || 'داده‌ای یافت نشد' %>
                 </option>
                 <% }) %>
               </select>
