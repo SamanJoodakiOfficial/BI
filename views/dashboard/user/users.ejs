@@ -25,27 +25,18 @@
 
         <!-- Search form -->
         <form
-          action="#"
+          action="/dashboard/users"
+          method="get"
           class="w-full rounded-lg mt-8 flex flex-col gap-4 items-center justify-end"
         >
           <input
             class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
             type="text"
-            name=""
-            id=""
-            placeholder="جست و جو بین 10،000 کاربر ثبت نام شده"
+            name="userEmail"
+            placeholder="جست‌وجو بین <%= totalUsers %> کاربران ثبت نام شده..."
           />
 
           <div class="w-full flex flex-col sm:flex-row gap-2">
-            <select
-              name="role"
-              class="w-full sm:w-auto border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none"
-            >
-              <option value="user">نقش کاربر</option>
-              <option value="user">کاربر</option>
-              <option value="user">ادمین</option>
-            </select>
-
             <button
               type="submit"
               class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
@@ -152,18 +143,20 @@
           <% } %>
         </div>
 
+        <% if (totalPages > 1) { %>
         <!--Pagination-->
         <footer
           class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
         >
-          <a href="#" class="text-404040">بعدی</a>
-          <a href="#" class="underline text-primary">1</a>
-          <a href="#" class="underline">2</a>
-          <a href="#" class="underline">3</a>
-          <a href="#" class="underline">4</a>
-          <a href="#" class="underline">5</a>
-          <a href="#" class="text-404040">قبلی</a>
+          <% for (let page = 1; page <= totalPages; page++) { %>
+          <a
+            href="?page=<%= page %>&limit=<%= limit %>&userEmail=<%= query %>"
+            class="<%= currentPage === page ? 'text-primary underline' : ''%>"
+            ><%= page %></a
+          >
+          <% } %>
         </footer>
+        <% } %>
       </main>
     </div>
   </body>

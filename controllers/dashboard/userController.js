@@ -6,7 +6,24 @@ const bcrypt = require('bcrypt');
 
 exports.renderUsers = async (req, res) => {
     try {
-        const users = await User.find({});
+        const query = req.query.userEmail;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 2;
+
+        let users;
+        let totalUsers;
+
+        if (query) {
+            users = await User.find({ email: new RegExp(query, 'i') })
+                .skip((page - 1) * limit)
+                .limit(limit);
+            totalUsers = await User.countDocuments({ email: new RegExp(query, 'i') });
+        } else {
+            users = await User.find({})
+                .skip((page - 1) * limit)
+                .limit(limit);;
+            totalUsers = await User.countDocuments({});
+        }
 
         const userStats = await Promise.all(users.map(async (user) => {
             const questionCount = await Question.countDocuments({ userID: user._id });
@@ -24,11 +41,9 @@ exports.renderUsers = async (req, res) => {
             text = 'کاربری یافت نشد';
         }
 
-        res.render('./dashboard/user/users', {
-            title: 'مدیریت کاربران',
-            users: userStats,
-            text
-        });
+        const totalPages = Math.ceil(totalUsers / limit);
+
+        res.render('./dashboard/user/users', { title: 'مدیریت کاربران', users: userStats, text, currentPage: page, query, limit, totalPages, totalUsers });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/users');
