@@ -26,7 +26,7 @@ exports.handleEditProfile = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.render('./dashboard/profile/editPersonalInformation', {
-            title: 'ویرایش کاربر',
+            title: 'ویرایش اطلاعات حساب کاربری',
             errors: errors.array()
         });
     }
@@ -39,11 +39,10 @@ exports.handleEditProfile = async (req, res) => {
             return res.redirect('/dashboard/profile');
         }
 
-        // بررسی وجود ایمیل تکراری
         const searchUser = await User.findOne({ email, _id: { $ne: userId } });
         if (searchUser) {
             return res.render('./dashboard/profile/editPersonalInformation', {
-                title: 'ویرایش اطلاعات کاربری',
+                title: 'ویرایش اطلاعات حساب کاربری',
                 errors: [{ msg: 'کاربری با این ایمیل از قبل وجود دارد' }]
             });
         }
@@ -55,7 +54,7 @@ exports.handleEditProfile = async (req, res) => {
         const isPasswordCorrect = await bcrypt.compare(currentPassword, currentUser.password);
         if (!isPasswordCorrect) {
             return res.render('./dashboard/profile/editPersonalInformation', {
-                title: 'ویرایش اطلاعات کاربری',
+                title: 'ویرایش اطلاعات حساب کاربری',
                 errors: [{ msg: 'رمز عبور فعلی اشتباه است' }]
             });
         }
@@ -63,7 +62,7 @@ exports.handleEditProfile = async (req, res) => {
         if (newPassword) {
             if (newPassword !== confirmNewPassword) {
                 return res.render('./dashboard/profile/editPersonalInformation', {
-                    title: 'ویرایش اطلاعات کاربری',
+                    title: 'ویرایش اطلاعات حساب کاربری',
                     errors: [{ msg: 'رمز عبور جدید و تکرار آن مطابقت ندارند' }]
                 });
             }

@@ -5,11 +5,37 @@ const { validationResult } = require('express-validator');
 
 exports.renderSubGroups = async (req, res) => {
     try {
-        const subGroups = await SubGroup.find({}).populate('groupID', 'name').populate('userID', 'email');
-        let text = '';
-        if (subGroups.length <= 0) { text = 'زیرگروهی یافت نشد'; };
+        const query = req.query.subGroupName;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
 
-        res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها', subGroups, text });
+        let subGroups;
+        let totalSubGroups;
+
+        if (query) {
+            subGroups = await SubGroup.find({ name: new RegExp(query, 'i') })
+                .populate('groupID', 'name')
+                .populate('userID', 'email')
+                .skip((page - 1) * limit)
+                .limit(limit);
+            totalSubGroups = await SubGroup.countDocuments({ name: new RegExp(query, 'i') });
+        } else {
+            subGroups = await SubGroup.find({})
+                .populate('groupID', 'name')
+                .populate('userID', 'email')
+                .skip((page - 1) * limit)
+                .limit(limit);;
+            totalSubGroups = await SubGroup.countDocuments({});
+        }
+
+        let text = '';
+        if (subGroups.length <= 0) {
+            text = 'زیرگروهی یافت نشد';
+        }
+
+        const totalPages = Math.ceil(totalSubGroups / limit);
+
+        res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها', subGroups, text, currentPage: page, query, limit, totalPages, totalSubGroups });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/subGroups');

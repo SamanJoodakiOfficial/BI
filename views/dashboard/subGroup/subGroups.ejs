@@ -23,35 +23,59 @@
           >
         </header>
 
+        <!-- Search form -->
+        <form
+          action="/dashboard/subGroups"
+          method="get"
+          class="w-full rounded-lg mt-8 flex flex-col gap-4 items-center justify-end"
+        >
+          <input
+            class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
+            type="text"
+            name="subGroupName"
+            placeholder="جست‌وجو بین <%= totalSubGroups %> زیرگروه ثبت شده..."
+          />
+
+          <div class="w-full flex flex-col sm:flex-row gap-2">
+            <button
+              type="submit"
+              class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              <i class="ri-search-line"></i>
+              جست و جو
+            </button>
+          </div>
+        </form>
+
         <!-- Errors -->
         <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
-          errors.forEach((error) => { %>
-          <div
-            class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-          >
-            <i class="ri-error-warning-line"></i>
-            <%= error.msg %>
-          </div>
-          <% }) %> <% } %>
-          <!-- Error -->
-           <% if (errorMessage && errorMessage.length > 0) { %>
-          <div
-            class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-          >
-            <i class="ri-error-warning-line"></i>
-            <%= errorMessage %>
-          </div>
-          <% } %>
-  
-          <!--Success-->
-          <% if (successMessage && successMessage.length > 0) { %>
-          <div
-            class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
-          >
-            <i class="ri-error-warning-line"></i>
-            <%= successMessage %>
-          </div>
-          <% } %>
+        errors.forEach((error) => { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= error.msg %>
+        </div>
+        <% }) %> <% } %>
+        <!-- Error -->
+        <% if (errorMessage && errorMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= errorMessage %>
+        </div>
+        <% } %>
+
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= successMessage %>
+        </div>
+        <% } %>
 
         <!-- Sub Group Boxes -->
         <div
@@ -72,7 +96,9 @@
             <!-- Group name -->
             <p class="flex items-center gap-1 text-404040">
               نام گروه: <% if (subGroup.groupID) { %>
-              <span class="text-primary"><%= subGroup.groupID.name %></span>
+              <span class="text-primary"
+                ><%= subGroup.groupID.name || 'داده‌ای یافت نشد' %></span
+              >
               <% } else { %>
               <span class="text-secondary">بدون گروه</span>
               <% } %>
@@ -80,8 +106,12 @@
 
             <!-- User name -->
             <p class="flex items-center gap-1 text-404040">
-              نام سازنده زیرگروه:
+              نام سازنده زیرگروه: <% if (subGroup.userID &&
+              subGroup.userID.email) { %>
               <span class="text-primary"><%= subGroup.userID.email %></span>
+              <% } else { %>
+              <span class="text-primary">داده‌ای یافت نشد</span>
+              <% } %>
             </p>
 
             <!-- Sub Group actions -->
@@ -103,6 +133,21 @@
           <p class="text-lg mt-4 text-primary"><%= text %></p>
           <% } %>
         </div>
+
+        <% if (totalPages > 1) { %>
+        <!--Pagination-->
+        <footer
+          class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
+        >
+          <% for (let page = 1; page <= totalPages; page++) { %>
+          <a
+            href="?page=<%= page %>&limit=<%= limit %>&subGroupName=<%= query %>"
+            class="<%= currentPage === page ? 'text-primary underline' : ''%>"
+            ><%= page %></a
+          >
+          <% } %>
+        </footer>
+        <% } %>
       </main>
     </div>
   </body>

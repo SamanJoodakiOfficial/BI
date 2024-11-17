@@ -4,13 +4,35 @@ const { validationResult } = require('express-validator');
 
 exports.renderGroups = async (req, res) => {
     try {
-        const groups = await Group.find({}).populate('userID', 'email');
+        const query = req.query.groupName;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        let groups;
+        let totalGroups;
+
+        if (query) {
+            groups = await Group.find({ name: new RegExp(query, 'i') })
+                .populate('userID', 'email')
+                .skip((page - 1) * limit)
+                .limit(limit);
+            totalGroups = await Group.countDocuments({ name: new RegExp(query, 'i') });
+        } else {
+            groups = await Group.find({})
+                .populate('userID', 'email')
+                .skip((page - 1) * limit)
+                .limit(limit);;
+            totalGroups = await Group.countDocuments({});
+        }
+
         let text = '';
         if (groups.length <= 0) {
             text = 'گروهی یافت نشد';
         }
 
-        res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها', groups, text });
+        const totalPages = Math.ceil(totalGroups / limit);
+
+        res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها', groups, text, currentPage: page, query, limit, totalPages, totalGroups });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/groups');

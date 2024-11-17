@@ -23,6 +23,30 @@
           >
         </header>
 
+        <!-- Search form -->
+        <form
+          action="/dashboard/groups"
+          method="get"
+          class="w-full rounded-lg mt-8 flex flex-col gap-4 items-center justify-end"
+        >
+          <input
+            class="w-full h-10 lg:h-12 border rounded-lg border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary text-right outline-none px-4"
+            type="text"
+            name="groupName"
+            placeholder="جست‌وجو بین <%= totalGroups %> گروه ثبت شده..."
+          />
+
+          <div class="w-full flex flex-col sm:flex-row gap-2">
+            <button
+              type="submit"
+              class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              <i class="ri-search-line"></i>
+              جست و جو
+            </button>
+          </div>
+        </form>
+
         <!-- Errors -->
         <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
         errors.forEach((error) => { %>
@@ -95,6 +119,19 @@
           <p class="text-lg mt-4 text-primary"><%= text %></p>
           <% } %>
         </div>
+
+        <% if (totalPages > 1) { %>
+        <!--Pagination-->
+        <footer
+          class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
+        >
+          <% for (let page = 1; page <= totalPages; page++) { %>
+          <a href="?page=<%= page %>&limit=<%= limit %>&groupName=<%= query %>"
+            class="<%= currentPage === page ? 'text-primary underline' : ''%>"><%= page %></a
+          >
+          <% } %>
+        </footer>
+        <% } %>
       </main>
     </div>
   </body>
