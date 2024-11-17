@@ -87,8 +87,5 @@ exports.generateReport = async () => {
             : null;
     });
 
-    console.log(report);
-
-
     return report;
 }; 

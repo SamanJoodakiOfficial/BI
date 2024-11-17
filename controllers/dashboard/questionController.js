@@ -106,12 +106,13 @@ exports.handleAddQuestion = async (req, res) => {
     }
 
     try {
-        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id');
+        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id name');
 
-        if (!subGroup) {
-            req.flash('error', 'گروه و زیرگروه تطابق ندارند');
+        if (!subgroup || !subgroup.groupID) {
+            req.flash('error', 'این زیرگروه فعلاً به گروهی متصل نیست.');
             return res.redirect('/dashboard/questions');
         }
+
         const code = uuidv4();
         const newQuestion = new Question({
             groupID: subgroup.groupID._id,
@@ -123,10 +124,12 @@ exports.handleAddQuestion = async (req, res) => {
         });
 
         await newQuestion.save();
+
         req.flash('success', `سوال ${text} با موفقیت ثبت شد`);
         res.redirect('/dashboard/questions/addQuestion');
     } catch (error) {
         console.error(error.message);
+        req.flash('error', 'خطای داخلی سرور. لطفاً دوباره تلاش کنید.');
         res.redirect('/dashboard/questions/addQuestion');
     }
 };
@@ -172,10 +175,10 @@ exports.handleUpdateQuestion = async (req, res) => {
     }
 
     try {
-        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id');
+        const subgroup = await SubGroup.findOne({ _id: subGroup }).populate('groupID', '_id name');
 
-        if (!subGroup) {
-            req.flash('error', 'گروه و زیرگروه تطابق ندارند');
+        if (!subgroup || !subgroup.groupID) {
+            req.flash('error', 'این زیرگروه فعلاً به گروهی متصل نیست.');
             return res.redirect('/dashboard/questions');
         }
 

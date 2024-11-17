@@ -11,7 +11,7 @@ exports.handleRegister = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('./auth/register', { title: 'ثبت نام', errors: errors.array() });
+        return res.render('./auth/register', { title: 'ثبت نام', errors: errors.array(), filled: req.body });
     }
 
     try {
@@ -40,7 +40,7 @@ exports.handleRegister = async (req, res) => {
 };
 
 exports.renderLogin = async (req, res) => {
-    res.render('./auth/login', { title: 'ورود کاربر' });
+    res.render('./auth/login', { title: 'ورود کاربر', });
 };
 
 exports.handleLogin = async (req, res) => {
@@ -48,7 +48,7 @@ exports.handleLogin = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('./auth/login', { title: 'ورود کاربر', errors: errors.array() });
+        return res.render('./auth/login', { title: 'ورود کاربر', errors: errors.array(), filled: req.body });
     }
 
     try {

@@ -27,7 +27,9 @@
               </div>
               <div class="flex flex-col gap-1 items-center">
                 <span>تعداد کاربران</span>
-                <p class="text-404040 text-bold text-3xl">10</p>
+                <p class="text-404040 text-bold text-1xl">
+                  <%= statistics.users || 'داده‌ای یافت نشد' %>
+                </p>
               </div>
             </div>
 
@@ -41,7 +43,9 @@
               </div>
               <div class="flex flex-col gap-1 items-center">
                 <span>تعداد گروه‌ها</span>
-                <p class="text-404040 text-bold text-3xl">10</p>
+                <p class="text-404040 text-bold text-1xl">
+                  <%= statistics.groups || 'داده‌ای یافت نشد' %>
+                </p>
               </div>
             </div>
 
@@ -55,7 +59,9 @@
               </div>
               <div class="flex flex-col gap-1 items-center">
                 <span>تعداد زیرگروه‌ها</span>
-                <p class="text-404040 text-bold text-3xl">10</p>
+                <p class="text-404040 text-bold text-1xl">
+                  <%= statistics.subGroups || 'داده‌ای یافت نشد' %>
+                </p>
               </div>
             </div>
 
@@ -69,7 +75,9 @@
               </div>
               <div class="flex flex-col gap-1 items-center">
                 <span>تعداد سوالات</span>
-                <p class="text-404040 text-bold text-3xl">10</p>
+                <p class="text-404040 text-bold text-1xl">
+                  <%= statistics.questions || 'داده‌ای یافت نشد' %>
+                </p>
               </div>
             </div>
 
@@ -83,7 +91,9 @@
               </div>
               <div class="flex flex-col gap-1 items-center">
                 <span>تعداد پاسخ‌ها</span>
-                <p class="text-404040 text-bold text-3xl">10</p>
+                <p class="text-404040 text-bold text-1xl">
+                  <%= statistics.responses || 'داده‌ای یافت نشد' %>
+                </p>
               </div>
             </div>
           </div>
@@ -122,117 +132,198 @@
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4">
           <div
-            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+            class="w-full min-h-[200px] relative flex justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
           >
-            <h3 class="text-404040">گروه: امنیت</h3>
-
+            <% if (report && report.length > 0) { %>
+            <h2 class="text-primary text-3xl text-bold">نمایش نمودار</h2>
             <ul class="mt-4 flex flex-col gap-4">
-              <li class="bg-slate-300 text-606060 rounded-xl p-4">
-                زیرگروه: امنیت شبکه
+              <% report.forEach(item => { %>
+              <h3 class="text-202020">
+                گروه: <%= item._id.groupName || 'داده‌ای یافت نشد' %>
+              </h3>
+              <li class="bg-slate-300 text-202020 rounded-xl p-4">
+                زیرگروه: <%= item._id.subGroupName || 'داده‌ای یافت نشد' %>
+
                 <ul class="mt-6 bg-slate-400 p-2 rounded-xl">
-                  <li>
-                    تعداد بله ( 1 - 100 ):
-                    <span class="text-404040"> 100 بله </span>
+                  <li class="flex gap-1 items-center">
+                    <i class="ri-information-line text-primary"></i>تعداد بله:
+                    <span class="text-404040">
+                      <%= item.totalYes || '0' %> بله
+                    </span>
                   </li>
-                  <li>
-                    تعداد خیر ( 0 ): <span class="text-404040"> 100 خیر </span>
+                  <li class="flex gap-1 items-center">
+                    <i class="ri-information-line text-primary"></i> تعداد خیر:
+                    <span class="text-404040">
+                      <%= item.totalNo || '0' %> خیر
+                    </span>
                   </li>
-                  <li>
-                    میانگین خیر ( 0 ):
-                    <span class="text-404040"> عدد میانگین </span>
+                  <li class="flex gap-1 items-center">
+                    <i class="ri-information-line text-primary"></i>میانگین خیر:
+                    <span class="text-404040">
+                      <%= item.totalNo === 0 ? '0' : item.avgNoScore || '0' %>
+                      میانگین
+                    </span>
                   </li>
-                  <li>
-                    میانگین بله ( 0 ):
-                    <span class="text-404040"> عدد میانگین </span>
+                  <li class="flex gap-1 items-center">
+                    <i class="ri-information-line text-primary"></i>میانگین بله
+                    :
+                    <span class="text-404040">
+                      <%= item.avgYesScore || '0' %> میانگین
+                    </span>
                   </li>
                 </ul>
 
-                <div class="w-full flex flex-col">
-                  <canvas id="myChart" width="50" height="50"></canvas>
-                  <canvas id="myChart2" width="50" height="50"></canvas>
+                <div
+                  class="chart-container grid sm:w-full md:grid-cols-2 items-center bg-slate-200 rounded-xl mt-4"
+                >
+                  <div class="chart-box">
+                    <canvas
+                      id="chartYes-<%= item._id.subGroupName.replace(/ /g, '') %>"
+                      width="200"
+                      height="100"
+                    ></canvas>
+                  </div>
+
+                  <div class="chart-box">
+                    <canvas
+                      id="chartPie-<%= item._id.subGroupName.replace(/ /g, '') %>"
+                      width="200"
+                      height="100"
+                    ></canvas>
+                  </div>
+
+                  <div class="chart-box">
+                    <canvas
+                      id="chartLine-<%= item._id.subGroupName.replace(/ /g, '') %>"
+                      width="200"
+                      height="100"
+                    ></canvas>
+                  </div>
+
+                  <div class="chart-box">
+                    <canvas
+                      id="chartStacked-<%= item._id.subGroupName.replace(/ /g, '') %>"
+                      width="200"
+                      height="100"
+                    ></canvas>
+                  </div>
                 </div>
+
+                <script>
+                  const yesData_<%= item._id.subGroupName.replace(/ /g, '') %> = <%= JSON.stringify(item.totalYes || 0) %>;
+                  const noData_<%= item._id.subGroupName.replace(/ /g, '') %> = <%= JSON.stringify(item.totalNo || 0) %>;
+                  const avgYesData_<%= item._id.subGroupName.replace(/ /g, '') %> = <%= JSON.stringify(item.avgYesScore || 0) %>;
+                  const avgNoData_<%= item._id.subGroupName.replace(/ /g, '') %> = <%= JSON.stringify(item.avgNoScore || 0) %>;
+
+                  const ctxYes_<%= item._id.subGroupName.replace(/ /g, '') %> = document.getElementById('chartYes-<%= item._id.subGroupName.replace(/ /g, '') %>').getContext('2d');
+                  new Chart(ctxYes_<%= item._id.subGroupName.replace(/ /g, '') %>, {
+                    type: 'bar',
+                    data: {
+                      labels: ['بله'],
+                      datasets: [{
+                        label: 'تعداد بله',
+                        data: [yesData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                      }]
+                    },
+                    options: {
+                      scales: {
+                        y: { beginAtZero: true }
+                      }
+                    }
+                  });
+
+                  const ctxPie_<%= item._id.subGroupName.replace(/ /g, '') %> = document.getElementById('chartPie-<%= item._id.subGroupName.replace(/ /g, '') %>').getContext('2d');
+                  new Chart(ctxPie_<%= item._id.subGroupName.replace(/ /g, '') %>, {
+                    type: 'pie',
+                    data: {
+                      labels: ['بله', 'خیر'],
+                      datasets: [{
+                        label: 'نسبت بله و خیر',
+                        data: [yesData_<%= item._id.subGroupName.replace(/ /g, '') %>, noData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1
+                      }]
+                    },
+                    options: {
+                      responsive: true
+                    }
+                  });
+
+                  const ctxLine_<%= item._id.subGroupName.replace(/ /g, '') %> = document.getElementById('chartLine-<%= item._id.subGroupName.replace(/ /g, '') %>').getContext('2d');
+                  new Chart(ctxLine_<%= item._id.subGroupName.replace(/ /g, '') %>, {
+                    type: 'line',
+                    data: {
+                      labels: ['میانگین'],
+                      datasets: [
+                        {
+                          label: 'میانگین بله',
+                          data: [avgYesData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                          fill: false,
+                          borderColor: 'rgba(75, 192, 192, 1)',
+                          tension: 0.1
+                        },
+                        {
+                          label: 'میانگین خیر',
+                          data: [avgNoData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                          fill: false,
+                          borderColor: 'rgba(255, 99, 132, 1)',
+                          tension: 0.1
+                        }
+                      ]
+                    },
+                    options: {
+                      responsive: true
+                    }
+                  });
+
+                  const ctxStacked_<%= item._id.subGroupName.replace(/ /g, '') %> = document.getElementById('chartStacked-<%= item._id.subGroupName.replace(/ /g, '') %>').getContext('2d');
+                  new Chart(ctxStacked_<%= item._id.subGroupName.replace(/ /g, '') %>, {
+                    type: 'bar',
+                    data: {
+                      labels: ['بله/خیر'],
+                      datasets: [
+                        {
+                          label: 'بله',
+                          data: [yesData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                          borderColor: 'rgba(75, 192, 192, 1)',
+                          borderWidth: 1,
+                          stack: 'stack1'
+                        },
+                        {
+                          label: 'خیر',
+                          data: [noData_<%= item._id.subGroupName.replace(/ /g, '') %>],
+                          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                          borderColor: 'rgba(255, 99, 132, 1)',
+                          borderWidth: 1,
+                          stack: 'stack1'
+                        }
+                      ]
+                    },
+                    options: {
+                      scales: {
+                        x: {
+                          stacked: true
+                        },
+                        y: {
+                          stacked: true
+                        }
+                      }
+                    }
+                  });
+                </script>
               </li>
-              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 2</li>
-              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 3</li>
-              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 4</li>
-              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 5</li>
             </ul>
+            <% }) } else { %>
+            <p class="text-lg mt-4 text-primary"><%= 'داده‌ای یافت نشد'%></p>
+            <% } %>
           </div>
         </div>
       </main>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-      const data = {
-        groups: [
-          {
-            name: "Group 1",
-            subgroups: [
-              {
-                name: "Subgroup 1",
-                questions: [
-                  {
-                    question: "What is your favorite color?",
-                    answers: ["Red", "Blue", "Green", "Yellow"],
-                    votes: [10, 20, 15, 5], // تعداد رای‌های هر پاسخ
-                  },
-                  {
-                    question: "What is your favorite fruit?",
-                    answers: ["Apple", "Banana", "Orange", "Grapes"],
-                    votes: [5, 15, 25, 10],
-                  },
-                ],
-              },
-              {
-                name: "Subgroup 2",
-                questions: [
-                  {
-                    question: "What is your favorite season?",
-                    answers: ["Spring", "Summer", "Autumn", "Winter"],
-                    votes: [20, 10, 15, 5],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      };
-
-      // مثال نمایش داده‌ها در چارت
-      const ctx1 = document.getElementById("myChart").getContext("2d");
-      const ctx2 = document.getElementById("myChart2").getContext("2d");
-
-      // نمایش چارت برای سوال اول از گروه اول
-      const question1 = data.groups[0].subgroups[0].questions[0];
-      new Chart(ctx1, {
-        type: "bar",
-        data: {
-          labels: question1.answers, // پاسخ‌ها
-          datasets: [
-            {
-              label: question1.question, // سوال
-              data: question1.votes, // رای‌ها
-              backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0"],
-            },
-          ],
-        },
-      });
-
-      // نمایش چارت برای سوال دوم از گروه اول
-      const question2 = data.groups[0].subgroups[0].questions[1];
-      new Chart(ctx2, {
-        type: "pie",
-        data: {
-          labels: question2.answers, // پاسخ‌ها
-          datasets: [
-            {
-              data: question2.votes, // رای‌ها
-              backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0"],
-            },
-          ],
-        },
-      });
-    </script>
   </body>
 </html>
