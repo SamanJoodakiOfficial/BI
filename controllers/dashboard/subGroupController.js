@@ -17,14 +17,18 @@ exports.renderSubGroups = async (req, res) => {
                 .populate('groupID', 'name')
                 .populate('userID', 'email')
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalSubGroups = await SubGroup.countDocuments({ name: new RegExp(query, 'i') });
         } else {
             subGroups = await SubGroup.find({})
                 .populate('groupID', 'name')
                 .populate('userID', 'email')
                 .skip((page - 1) * limit)
-                .limit(limit);;
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalSubGroups = await SubGroup.countDocuments({});
         }
 

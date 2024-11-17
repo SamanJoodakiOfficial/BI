@@ -2,6 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
+router.use('/bi', require('./dashboard/bi'));
+
 // Groups
 router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
 

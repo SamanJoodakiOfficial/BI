@@ -24,8 +24,10 @@ exports.renderResponses = async (req, res) => {
                     ]
                 })
                 .skip((page - 1) * limit)
-                .limit(limit);
-            totalResponses = await Response.countDocuments({ score: query});
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
+            totalResponses = await Response.countDocuments({ score: query });
         } else {
             responses = await Response.find({})
                 .populate('userID', 'email')
@@ -38,7 +40,9 @@ exports.renderResponses = async (req, res) => {
                     ]
                 })
                 .skip((page - 1) * limit)
-                .limit(limit);;
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalResponses = await Response.countDocuments({});
         }
 

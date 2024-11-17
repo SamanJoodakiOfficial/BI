@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <%- include("../../partials/head") %>
+
+  <body class="bg-primaryBackground">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../../partials/sidebar.ejs') %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 lg:p-6">
+        <header class="w-full flex flex-col">
+          <h2 class="font-bold text-202020 text-lg lg:text-xl">
+            داشبورد هوش تجاری
+          </h2>
+
+          <div
+            class="w-full grid items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            <div
+              class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2 items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 bg-primary ring-8 text-white rounded-xl flex items-center justify-center"
+              >
+                <i class="ri-group-line"></i>
+              </div>
+              <div class="flex flex-col gap-1 items-center">
+                <span>تعداد کاربران</span>
+                <p class="text-404040 text-bold text-3xl">10</p>
+              </div>
+            </div>
+
+            <div
+              class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2 items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 bg-primary ring-8 text-white rounded-xl flex items-center justify-center"
+              >
+                <i class="ri-group-2-line"></i>
+              </div>
+              <div class="flex flex-col gap-1 items-center">
+                <span>تعداد گروه‌ها</span>
+                <p class="text-404040 text-bold text-3xl">10</p>
+              </div>
+            </div>
+
+            <div
+              class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2 items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 bg-primary ring-8 text-white rounded-xl flex items-center justify-center"
+              >
+                <i class="ri-user-community-line"></i>
+              </div>
+              <div class="flex flex-col gap-1 items-center">
+                <span>تعداد زیرگروه‌ها</span>
+                <p class="text-404040 text-bold text-3xl">10</p>
+              </div>
+            </div>
+
+            <div
+              class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2 items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 bg-primary ring-8 text-white rounded-xl flex items-center justify-center"
+              >
+                <i class="ri-database-line"></i>
+              </div>
+              <div class="flex flex-col gap-1 items-center">
+                <span>تعداد سوالات</span>
+                <p class="text-404040 text-bold text-3xl">10</p>
+              </div>
+            </div>
+
+            <div
+              class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto flex flex-col gap-2 items-center justify-center"
+            >
+              <div
+                class="w-10 h-10 bg-primary ring-8 text-white rounded-xl flex items-center justify-center"
+              >
+                <i class="ri-chat-1-line"></i>
+              </div>
+              <div class="flex flex-col gap-1 items-center">
+                <span>تعداد پاسخ‌ها</span>
+                <p class="text-404040 text-bold text-3xl">10</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Errors -->
+        <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+        errors.forEach((error) => { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= error.msg %>
+        </div>
+        <% }) %> <% } %>
+        <!-- Error -->
+        <% if (errorMessage && errorMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= errorMessage %>
+        </div>
+        <% } %>
+
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= successMessage %>
+        </div>
+        <% } %>
+
+        <!-- BI Details -->
+        <div class="w-full grid items-center grid-cols-1 gap-4">
+          <div
+            class="w-full min-h-[200px] relative bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+          >
+            <h3 class="text-404040">گروه: امنیت</h3>
+
+            <ul class="mt-4 flex flex-col gap-4">
+              <li class="bg-slate-300 text-606060 rounded-xl p-4">
+                زیرگروه: امنیت شبکه
+                <ul class="mt-6 bg-slate-400 p-2 rounded-xl">
+                  <li>
+                    تعداد بله ( 1 - 100 ):
+                    <span class="text-404040"> 100 بله </span>
+                  </li>
+                  <li>
+                    تعداد خیر ( 0 ): <span class="text-404040"> 100 خیر </span>
+                  </li>
+                  <li>
+                    میانگین خیر ( 0 ):
+                    <span class="text-404040"> عدد میانگین </span>
+                  </li>
+                  <li>
+                    میانگین بله ( 0 ):
+                    <span class="text-404040"> عدد میانگین </span>
+                  </li>
+                </ul>
+
+                <div class="w-full flex flex-col">
+                  <canvas id="myChart" width="50" height="50"></canvas>
+                  <canvas id="myChart2" width="50" height="50"></canvas>
+                </div>
+              </li>
+              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 2</li>
+              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 3</li>
+              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 4</li>
+              <li class="bg-primary text-white rounded-xl p-4">زیرگروه 5</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const data = {
+        groups: [
+          {
+            name: "Group 1",
+            subgroups: [
+              {
+                name: "Subgroup 1",
+                questions: [
+                  {
+                    question: "What is your favorite color?",
+                    answers: ["Red", "Blue", "Green", "Yellow"],
+                    votes: [10, 20, 15, 5], // تعداد رای‌های هر پاسخ
+                  },
+                  {
+                    question: "What is your favorite fruit?",
+                    answers: ["Apple", "Banana", "Orange", "Grapes"],
+                    votes: [5, 15, 25, 10],
+                  },
+                ],
+              },
+              {
+                name: "Subgroup 2",
+                questions: [
+                  {
+                    question: "What is your favorite season?",
+                    answers: ["Spring", "Summer", "Autumn", "Winter"],
+                    votes: [20, 10, 15, 5],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      // مثال نمایش داده‌ها در چارت
+      const ctx1 = document.getElementById("myChart").getContext("2d");
+      const ctx2 = document.getElementById("myChart2").getContext("2d");
+
+      // نمایش چارت برای سوال اول از گروه اول
+      const question1 = data.groups[0].subgroups[0].questions[0];
+      new Chart(ctx1, {
+        type: "bar",
+        data: {
+          labels: question1.answers, // پاسخ‌ها
+          datasets: [
+            {
+              label: question1.question, // سوال
+              data: question1.votes, // رای‌ها
+              backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0"],
+            },
+          ],
+        },
+      });
+
+      // نمایش چارت برای سوال دوم از گروه اول
+      const question2 = data.groups[0].subgroups[0].questions[1];
+      new Chart(ctx2, {
+        type: "pie",
+        data: {
+          labels: question2.answers, // پاسخ‌ها
+          datasets: [
+            {
+              data: question2.votes, // رای‌ها
+              backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0"],
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>

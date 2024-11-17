@@ -15,13 +15,17 @@ exports.renderGroups = async (req, res) => {
             groups = await Group.find({ name: new RegExp(query, 'i') })
                 .populate('userID', 'email')
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalGroups = await Group.countDocuments({ name: new RegExp(query, 'i') });
         } else {
             groups = await Group.find({})
                 .populate('userID', 'email')
                 .skip((page - 1) * limit)
-                .limit(limit);;
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalGroups = await Group.countDocuments({});
         }
 

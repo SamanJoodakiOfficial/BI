@@ -16,12 +16,16 @@ exports.renderUsers = async (req, res) => {
         if (query) {
             users = await User.find({ email: new RegExp(query, 'i') })
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalUsers = await User.countDocuments({ email: new RegExp(query, 'i') });
         } else {
             users = await User.find({})
                 .skip((page - 1) * limit)
-                .limit(limit);;
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalUsers = await User.countDocuments({});
         }
 

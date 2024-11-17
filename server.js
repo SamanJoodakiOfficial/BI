@@ -76,7 +76,6 @@ app.use(async (req, res, next) => {
     next();
 });
 
-
 // Dashboard routes
 app.use('/dashboard', redirectToDashboardIfLoggedIn, require('./routes/dashboard'));
 

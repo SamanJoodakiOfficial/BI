@@ -25,7 +25,9 @@ exports.renderQuestions = async (req, res) => {
                 .populate('subGroupID', 'name')
                 .populate('userID', 'name')
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalQuestions = await Question.countDocuments({ name: new RegExp(query, 'i') });
         } else {
             questions = await Question.find({})
@@ -33,7 +35,9 @@ exports.renderQuestions = async (req, res) => {
                 .populate('subGroupID', 'name')
                 .populate('userID', 'name')
                 .skip((page - 1) * limit)
-                .limit(limit);;
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                .exec();
             totalQuestions = await Question.countDocuments({});
         }
 
