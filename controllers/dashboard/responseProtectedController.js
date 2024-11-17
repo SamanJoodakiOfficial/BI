@@ -5,23 +5,51 @@ const { validationResult } = require('express-validator');
 
 exports.renderResponses = async (req, res) => {
     try {
-        const responses = await Response.find({})
-            .populate('userID', 'email')
-            .populate({
-                path: 'questionID',
-                populate: [
-                    { path: 'groupID', select: 'name' },
-                    { path: 'subGroupID', select: 'name' },
-                    { path: 'userID', select: 'email' }
-                ]
-            });
+        const query = parseFloat(req.query.responseScore);
+        const page = parseFloat(req.query.page) || 1;
+        const limit = parseFloat(req.query.limit) || 10;
+
+        let responses;
+        let totalResponses;
+
+        if (query) {
+            responses = await Response.find({ score: query })
+                .populate('userID', 'email')
+                .populate({
+                    path: 'questionID',
+                    populate: [
+                        { path: 'groupID', select: 'name' },
+                        { path: 'subGroupID', select: 'name' },
+                        { path: 'userID', select: 'email' }
+                    ]
+                })
+                .skip((page - 1) * limit)
+                .limit(limit);
+            totalResponses = await Response.countDocuments({ score: query});
+        } else {
+            responses = await Response.find({})
+                .populate('userID', 'email')
+                .populate({
+                    path: 'questionID',
+                    populate: [
+                        { path: 'groupID', select: 'name' },
+                        { path: 'subGroupID', select: 'name' },
+                        { path: 'userID', select: 'email' }
+                    ]
+                })
+                .skip((page - 1) * limit)
+                .limit(limit);;
+            totalResponses = await Response.countDocuments({});
+        }
 
         let text = '';
         if (responses.length <= 0) {
             text = 'پاسخی یافت نشد';
         }
 
-        res.render('./dashboard/response/responses', { title: 'مدیریت پاسخ‌ها', responses, text });
+        const totalPages = Math.ceil(totalResponses / limit);
+
+        res.render('./dashboard/response/responses', { title: 'مدیریت پاسخ‌ها', responses, text, currentPage: page, query, limit, totalPages, totalResponses });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/responses');

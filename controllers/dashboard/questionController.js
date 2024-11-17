@@ -12,7 +12,30 @@ exports.renderQuestions = async (req, res) => {
     const userId = req.session.userId;
 
     try {
-        const questions = await Question.find({}).populate('groupID', 'name').populate('subGroupID', 'name').populate('userID', 'name');
+        const query = req.query.questionName;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        let questions;
+        let totalQuestions;
+
+        if (query) {
+            questions = await Question.find({ name: new RegExp(query, 'i') })
+                .populate('groupID', 'name')
+                .populate('subGroupID', 'name')
+                .populate('userID', 'name')
+                .skip((page - 1) * limit)
+                .limit(limit);
+            totalQuestions = await Question.countDocuments({ name: new RegExp(query, 'i') });
+        } else {
+            questions = await Question.find({})
+                .populate('groupID', 'name')
+                .populate('subGroupID', 'name')
+                .populate('userID', 'name')
+                .skip((page - 1) * limit)
+                .limit(limit);;
+            totalQuestions = await Question.countDocuments({});
+        }
 
         if (questions.length >= 1) {
             for (let question of questions) {
@@ -33,10 +56,12 @@ exports.renderQuestions = async (req, res) => {
 
         let text = '';
         if (questions.length <= 0) {
-            text = 'سوالی یافت نشد';
+            text = 'گروهی یافت نشد';
         }
 
-        res.render('./dashboard/question/questions', { title: 'بانک سوالات', questions, text });
+        const totalPages = Math.ceil(totalQuestions / limit);
+
+        res.render('./dashboard/question/questions', { title: 'بانک سوالات', questions, text, currentPage: page, query, limit, totalPages, totalQuestions });
     } catch (error) {
         console.error(error.message);
         res.redirect('/dashboard/questions');
