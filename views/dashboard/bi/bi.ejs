@@ -132,18 +132,69 @@
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4">
           <div
-            class="w-full min-h-[200px] relative flex justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+            class="w-full min-h-[200px] relative flex flex-col justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+          >
+            <h2 class="text-primary text-2xl text-bold">نمایش جدول</h2>
+            <table
+              class="w-full bg-white border mt-8 p-4 overflow-auto border-CBCBCB border-collapse text-sm --odd:bg-white even:bg-slate-100 [&:nth-child(odd)]:bg-gray-400"
+            >
+              <thead>
+                <tr class="bg-primary text-white text-center font-bold">
+                  <th class="px-3 py-4 text-center">نام گروه</th>
+                  <th class="px-3 py-4 text-center">نام زیرگروه</th>
+                  <th class="px-3 py-4 text-center">تعداد سوالات</th>
+                  <th class="px-3 py-4 text-center">تعداد جواب (بله)</th>
+                  <th class="px-3 py-4 text-center">تعداد جواب (خیر)</th>
+                  <th class="px-3 py-4 text-center">میانگین جواب‌های (بله)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (report && report.length > 0) { report.forEach((item) => {
+                %>
+                <tr class="border-b-2 border-b-ADADAD">
+                  <td class="px-3 py-4 text-center">
+                    <%= item._id.groupName || 'داده‌ای یافت نشد' %>
+                  </td>
+                  <td class="px-3 py-4 text-center">
+                    <%= item._id.subGroupName || 'داده‌ای یافت نشد' %>
+                  </td>
+                  <td class="px-3 py-4 text-center">
+                    <%= item.totalQuestions || 'داده‌ای یافت نشد' %>
+                  </td>
+                  <td class="px-3 py-4 text-center">
+                    <%= item.totalYes || 'داده‌ای یافت نشد' %>
+                  </td>
+                  <td class="px-3 py-4 text-center">
+                    <%= item.totalNo || 'داده‌ای یافت نشد' %>
+                  </td>
+                  <td class="px-3 py-4 text-center">
+                    <%= item.avgYesScore || 'داده‌ای یافت نشد' %>
+                  </td>
+                </tr>
+
+                <% }) } else { %>
+                <p class="text-lg mt-4 text-primary">
+                  <%= 'داده‌ای یافت نشد'%>
+                </p>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="w-full min-h-[200px] relative flex flex-col gap-4 justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
           >
             <% if (report && report.length > 0) { %>
-            <h2 class="text-primary text-3xl text-bold">نمایش نمودار</h2>
+            <h2 class="text-primary text-2xl text-bold">نمایش نمودار</h2>
             <ul class="mt-4 flex flex-col gap-4">
               <% report.forEach(item => { %>
               <h3 class="text-202020">
                 گروه: <%= item._id.groupName || 'داده‌ای یافت نشد' %>
               </h3>
-              <li class="bg-slate-300 text-202020 rounded-xl p-4">
-                زیرگروه: <%= item._id.subGroupName || 'داده‌ای یافت نشد' %>
-
+              <div class="bg-slate-300 text-202020 rounded-xl p-4 marker:hidden">
+                <h3 class="text-202020">
+                  زیرگروه: <%= item._id.subGroupName || 'داده‌ای یافت نشد' %>
+                </h3>
                 <ul class="mt-6 bg-slate-400 p-2 rounded-xl">
                   <li class="flex gap-1 items-center">
                     <i class="ri-information-line text-primary"></i>تعداد بله:
@@ -316,7 +367,7 @@
                     }
                   });
                 </script>
-              </li>
+              </div>
             </ul>
             <% }) } else { %>
             <p class="text-lg mt-4 text-primary"><%= 'داده‌ای یافت نشد'%></p>

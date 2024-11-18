@@ -632,6 +632,10 @@ body {
   display: flex;
 }
 
+.table{
+  display: table;
+}
+
 .grid{
   display: grid;
 }
@@ -718,8 +722,16 @@ body {
   flex: 1 1 0%;
 }
 
+.border-collapse{
+  border-collapse: collapse;
+}
+
 .cursor-pointer{
   cursor: pointer;
+}
+
+.list-none{
+  list-style-type: none;
 }
 
 .grid-cols-1{
@@ -780,6 +792,10 @@ body {
   overflow: auto;
 }
 
+.overflow-hidden{
+  overflow: hidden;
+}
+
 .break-words{
   overflow-wrap: break-word;
 }
@@ -792,13 +808,42 @@ body {
   border-radius: 0.75rem;
 }
 
+.rounded-t-xl{
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
+.rounded-t-lg{
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
 .border{
   border-width: 1px;
+}
+
+.border-b-2{
+  border-bottom-width: 2px;
 }
 
 .border-CBCBCB{
   --tw-border-opacity: 1;
   border-color: rgb(203 203 203 / var(--tw-border-opacity));
+}
+
+.border-404040{
+  --tw-border-opacity: 1;
+  border-color: rgb(64 64 64 / var(--tw-border-opacity));
+}
+
+.border-b-primary{
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(0 123 255 / var(--tw-border-opacity));
+}
+
+.border-b-ADADAD{
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(173 173 173 / var(--tw-border-opacity));
 }
 
 .bg-CBCBCB{
@@ -866,6 +911,11 @@ body {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.bg-red-300{
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
+}
+
 .p-1{
   padding: 0.25rem;
 }
@@ -876,6 +926,10 @@ body {
 
 .p-4{
   padding: 1rem;
+}
+
+.p-3{
+  padding: 0.75rem;
 }
 
 .px-4{
@@ -891,6 +945,16 @@ body {
 .px-8{
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.px-3{
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.py-4{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .text-center{
@@ -923,11 +987,6 @@ body {
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-9xl{
-  font-size: 8rem;
-  line-height: 1;
 }
 
 .text-2xl{
@@ -1084,6 +1143,24 @@ body {
   font-style: normal;
 }
 
+.marker\:hidden *::marker{
+  display: none;
+}
+
+.marker\:hidden::marker{
+  display: none;
+}
+
+.even\:bg-slate-100:nth-child(even){
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+}
+
+.last-of-type\:border-b-primary:last-of-type{
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(0 123 255 / var(--tw-border-opacity));
+}
+
 .hover\:-translate-y-1:hover{
   --tw-translate-y: -0.25rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1206,4 +1283,9 @@ body {
     font-size: 1.25rem;
     line-height: 1.75rem;
   }
+}
+
+.\[\&\:nth-child\(odd\)\]\:bg-gray-400:nth-child(odd){
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
 }
