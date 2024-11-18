@@ -137,7 +137,7 @@ exports.handleUpdateResponse = async (req, res) => {
             return res.redirect('/dashboard/responses');
         }
 
-        req.flash('success', `پاسخ با شناسه ${updatedResponse._id} با موفقیت ویرایش شد.`);
+        req.flash('success', `پاسخ ${parsedScore} با شناسه ${updatedResponse._id} با موفقیت ویرایش شد.`);
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);

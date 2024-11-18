@@ -36,12 +36,12 @@ exports.handleAddResponse = async (req, res) => {
         const existingResponse = await Response.findOne({ userID: userId, questionID: questionId });
 
         if (existingResponse) {
-            existingResponse.score = parsedScore ? parsedScore : existingResponse.score;
+            existingResponse.score = parsedScore ?? existingResponse.score;
             existingResponse.description = description ? description : existingResponse.description;
             existingResponse.documents = file ? [file] : existingResponse.documents;
 
             await existingResponse.save();
-            req.flash('success', `جواب شما برای سوال ${questionId} با موفقیت بروزرسانی شد`);
+            req.flash('success', `جواب ${parsedScore} برای سوال ${questionId} با موفقیت بروزرسانی شد`);
             return res.redirect('/dashboard/questions');
         } else {
             const newResponse = new Response({
