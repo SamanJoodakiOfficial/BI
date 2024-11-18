@@ -86,8 +86,61 @@
             </div>
             <% }) } %>
           </div>
+
+          <canvas id="groupChart" width="400" height="400"></canvas>
         </div>
       </main>
     </div>
+
+    <script>
+      // داده‌های گزارش ارسال‌شده از سرور
+      const report = <%- JSON.stringify(report) %>;
+
+      // محاسبه میانگین امتیاز هر گروه
+      const groupData = report.map(group => {
+          const totalScore = group.subGroups.reduce((sum, subGroup) => sum + subGroup.score, 0);
+          const avgScore = totalScore / group.subGroups.length;
+          return {
+              groupName: group.groupName,
+              avgScore: avgScore
+          };
+      });
+
+      // استخراج نام و میانگین امتیاز گروه‌ها
+      const labels = groupData.map(group => group.groupName);
+      const data = groupData.map(group => group.avgScore);
+
+      // ایجاد نمودار دایره‌ای
+      const ctx = document.getElementById('groupChart').getContext('2d');
+      new Chart(ctx, {
+          type: 'pie',
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: 'میانگین امتیاز گروه‌ها',
+                  data: data,
+                  backgroundColor: [
+                      '#ff9999', '#66b3ff', '#99ff99', '#ffcc99', '#c2c2f0', '#ffb3e6'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'top',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function (tooltipItem) {
+                              return `${tooltipItem.label}: ${tooltipItem.raw.toFixed(1)}`;
+                          }
+                      }
+                  }
+              }
+          }
+      });
+    </script>
   </body>
 </html>
