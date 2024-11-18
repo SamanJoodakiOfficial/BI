@@ -2,7 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+// Business Intelligence
 router.use('/bi', require('./dashboard/bi'));
+
+// Big Picture
+router.use('/bigPicture', require('./dashboard/bigPicture'));
 
 // Groups
 router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));

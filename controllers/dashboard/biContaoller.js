@@ -24,8 +24,6 @@ exports.renderBI = async (req, res) => {
 
         report = report.sort();
 
-        console.log(report);
-
         res.render('./dashboard/bi/bi', { title: 'داشبورد هوش تجاری', report, statistics });
     } catch (error) {
         console.error(error.message);

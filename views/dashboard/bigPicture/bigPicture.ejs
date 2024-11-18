@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <%- include("../../partials/head") %>
+
+  <body class="bg-primaryBackground">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../../partials/sidebar.ejs') %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 lg:p-6">
+        <header class="w-full flex flex-col">
+          <h2 class="font-bold text-202020 text-lg lg:text-xl">
+            تصویر بزرگ - تحلیل هوش مصنوعی
+          </h2>
+        </header>
+
+        <!-- Errors -->
+        <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
+        errors.forEach((error) => { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= error.msg %>
+        </div>
+        <% }) %> <% } %>
+        <!-- Error -->
+        <% if (errorMessage && errorMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= errorMessage %>
+        </div>
+        <% } %>
+
+        <!--Success-->
+        <% if (successMessage && successMessage.length > 0) { %>
+        <div
+          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+        >
+          <i class="ri-error-warning-line"></i>
+          <%= successMessage %>
+        </div>
+        <% } %>
+
+        <!-- BI Details -->
+        <div class="w-full grid items-center grid-cols-1 gap-4 mt-4">
+          <div
+            class="w-full min-h-20 rounded-lg flex justify-between items-center gap-1 md:flex-row flex-col"
+          >
+            <% if (colorGuide && colorGuide.length > 0) { %> <%
+            colorGuide.forEach((color) => { %>
+            <div
+              class="text-xs text-center rounded-lg"
+              style="background-color: <%= color.color %>"
+            >
+              <p>طیف رنگ: <%= color.range %></p>
+              <p>توضیح رنگ: <%= color.description %></p>
+            </div>
+            <% }) } %>
+          </div>
+
+          <div
+            class="w-full min-h-[500px] rounded-lg grid grid-cols-1 gap-2 md:grid-cols-4"
+          >
+            <!-- Columns -->
+            <% if (report && report.length > 0) { %> <%
+            report.forEach((group)=>{ %>
+            <div class="w-full min-h-max flex flex-col gap-2">
+              <div
+                class="w-full p-4 text-center bg-slate-500 text-white rounded-lg"
+              >
+                <%= group.groupName %>
+              </div>
+
+              <% group.subGroups.forEach((subGroup) => { %>
+              <div
+                class="w-full p-4 text-center text-white rounded-lg"
+                style="background-color: <%= subGroup.color %>"
+              >
+                <%= subGroup.subGroupName %> <%= subGroup.score.toFixed(1) %>
+              </div>
+              <% }) %>
+            </div>
+            <% }) } %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
