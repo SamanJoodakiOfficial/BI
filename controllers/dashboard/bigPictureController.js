@@ -14,7 +14,7 @@ exports.renderBigPicture = async (req, res) => {
 
         res.render('./dashboard/bigPicture/bigPicture', { title: 'تصویر بزرگ - هوش مصنوعی', report, colorGuide });
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
         res.redirect('/dashboard/bigPicture');
     }
 };

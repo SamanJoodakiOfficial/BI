@@ -13,7 +13,7 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-             اضافه کردن گروه جدید توسط <%= user.role || 'داده‌ای یافت نشد'%>
+            اضافه کردن گروه جدید توسط <%= user.role || 'داده‌ای یافت نشد'%>
             <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
@@ -36,12 +36,12 @@
           </div>
           <% }) %> <% } %>
           <!-- Error -->
-          <% var error = error || '' %> <% if (error) { %>
+          <% if (errorMessage && errorMessage.length > 0) { %>
           <div
-            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+            class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
-            <%= error %>
+            <%= errorMessage %>
           </div>
           <% } %>
 

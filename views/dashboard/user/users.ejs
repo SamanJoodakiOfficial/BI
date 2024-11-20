@@ -51,7 +51,7 @@
         <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
         errors.forEach((error) => { %>
         <div
-          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+          class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
         >
           <i class="ri-error-warning-line"></i>
           <%= error.msg %>
@@ -70,7 +70,7 @@
         <!--Success-->
         <% if (successMessage && successMessage.length > 0) { %>
         <div
-          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+          class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
         >
           <i class="ri-error-warning-line"></i>
           <%= successMessage %>
@@ -89,35 +89,46 @@
             <!-- user details -->
             <p class="flex items-center gap-1 text-404040">
               ایمیل کاربر:
-              <span class="text-primary"><%= usr.email || 'داده‌ای یافت نشد' %></span>
+              <span class="text-primary"
+                ><%= usr.email || 'داده‌ای یافت نشد' %></span
+              >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
-              نقش کاربر: <span class="text-primary"><%= usr.role || 'داده‌ای یافت نشد' %></span>
+              نقش کاربر:
+              <span class="text-primary"
+                ><%= usr.role || 'داده‌ای یافت نشد' %></span
+              >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تاریخ ثبت نام:
               <span class="text-primary"
-                ><%= usr.createdAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت نشد' %></span
+                ><%= usr.createdAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت
+                نشد' %></span
               >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تاریخ آخرین بروزرسانی:
               <span class="text-primary"
-                ><%= usr.updatedAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت نشد' %></span
+                ><%= usr.updatedAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت
+                نشد' %></span
               >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تعداد پاسخ ثبت شده:
-              <span class="text-primary"><%= usr.responseCount || 'داده‌ای یافت نشد' %></span>
+              <span class="text-primary"
+                ><%= usr.responseCount || 'داده‌ای یافت نشد' %></span
+              >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تعداد سوالات ثبت شده:
-              <span class="text-primary"><%= usr.questionCount || 'داده‌ای یافت نشد' %></span>
+              <span class="text-primary"
+                ><%= usr.questionCount || 'داده‌ای یافت نشد' %></span
+              >
             </p>
 
             <!-- user actions -->
@@ -139,7 +150,9 @@
           </div>
 
           <% }) } else { %>
-          <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد' %></p>
+          <p class="text-lg mt-4 text-primary">
+            <%= text || 'داده‌ای یافت نشد' %>
+          </p>
           <% } %>
         </div>
 

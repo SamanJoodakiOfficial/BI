@@ -128,8 +128,12 @@ exports.handleAddQuestion = async (req, res) => {
         req.flash('success', `سوال ${text} با موفقیت ثبت شد`);
         res.redirect('/dashboard/questions/addQuestion');
     } catch (error) {
-        console.error(error.message);
-        req.flash('error', 'خطای داخلی سرور. لطفاً دوباره تلاش کنید.');
+        if (error.code === 11000) {
+            req.flash('error', 'این سوال قبلاً طراحی شده است.');
+        } else {
+            console.error(error.message);
+            req.flash('error', 'خطای داخلی سرور. لطفاً دوباره تلاش کنید.');
+        }
         res.redirect('/dashboard/questions/addQuestion');
     }
 };

@@ -81,8 +81,10 @@ exports.handleAddSubGroup = async (req, res) => {
 
         const exisitingSubGroup = await SubGroup.findOne({ name });
         if (exisitingSubGroup) {
+            const groups = await Group.find({});
             const exisitingSubGroup = await Group.find({});
-            return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `زیرگروه ${name} قبلا ثبت شده است`, exisitingSubGroup });
+
+            return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `زیرگروه ${name} قبلا ثبت شده است`, exisitingSubGroup, groups });
         }
 
         const newSubGroup = SubGroup({

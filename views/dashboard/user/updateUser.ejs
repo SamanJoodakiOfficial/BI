@@ -13,7 +13,8 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            ویرایش کاربر <%= selectedUser.email  || 'داده‌ای یافت نشد'%> توسط <%= user.role || 'داده‌ای یافت نشد' %>
+            ویرایش کاربر <%= selectedUser.email || 'داده‌ای یافت نشد'%> توسط <%=
+            user.role || 'داده‌ای یافت نشد' %>
             <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
         </header>
@@ -25,7 +26,9 @@
         >
           <h2 class="font-bold text-lg text-202020">
             ویرایش کاربر <%= selectedUser.email || 'داده‌ای یافت نشد' %> -
-            <span class="text-primary"><%= selectedUser.role || 'داده‌ای یافت نشد' %></span>
+            <span class="text-primary"
+              ><%= selectedUser.role || 'داده‌ای یافت نشد' %></span
+            >
           </h2>
 
           <!-- Errors -->
@@ -41,7 +44,7 @@
           <!-- Error -->
           <% if (errorMessage && errorMessage.length > 0) { %>
           <div
-            class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+            class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
           >
             <i class="ri-error-warning-line"></i>
             <%= errorMessage %>

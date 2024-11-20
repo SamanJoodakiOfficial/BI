@@ -15,36 +15,6 @@
           </h2>
         </header>
 
-        <!-- Errors -->
-        <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
-        errors.forEach((error) => { %>
-        <div
-          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-        >
-          <i class="ri-error-warning-line"></i>
-          <%= error.msg %>
-        </div>
-        <% }) %> <% } %>
-        <!-- Error -->
-        <% if (errorMessage && errorMessage.length > 0) { %>
-        <div
-          class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-        >
-          <i class="ri-error-warning-line"></i>
-          <%= errorMessage %>
-        </div>
-        <% } %>
-
-        <!--Success-->
-        <% if (successMessage && successMessage.length > 0) { %>
-        <div
-          class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
-        >
-          <i class="ri-error-warning-line"></i>
-          <%= successMessage %>
-        </div>
-        <% } %>
-
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4 mt-4">
           <div
@@ -59,11 +29,13 @@
               <p>طیف رنگ: <%= color.range %></p>
               <p>توضیح رنگ: <%= color.description %></p>
             </div>
-            <% }) } %>
+            <% }) } else { %>
+            <p class="text-lg mt-4 text-primary"><%= 'داده‌ای یافت نشد' %></p>
+            <% } %> %>
           </div>
 
           <div
-            class="w-full min-h-[500px] rounded-lg grid grid-cols-1 gap-2 md:grid-cols-4"
+            class="w-full min-h-[100px] rounded-lg grid grid-cols-1 gap-2 md:grid-cols-4"
           >
             <!-- Columns -->
             <% if (report && report.length > 0) { %> <%
@@ -84,19 +56,34 @@
               </div>
               <% }) %>
             </div>
-            <% }) } %>
+            <% })} else { %>
+            <p class="text-lg mt-4 text-primary">
+              <%= 'تصویر بزرگ یافت نشد' %>
+            </p>
+            <% } %>
           </div>
 
-          <canvas id="groupChart" width="400" height="400"></canvas>
+          <!-- <canvas id="groupChart" width="400" height="400"></canvas> -->
+
+          <div class="w-full min-h-[200px] rounded-lg bg-slate-800 p-4">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center"
+              >
+                <i class="ri-robot-2-line"></i>
+              </div>
+
+              <span class="text-white"> تجزیه و تحلیل هوش مصنوعی </span>
+            </div>
+
+            <div class="text-white text-justify mt-4" id="show"></div>
+          </div>
         </div>
       </main>
     </div>
-
     <script>
-      // داده‌های گزارش ارسال‌شده از سرور
       const report = <%- JSON.stringify(report) %>;
 
-      // محاسبه میانگین امتیاز هر گروه
       const groupData = report.map(group => {
           const totalScore = group.subGroups.reduce((sum, subGroup) => sum + subGroup.score, 0);
           const avgScore = totalScore / group.subGroups.length;
@@ -106,11 +93,9 @@
           };
       });
 
-      // استخراج نام و میانگین امتیاز گروه‌ها
       const labels = groupData.map(group => group.groupName);
       const data = groupData.map(group => group.avgScore);
 
-      // ایجاد نمودار دایره‌ای
       const ctx = document.getElementById('groupChart').getContext('2d');
       new Chart(ctx, {
           type: 'pie',
@@ -140,6 +125,52 @@
                   }
               }
           }
+      });
+    </script>
+
+    <script>
+      const showOpenAIResult = document.getElementById("show");
+
+      const openai = async (prompt) => {
+        const CHATGPT_API_KEY = "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";
+        try {
+          const options = {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${CHATGPT_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "gpt-4o",
+              messages: [{ role: "user", content: `تجزیه و تحلیل کن گزارش را و نظر خودت را برای این گزارش بیان کن: ${prompt}` }],
+            }),
+          };
+
+          const response = await fetch("https://api.openai.com/v1/chat/completions", options);
+          if (!response.ok) {
+            console.error(`HTTP Error: ${response.status}`);
+            return 'خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.';
+          }
+          const data = await response.json();
+          return data.choices[0]?.message?.content || 'پاسخی دریافت نشد.';
+        } catch (error) {
+          console.error(error.message);
+          return 'خطایی رخ داد. لطفاً دوباره تلاش کنید.';
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        const report = <%- JSON.stringify(report || {}) %>;
+        const prompt = JSON.stringify(report);
+        console.log(prompt);
+        const openAIResponse = await openai(prompt);
+
+        const paragraphs = openAIResponse.split("\n").filter(line => line.trim() !== "");
+        paragraphs.forEach(paragraph => {
+          const p = document.createElement("p");
+          p.textContent = paragraph.trim();
+          showOpenAIResult.appendChild(p);
+        });
       });
     </script>
   </body>

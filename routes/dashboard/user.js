@@ -8,12 +8,15 @@ router.get('/', userController.renderUsers);
 router.get('/addUser', userController.renderAddUser);
 router.post('/addUser',
     body("email")
+        .trim()
         .isEmail()
         .withMessage("ایمیل نامعتبر است"),
     body("password")
+        .trim()
         .isLength({ min: 6, max: 20 })
         .withMessage("تعداد کاراکتر کلمه عبور می‌بایست بین 6 تا 20 کاراکتر باشد"),
     body("role")
+        .trim()
         .notEmpty()
         .withMessage("نقش کاربر الزامی است")
         .isIn(['user', 'admin'])

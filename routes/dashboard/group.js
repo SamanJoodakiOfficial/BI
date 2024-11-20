@@ -8,13 +8,13 @@ const router = express.Router();
 router.get('/', groupController.renderGroups);
 router.get('/addGroup', groupController.renderAddGroup);
 router.post('/addGroup',
-    body("name").notEmpty().withMessage("نام گروه اجباری است")
+    body("name").trim().notEmpty().withMessage("نام گروه اجباری است")
     , groupController.handleAddGroup);
 router.get('/updateGroup/:groupId',
     groupController.renderUpdateGroup
 );
 router.post('/updateGroup/:groupId',
-    body("name").notEmpty().withMessage("نام گروه اجباری است"),
+    body("name").trim().notEmpty().withMessage("نام گروه اجباری است"),
     groupController.handleUpdateGroup
 );
 router.get('/deleteGroup/:groupId', groupController.handleDeleteGroup);
