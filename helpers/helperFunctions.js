@@ -2,7 +2,6 @@ require('dotenv').config();
 const Group = require('../models/Group');
 const SubGroup = require('../models/SubGroup');
 const Question = require('../models/Question');
-const { OpenAI } = require('openai');
 
 exports.generateReport = async () => {
     const report = await Question.aggregate([

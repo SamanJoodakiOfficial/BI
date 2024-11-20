@@ -22,6 +22,7 @@
         <form
           action="/dashboard/responses/updateResponse/<%= response._id %>"
           method="post"
+          enctype="multipart/form-data"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-4 justify-start"
         >
           <h2 class="font-bold text-lg text-202020">ویرایش پاسخ <%= response._id || 'داده‌ای یافت نشد' %></h2>
@@ -30,7 +31,7 @@
           <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
             errors.forEach((error) => { %>
             <div
-              class="w-full min-h-8 rounded-lg bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
+              class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
             >
               <i class="ri-error-warning-line"></i>
               <%= error.msg %>
@@ -49,7 +50,7 @@
             <!--Success-->
             <% if (successMessage && successMessage.length > 0) { %>
             <div
-              class="w-full min-h-8 rounded-lg bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
+              class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
             >
               <i class="ri-error-warning-line"></i>
               <%= successMessage %>
@@ -110,7 +111,7 @@
             </div>
 
             <div class="flex flex-col gap-2">
-              <input type="file" name="file" id="documents" multiple />
+              <input type="file" name="files" multiple />
             </div>
           </div>
 

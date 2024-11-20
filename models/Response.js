@@ -21,7 +21,8 @@ const responseSchema = new mongoose.Schema({
         type: String
     },
     documents: [{
-        type: String
+        type: String,
+        max: 10
     }]
 }, { timestamps: true });
 

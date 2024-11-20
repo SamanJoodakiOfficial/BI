@@ -6,6 +6,7 @@ const MongoStore = require('connect-mongo');
 const bodyParser = require('body-parser');
 const path = require('path');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 const User = require('./models/User');
 
@@ -46,6 +47,8 @@ app.use((req, res, next) => {
     res.locals.errorMessage = req.flash('error');
     next();
 });
+
+app.use('/uploads', express.static('uploads'));
 
 // Database connection
 mongoose.connect(process.env.DATABASE_URI)

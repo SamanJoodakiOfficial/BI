@@ -86,10 +86,11 @@ exports.renderUpdateResponse = async (req, res) => {
 };
 
 exports.handleUpdateResponse = async (req, res) => {
-    const { score, description, file } = req.body;
+    const { score, description } = req.body;
     const userId = req.session.userId;
     const responseId = req.params.responseId;
 
+    const uploadedFiles = req.files ? req.files.map(file => file.filename) : [];
     const parsedScore = parseInt(score);
 
     try {
@@ -103,6 +104,7 @@ exports.handleUpdateResponse = async (req, res) => {
                     { path: 'userID', select: 'email' }
                 ]
             });
+
         if (!response) {
             req.flash('error', 'پاسخی با این شناسه یافت نشد');
             return res.redirect('/dashboard/responses');
@@ -111,23 +113,33 @@ exports.handleUpdateResponse = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.render('./dashboard/response/updateResponse', {
-                title: `اضافه کردن پاسخ جدید برای سوال ${response.questionID._id}`,
+                title: `ویرایش پاسخ برای سوال ${response.questionID._id}`,
                 errors: errors.array(),
                 question: response.questionID,
-                response
+                response,
             });
         }
 
-        const updatedDocuments = file ? [file] : response.documents;
+        if (uploadedFiles.length > 10) {
+            req.flash('error', 'شما نمی‌توانید بیش از 10 فایل به صورت یکجا آپلود کنید');
+            return res.redirect(`/dashboard/responses/updateResponse/${responseId}`);
+        }
+
+        const updatedDocuments = [...response.documents, ...uploadedFiles];
+
+        if (updatedDocuments.length > 10) {
+            req.flash('error', 'شما نمی‌توانید بیش از 10 فایل برای یک پاسخ آپلود کنید');
+            return res.redirect(`/dashboard/responses/updateResponse/${responseId}`);
+        }
 
         const updatedResponse = await Response.findByIdAndUpdate(
             responseId,
             {
                 userID: userId,
-                questionID: response.questionID,
+                questionID: response.questionID._id,
                 score: parsedScore,
                 description,
-                documents: updatedDocuments
+                documents: updatedDocuments,
             },
             { new: true }
         );
@@ -142,7 +154,7 @@ exports.handleUpdateResponse = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         req.flash('error', 'خطای سرور رخ داد.');
-        res.redirect('/dashboard/resonses');
+        res.redirect('/dashboard/responses');
     }
 };
 
@@ -151,24 +163,26 @@ exports.renderAddResponseByAdmin = async (req, res) => {
 };
 
 exports.handleAddResponseByAdmin = async (req, res) => {
-    const { questionId, score, description, file } = req.body;
+    const { questionId, score, description } = req.body;
     const userId = req.session.userId;
 
+    const uploadedFiles = req.files ? req.files.map(file => file.filename) : [];
     const parsedScore = parseInt(score);
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render(`./dashboard/response/addResponseByAdmin`, { title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`, errors: errors.array() });
+        return res.render(`./dashboard/response/addResponseByAdmin`, {
+            title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
+            errors: errors.array(),
+        });
     }
 
     try {
         if (!mongoose.Types.ObjectId.isValid(questionId)) {
-            return res.render(`./dashboard/response/addResponseByAdmin`,
-                {
-                    title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
-                    errors: errors.array(),
-                    error: `شناسه سوال ${questionId} نامعتبر است`
-                });
+            return res.render(`./dashboard/response/addResponseByAdmin`, {
+                title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
+                errors: [{ msg: `شناسه سوال ${questionId} نامعتبر است` }],
+            });
         }
 
         const newResponse = new Response({
@@ -176,27 +190,20 @@ exports.handleAddResponseByAdmin = async (req, res) => {
             questionID: questionId,
             score: parsedScore,
             description,
-            documents: file ? [file] : []
+            documents: uploadedFiles,
         });
 
-        if (!newResponse) {
-            return res.render('./dashboard/response/addResponseByAdmin',
-                {
-                    title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
-                    errors: errors.array(),
-                    erorr: 'خطایی رخ داده است هنگام ساخت پاسخ'
-                }
-            );
-        }
-
         await newResponse.save();
+
         req.flash('success', `جواب ${score} برای سوال ${questionId} با موفقیت ثبت شد`);
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
+        req.flash('error', 'خطایی در ثبت پاسخ رخ داد.');
         res.redirect('/dashboard/responses');
     }
 };
+
 
 exports.handleDeleteResponse = async (req, res) => {
     const responseId = req.params.responseId;
