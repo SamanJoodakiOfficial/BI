@@ -60,7 +60,7 @@ exports.renderQuestions = async (req, res) => {
 
         let text = '';
         if (questions.length <= 0) {
-            text = 'گروهی یافت نشد';
+            text = 'سوالی یافت نشد';
         }
 
         const totalPages = Math.ceil(totalQuestions / limit);

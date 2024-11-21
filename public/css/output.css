@@ -652,12 +652,12 @@ body {
   height: 3rem;
 }
 
-.h-14{
-  height: 3.5rem;
-}
-
 .h-8{
   height: 2rem;
+}
+
+.h-\[300px\]{
+  height: 300px;
 }
 
 .min-h-20{
@@ -672,16 +672,16 @@ body {
   min-height: 2rem;
 }
 
+.min-h-\[100px\]{
+  min-height: 100px;
+}
+
 .min-h-\[200px\]{
   min-height: 200px;
 }
 
 .min-h-\[400px\]{
   min-height: 400px;
-}
-
-.min-h-\[500px\]{
-  min-height: 500px;
 }
 
 .min-h-max{
@@ -693,25 +693,16 @@ body {
   min-height: 100vh;
 }
 
-.min-h-min{
-  min-height: -moz-min-content;
-  min-height: min-content;
-}
-
-.min-h-\[100px\]{
-  min-height: 100px;
-}
-
 .w-10{
   width: 2.5rem;
 }
 
-.w-14{
-  width: 3.5rem;
-}
-
 .w-8{
   width: 2rem;
+}
+
+.w-\[300px\]{
+  width: 300px;
 }
 
 .w-\[400px\]{
@@ -794,6 +785,10 @@ body {
 
 .gap-4{
   gap: 1rem;
+}
+
+.gap-5{
+  gap: 1.25rem;
 }
 
 .space-y-4 > :not([hidden]) ~ :not([hidden]){
@@ -886,6 +881,16 @@ body {
   background-color: rgb(100 116 139 / var(--tw-bg-opacity));
 }
 
+.bg-slate-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+
+.bg-slate-900{
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+}
+
 .bg-success{
   --tw-bg-opacity: 1;
   background-color: rgb(0 150 109 / var(--tw-bg-opacity));
@@ -906,19 +911,19 @@ body {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.bg-slate-800{
+.bg-success-light-2{
   --tw-bg-opacity: 1;
-  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
-}
-
-.bg-slate-900{
-  --tw-bg-opacity: 1;
-  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+  background-color: rgb(243 253 250 / var(--tw-bg-opacity));
 }
 
 .bg-error-light-2{
   --tw-bg-opacity: 1;
   background-color: rgb(237 46 46 / var(--tw-bg-opacity));
+}
+
+.object-contain{
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .p-1{
@@ -973,6 +978,11 @@ body {
 .text-2xl{
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-\[16px\]{
@@ -1038,9 +1048,14 @@ body {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-error-light-2{
+.text-success{
   --tw-text-opacity: 1;
-  color: rgb(237 46 46 / var(--tw-text-opacity));
+  color: rgb(0 150 109 / var(--tw-text-opacity));
+}
+
+.text-FFFFFF{
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .underline{

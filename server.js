@@ -84,6 +84,5 @@ app.use('/dashboard', redirectToDashboardIfLoggedIn, require('./routes/dashboard
 
 // 404 - Page not found
 app.use((req, res) => {
-    // Template required
-    res.send('<p style="color: red">404 - Page not found!</p>');
+    res.render('./404', { title: 'صفحه پیدا نشد' });
 });

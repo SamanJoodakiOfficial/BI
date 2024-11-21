@@ -60,7 +60,8 @@ exports.handleAddGroup = async (req, res) => {
         const existingGroup = await Group.findOne({ name });
 
         if (existingGroup) {
-            return res.render('./dashboard/group/addGroup', { title: 'اضافه کردن گروه جدید', error: `گروه ${name} وجود دارد` });
+            req.flash('error', `گروه ${name} وجود دارد`);
+            return res.redirect('/dashboard/groups/addGroup');
         }
 
         const newGroup = new Group({ userID: userId, name });
@@ -102,21 +103,37 @@ exports.handleUpdateGroup = async (req, res) => {
         return res.render(`./dashboard/group/updateGroup`, {
             title: `ویرایش گروه ${existingGroup ? existingGroup.name : ''}`,
             group: existingGroup,
-            errors: errors.array()
+            errors: errors.array(),
         });
     }
 
     try {
-        const updatedGroup = await Group.findByIdAndUpdate(groupId, { userId, name }, { new: true });
+        const existingGroup = await Group.findOne({ name, _id: { $ne: groupId } });
+        if (existingGroup) {
+            const group = await Group.findById(groupId);
+            return res.render(`./dashboard/group/updateGroup`, {
+                title: `ویرایش گروه ${group ? group.name : ''}`,
+                group,
+                errors: [{ msg: `گروهی با نام ${name} قبلاً ثبت شده است.` }],
+            });
+        }
+
+        const updatedGroup = await Group.findByIdAndUpdate(
+            groupId,
+            { userId, name },
+            { new: true }
+        );
 
         if (!updatedGroup) {
-            return res.render('./dashboard/group/groups', { title: "مدیریت گروه‌ها" });
+            req.flash('error', 'گروه یافت نشد');
+            return res.redirect('/dashboard/groups');
         }
 
         req.flash('success', `گروه ${name} با موفقیت ویرایش شد`);
         res.redirect('/dashboard/groups');
     } catch (error) {
         console.error(error.message);
+        req.flash('error', 'خطایی در ویرایش گروه رخ داد');
         res.redirect('/dashboard/groups');
     }
 };

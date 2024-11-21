@@ -8,7 +8,7 @@ exports.renderUsers = async (req, res) => {
     try {
         const query = req.query.userEmail;
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 2;
+        const limit = parseInt(req.query.limit) || 10;
 
         let users;
         let totalUsers;

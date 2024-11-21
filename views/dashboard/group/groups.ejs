@@ -47,35 +47,7 @@
           </div>
         </form>
 
-          <!-- Errors -->
-          <% var errors = errors || '' %> <% if (errors.length >= 1) { %> <%
-            errors.forEach((error) => { %>
-            <div
-              class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-            >
-              <i class="ri-error-warning-line"></i>
-              <%= error.msg %>
-            </div>
-            <% }) %> <% } %>
-            <!-- Error -->
-            <% if (errorMessage && errorMessage.length > 0) { %>
-            <div
-              class="w-full min-h-8 rounded-lg mt-4 bg-error-light-1 text-error text-sm flex items-center p-4 gap-1"
-            >
-              <i class="ri-error-warning-line"></i>
-              <%= errorMessage %>
-            </div>
-            <% } %>
-  
-            <!--Success-->
-            <% if (successMessage && successMessage.length > 0) { %>
-            <div
-              class="w-full min-h-8 rounded-lg mt-4 bg-success-light-1 text-white text-sm flex items-center p-4 gap-1"
-            >
-              <i class="ri-error-warning-line"></i>
-              <%= successMessage %>
-            </div>
-            <% } %>
+        <%- include('../../partials/announcement') %>
 
         <!-- Group Boxes -->
         <div
@@ -119,7 +91,9 @@
             </div>
           </div>
           <% }) %> <% } else { %>
-          <p class="text-lg mt-4 text-primary"><%= text || 'داده‌ای یافت نشد' %></p>
+          <p class="text-lg mt-4 text-primary">
+            <%= text || 'داده‌ای یافت نشد' %>
+          </p>
           <% } %>
         </div>
 

@@ -2,6 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    res.redirect('/dashboard/bi');
+});
+
 // Business Intelligence
 router.use('/bi', require('./dashboard/bi'));
 

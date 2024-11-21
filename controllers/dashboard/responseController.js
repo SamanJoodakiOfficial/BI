@@ -56,7 +56,7 @@ exports.handleAddResponse = async (req, res) => {
                 return res.redirect('/dashboard/questions');
             }
 
-            if (existingResponse && existingResponse.documents.length >= 10) {
+            if (existingResponse && existingResponse.documents.length > 10) {
                 req.flash('error', 'شما نمی‌توانید بیش از 10 فایل برای یک پاسخ آپلود کنید');
                 return res.redirect('/dashboard/questions');
             }

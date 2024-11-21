@@ -84,7 +84,9 @@ exports.handleAddSubGroup = async (req, res) => {
             const groups = await Group.find({});
             const exisitingSubGroup = await Group.find({});
 
-            return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `زیرگروه ${name} قبلا ثبت شده است`, exisitingSubGroup, groups });
+            req.flash('error', 'این زیرگروه قبلا ثبت شده است');
+            // return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `زیرگروه ${name} قبلا ثبت شده است`, exisitingSubGroup, groups });
+            return res.redirect('/dashboard/subGroups/addSubGroup');
         }
 
         const newSubGroup = SubGroup({
@@ -121,7 +123,6 @@ exports.renderUpdateSubGroup = async (req, res) => {
     }
 };
 
-
 exports.handleUpdateSubGroup = async (req, res) => {
     const { group, name } = req.body;
     const userId = req.session.userId;
@@ -131,15 +132,36 @@ exports.handleUpdateSubGroup = async (req, res) => {
     if (!errors.isEmpty()) {
         const groups = await Group.find({});
         const subGroup = await SubGroup.findById(subGroupId);
-        return res.render(`./dashboard/subGroup/updateSubGroup`, { title: `ویرایش زیرگروه ${name}`, errors: errors.array(), groups, subGroup });
+        return res.render(`./dashboard/subGroup/updateSubGroup`, {
+            title: `ویرایش زیرگروه ${name}`,
+            errors: errors.array(),
+            groups,
+            subGroup,
+        });
     }
 
     try {
-        const updatedSubGroup = await SubGroup.findByIdAndUpdate(subGroupId, {
-            userID: userId,
-            groupID: group,
-            name
-        }, { new: true });
+        const existingSubGroup = await SubGroup.findOne({ name, _id: { $ne: subGroupId } });
+        if (existingSubGroup) {
+            const groups = await Group.find({});
+            const subGroup = await SubGroup.findById(subGroupId);
+            return res.render(`./dashboard/subGroup/updateSubGroup`, {
+                title: `ویرایش زیرگروه ${name}`,
+                errors: [{ msg: `زیرگروهی با نام ${name} قبلاً ثبت شده است.` }],
+                groups,
+                subGroup,
+            });
+        }
+
+        const updatedSubGroup = await SubGroup.findByIdAndUpdate(
+            subGroupId,
+            {
+                userID: userId,
+                groupID: group,
+                name,
+            },
+            { new: true }
+        );
 
         if (!updatedSubGroup) {
             return res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها' });
@@ -149,9 +171,11 @@ exports.handleUpdateSubGroup = async (req, res) => {
         res.redirect('/dashboard/subGroups');
     } catch (error) {
         console.error(error.message);
+        req.flash('error', 'خطایی در ویرایش زیرگروه رخ داد');
         res.redirect('/dashboard/subGroups');
     }
 };
+
 
 exports.handleDeleteSubGroup = async (req, res) => {
     const subGroupId = req.params.subGroupId;
@@ -160,7 +184,8 @@ exports.handleDeleteSubGroup = async (req, res) => {
         const deletedSubGroup = await SubGroup.findByIdAndDelete(subGroupId);
 
         if (!deletedSubGroup) {
-            return res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها' });
+            req.flash('error', 'زیرگروه یافت نشد');
+            res.redirect('/dashboard/subGroups');
         }
 
         req.flash('success', `زیرگروه ${deletedSubGroup.name} با موفقیت حذف شد`);
