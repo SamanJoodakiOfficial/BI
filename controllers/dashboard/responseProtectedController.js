@@ -185,7 +185,7 @@ exports.handleAddResponseByAdmin = async (req, res) => {
             });
         }
 
-        const existingResponse = await Response.findById(questionId);
+        const existingResponse = await Question.findById(questionId);
 
         if (!existingResponse) {
             req.flash('error', `سوال با شناسه ${questionId} یافت نشد`);
