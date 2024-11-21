@@ -76,16 +76,14 @@
             <p class="flex items-center gap-1 text-404040">
               تاریخ ثبت نام:
               <span class="text-primary"
-                ><%= usr.createdAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت
-                نشد' %></span
+                ><%= usr.createdAt.toLocaleDateString('fa-IR') || 'داده‌ای یاف نشد' %></span
               >
             </p>
 
             <p class="flex items-center gap-1 text-404040">
               تاریخ آخرین بروزرسانی:
               <span class="text-primary"
-                ><%= usr.updatedAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت
-                نشد' %></span
+                ><%= usr.updatedAt.toLocaleDateString('fa-IR') || 'داده‌ای یافت نشد' %></span
               >
             </p>
 
@@ -129,6 +127,7 @@
         </div>
 
         <% if (totalPages > 1) { %>
+        <!--Pagination-->
         <footer
           class="w-full flex items-center justify-center flex-wrap gap-4 mt-8"
         >

@@ -140,6 +140,22 @@
               <% } %>
             </p>
           </p>
+
+          <p class="text-404040">تاریخ ساخت : 
+            <p class="flex flex-col gap-1">
+              <%= response.createdAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) || 'داده‌ای یافت نشد' %>
+            </p>
+          </p>
+
+          <p class="text-404040">تاریخ بروزرسانی : 
+            <p class="flex flex-col gap-1">
+              <%= response.updatedAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) || 'داده‌ای یافت نشد' %>
+            </p>
+          </p>
         </div>
       </div>
     <% }) %>

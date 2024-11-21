@@ -87,6 +87,24 @@
                   <%= question.subGroupID ? question.subGroupID.name : 'داده‌ای یافت نشد'%>
                 </div>
               </div>
+
+              <div class="flex items-center gap-1">
+                تاریخ ساخت:
+                <div class="w-fit text-xs bg-primary p-1 text-white rounded-lg">
+                  <%= question.createdAt.toLocaleDateString('fa-IR', { hour:
+                    '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                    }) || 'داده‌ای یافت نشد'%>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1">
+                تاریخ به‌روزرسانی:
+                <div class="w-fit text-xs bg-error p-1 text-white rounded-lg">
+                  <%= question.updatedAt.toLocaleDateString('fa-IR', { hour:
+                    '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                    }) || 'داده‌ای یافت نشد'%>
+                </div>
+              </div>
             </div>
 
             <!-- Question text -->
@@ -140,6 +158,22 @@
           <p class="text-606060 ">مستندی یافت نشد</p>
             <% } %>
       </p>
+    </p>
+
+    <p class="text-404040">تاریخ ساخت : 
+      <span class="text-606060 text-bold">
+        <%= question.userResponse.createdAt.toLocaleDateString('fa-IR', { hour:
+          '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+          })  || 'داده‌ای یافت نشد' %>
+      </span>
+    </p>
+
+    <p class="text-404040">تاریخ به‌روزرسانی : 
+      <span class="text-606060 text-bold">
+        <%= question.userResponse.updatedAt.toLocaleDateString('fa-IR', { hour:
+          '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+          })  || 'داده‌ای یافت نشد' %>
+      </span>
     </p>
   <% } else { %>
     <p class="text-404040">پاسخی برای این سوال از جانب ثبت نشده است.</p>

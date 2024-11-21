@@ -88,6 +88,32 @@
               <% } %>
             </p>
 
+            <!-- Created At -->
+            <p class="flex items-center gap-1 text-404040">
+              تاریخ ساخت: <% if (subGroup && subGroup.createdAt) { %>
+              <span class="text-primary"
+                ><%= subGroup.createdAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) %></span
+              >
+              <% } else { %>
+              <span class="text-primary">داده‌ای یافت نشد</span>
+              <% } %>
+            </p>
+
+            <!-- Updated At -->
+            <p class="flex items-center gap-1 text-404040">
+              تاریخ به‌روزرسانی: <% if (subGroup && subGroup.updatedAt) { %>
+              <span class="text-primary"
+                ><%= subGroup.updatedAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) %></span
+              >
+              <% } else { %>
+              <span class="text-primary">داده‌ای یافت نشد</span>
+              <% } %>
+            </p>
+
             <!-- Sub Group actions -->
             <div class="flex items-center gap-2 flex-wrap">
               <a

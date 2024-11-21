@@ -75,6 +75,24 @@
               </span>
             </p>
 
+            <p class="flex items-center gap-1 text-404040">
+              تاریخ ساخت:
+              <span class="text-primary">
+                <%= group.createdAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) || 'داده‌ای یافت نشد' %>
+              </span>
+            </p>
+
+            <p class="flex items-center gap-1 text-404040">
+              تاریخ به‌روزرسانی:
+              <span class="text-primary">
+                <%= group.updatedAt.toLocaleDateString('fa-IR', { hour:
+                '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+                }) || 'داده‌ای یافت نشد' %>
+              </span>
+            </p>
+
             <!-- Group actions -->
             <div class="flex items-center gap-2 flex-wrap">
               <a

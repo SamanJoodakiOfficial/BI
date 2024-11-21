@@ -82,6 +82,10 @@ app.use(async (req, res, next) => {
 // Dashboard routes
 app.use('/dashboard', redirectToDashboardIfLoggedIn, require('./routes/dashboard'));
 
+app.get('/', (req, res) => {
+    res.redirect('/dashboard');
+});
+
 // 404 - Page not found
 app.use((req, res) => {
     res.render('./404', { title: 'صفحه پیدا نشد' });
