@@ -116,6 +116,12 @@ exports.renderUpdateSubGroup = async (req, res) => {
         }
 
         const groups = await Group.find({});
+
+        if (!groups.length) {
+            req.flash('error', 'برای اضافه یا ویرایش کردن زیرگروه می‌بایست حداقل یک گروه وجود داشته باشد');
+            return res.redirect('/dashboard/groups');
+        }
+
         res.render('./dashboard/subGroup/updateSubGroup', { title: `ویرایش زیرگروه ${subGroup.name}`, groups, subGroup });
     } catch (error) {
         console.error(error.message);

@@ -9,17 +9,28 @@
 
       <!-- Main Content -->
       <main class="flex-1 p-4 lg:p-6">
-        <header
-          class="w-full flex items-center justify-between flex-wrap gap-2"
-        >
+        <header class="w-full flex items-center justify-between flex-wrap gap-2">
           <h2 class="font-bold text-202020 text-lg lg:text-xl">بانک سوالات</h2>
           <% if (user.role === 'admin') { %>
+          <div class="flex gap-4 items-center">
             <a
-            href="/dashboard/questions/addQuestion"
-            class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-            ><i class="ri-add-line"></i
-            ><span class="hidden sm:inline">ثبت سوال جدید</span></a
-          >
+              href="/dashboard/questions/addQuestion"
+              class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              <i class="ri-add-line"></i>
+              <span class="hidden sm:inline">ثبت سوال جدید</span>
+            </a>
+      
+            <form action="/dashboard/questions/import" method="post" enctype="multipart/form-data" class="flex gap-2 items-center">
+              <label for="import" class="w-52 h-10 px-4 lg:h-12 lg:px-6 cursor-pointer bg-white text-404040 border border-CBCBCB flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200">
+                بارگذاری سوال
+              </label>
+              <input type="file" name="import" id="import" class="hidden" multiple>
+              <button type="submit" class="w-10 h-10 px-4 lg:h-12 lg:px-6 cursor-pointer bg-white text-404040 border border-CBCBCB flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200">
+                <i class="ri-upload-line"></i>
+              </button>
+            </form>
+          </div>
           <% } %>
         </header>
 

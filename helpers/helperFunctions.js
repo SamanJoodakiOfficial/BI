@@ -2,6 +2,8 @@ require('dotenv').config();
 const Group = require('../models/Group');
 const SubGroup = require('../models/SubGroup');
 const Question = require('../models/Question');
+const fs = require('fs');
+const xlsx = require('xlsx');
 
 exports.generateReport = async () => {
     const report = await Question.aggregate([
@@ -162,4 +164,31 @@ exports.getScoreColorGuide = () => {
         { range: '91-100', color: '#00ff00', description: 'سبز پررنگ' },
         { range: 'بیش از 100', color: '#ffffff', description: 'سفید' },
     ];
+};
+
+exports.processFile = async (file) => {
+    const validFileTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ];
+
+    if (file.mimetype === validFileTypes[0]) {
+        const workbook = xlsx.readFile(file.path);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        return xlsx.utils.sheet_to_json(worksheet);
+    }
+
+    throw new Error('فرمت فایل پشتیبانی نمی‌شود.');
+};
+
+exports.validateData = (fileData, fileName, invalidData) => {
+    const validData = [];
+    fileData.forEach((entry) => {
+        if (entry.groupID && entry.subGroupID && entry.text) {
+            validData.push(entry);
+        } else {
+            invalidData.push({ file: fileName, entry });
+        }
+    });
+    return validData;
 };

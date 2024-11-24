@@ -13,7 +13,8 @@
           class="w-full flex items-center justify-between flex-wrap gap-2"
         >
           <h2 class="font-bold text-202020 text-lg lg:text-xl">
-            اضافه کردن پاسخ جدید برای سوال<%= response._id || 'داده‌ای یافت نشد' %> توسط
+            اضافه کردن پاسخ جدید برای سوال<%= response._id || 'داده‌ای یافت نشد'
+            %> توسط
             <p><%= user.role || 'داده‌ای یافت نشد'%></p>
             <p class="text-primary"><%= user.email || 'داده‌ای یافت نشد' %></p>
           </h2>
@@ -25,35 +26,39 @@
           enctype="multipart/form-data"
           class="w-full min-h-[400px] bg-white rounded-lg p-4 mt-8 shadow-lg flex flex-col gap-4 justify-start"
         >
-          <h2 class="font-bold text-lg text-202020">ویرایش پاسخ <%= response._id || 'داده‌ای یافت نشد' %></h2>
+          <h2 class="font-bold text-lg text-202020">
+            ویرایش پاسخ <%= response._id || 'داده‌ای یافت نشد' %>
+          </h2>
 
           <%- include('../../partials/announcement') %>
 
           <div class="flex flex-col gap-4">
             <div class="bg-slate-400 rounded-lg p-4">
-              <p class="font-bold">
-                متن سوال:
-                <p class="text-404040 mt-4">
-                  <%= response.questionID.text || 'داده‌ای یافت نشد'%>
-                  </p>
+              <p class="font-bold">متن سوال:</p>
+              <p class="text-404040 mt-4">
+                <%= response.questionID && response.questionID.text ?
+                response.questionID.text : 'داده‌ای یافت نشد' %>
               </p>
             </div>
 
             <div class="bg-slate-300 rounded-lg p-4">
-              <div class="flex items-center gap-2">
-                <span class="font-bold">گروه</span>
-                <p class="text-primary"><%= response.questionID.groupID.name || 'داده‌ای یافت نشد'%></p>
-              </div>
+              <p class="text-primary">
+                <%= response.questionID && response.questionID.groupID &&
+                response.questionID.groupID.name ?
+                response.questionID.groupID.name : 'داده‌ای یافت نشد' %>
+              </p>
 
-              <div class="flex items-center gap-2">
-                <span class="font-bold">زیرگروه:</span>
-                <p class="text-primary"><%= response.questionID.subGroupID.name || 'داده‌ای یافت نشد' %></p>
-              </div>
+              <p class="text-primary">
+                <%= response.questionID && response.questionID.subGroupID &&
+                response.questionID.subGroupID.name ?
+                response.questionID.subGroupID.name : 'داده‌ای یافت نشد' %>
+              </p>
 
-              <div class="flex items-center gap-2">
-                <span class="font-bold">سازنده سوال:</span>
-                <p class="text-primary"><%= response.questionID.userID.email || 'داده‌ای یافت نشد' %></p>
-              </div>
+              <p class="text-primary">
+                <%= response.questionID && response.questionID.userID &&
+                response.questionID.userID.email ?
+                response.questionID.userID.email : 'داده‌ای یافت نشد' %>
+              </p>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -78,7 +83,8 @@
                 placeholder="توضیحات شما"
                 name="description"
                 id="description"
-              ><%= response.description || 'داده‌ای یافت نشد' %>
+              >
+<%= response.description || 'داده‌ای یافت نشد' %>
               </textarea>
             </div>
 
@@ -96,7 +102,8 @@
             >
               ثبت پاسخ
             </button>
-            <a href="/dashboard/responses"
+            <a
+              href="/dashboard/responses"
               type="button"
               class="w-full sm:w-1/2 h-12 px-6 bg-disabledButton text-606060 flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             >

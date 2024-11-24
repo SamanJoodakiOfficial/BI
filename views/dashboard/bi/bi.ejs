@@ -102,9 +102,10 @@
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4">
           <div
-            class="w-full min-h-[200px] relative flex flex-col justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+            class="w-full min-h-[200px] relative flex flex-col gap-4 justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
           >
             <h2 class="text-primary text-2xl text-bold">نمایش جدول</h2>
+            <% if(report && report.length > 0) { %>
             <table
               class="w-full bg-white border mt-8 p-4 overflow-auto border-CBCBCB border-collapse text-sm --odd:bg-white even:bg-slate-100 [&:nth-child(odd)]:bg-gray-400"
             >
@@ -119,8 +120,7 @@
                 </tr>
               </thead>
               <tbody>
-                <% if (report && report.length > 0) { report.forEach((item) => {
-                %>
+                <% report.forEach((item) => { %>
                 <tr class="border-b-2 border-b-ADADAD">
                   <td class="px-3 py-4 text-center">
                     <%= item._id.groupName || 'داده‌ای یافت نشد' %>
@@ -154,8 +154,8 @@
           <div
             class="w-full min-h-[200px] relative flex flex-col gap-4 justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
           >
-            <% if (report && report.length > 0) { %>
             <h2 class="text-primary text-2xl text-bold">نمایش نمودار</h2>
+            <% if (report && report.length > 0) { %>
             <ul class="mt-4 flex flex-col gap-4">
               <% report.forEach(item => { %>
               <h3 class="text-202020">

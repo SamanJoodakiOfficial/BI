@@ -74,8 +74,9 @@ exports.renderUpdateResponse = async (req, res) => {
                 ]
             });
 
-        if (!response) {
-            return res.render('./dashboard/response/responses', { title: 'مدیریت پاسخ‌ها' });
+        if (!response || !response.questionID) {
+            req.flash('error', `پاسخ با شناسه ${responseId} یافت نشد یا مطعلق به سوالی نیست.`);
+            return res.redirect('/dashboard/responses');
         }
 
         res.render('./dashboard/response/updateResponse', { title: 'ویرایش پاسخ', response });
