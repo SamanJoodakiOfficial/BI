@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <%- include("../../partials/head") %>
+
+  <body class="bg-primaryBackground">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+      <!-- Sidebar -->
+      <%- include('../../partials/sidebar') %>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-4 lg:p-6">
+        <header
+          class="w-full flex items-center justify-between flex-wrap gap-2"
+        >
+          <h2 class="font-bold text-202020 text-lg lg:text-xl">گزارشات</h2>
+          <div class="flex gap-4 items-center">
+            <button
+              id="download-pdf"
+              class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              <i class="ri-download-line"></i>
+              <span class="hidden sm:inline">دانلود گزارش</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Form Section -->
+        <div class="w-full min-h-[150px] mt-4 bg-white rounded-lg p-4">
+          <form
+            action="/dashboard/reports"
+            method="get"
+            class="w-full rounded-lg mt-8 flex flex-col lg:flex-row gap-4 items-center justify-between"
+          >
+            <div class="flex flex-1 flex-col lg:flex-row gap-4 items-center">
+              <div>
+                <label for="startDate" class="text-202020">تاریخ شروع:</label>
+                <input
+                  type="text"
+                  name="startDate"
+                  id="startDate"
+                  class="border border-CBCBCB rounded-lg p-2"
+                  placeholder="انتخاب تاریخ"
+                  data-jdp
+                />
+              </div>
+
+              <div>
+                <label for="endDate" class="text-202020">تاریخ پایان:</label>
+                <input
+                  type="text"
+                  name="endDate"
+                  id="endDate"
+                  class="border border-CBCBCB rounded-lg p-2"
+                  placeholder="انتخاب تاریخ"
+                  data-jdp
+                />
+              </div>
+            </div>
+
+            <button
+              type="reset"
+              class="w-full lg:w-[150px] h-12 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-error/30 hover:shadow-xl transition-all duration-200"
+            >
+              پاک کردن تاریخ‌ها
+            </button>
+
+            <button
+              type="submit"
+              class="w-full lg:w-[150px] h-12 flex items-center gap-1 justify-center rounded-lg bg-warning text-center text-white font-bold shadow-lg shadow-warning/30 hover:shadow-xl transition-all duration-200"
+            >
+              دریافت گزارش
+            </button>
+          </form>
+        </div>
+
+        <div id="pdf">
+          <!-- Table Section -->
+          <div
+            class="w-full min-h-[200px] relative flex flex-col gap-4 justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+          >
+            <h2 class="text-primary text-2xl text-bold">نمایش جدول</h2>
+            <div class="overflow-x-auto">
+              <!-- نمایش تاریخ شروع و پایان به صورت دینامیک -->
+              <div class="w-full bg-white p-4 rounded-lg mb-4">
+                <p class="text-lg font-bold text-404040">
+                  گزارشات برای ماه <%= monthlyComparison.length > 0 ?
+                  monthlyComparison[0].month : 'ماه نامشخص' %>
+                </p>
+              </div>
+
+              <table
+                class="w-full bg-white border mt-8 p-4 overflow-auto border-CBCBCB border-collapse text-sm --odd:bg-white even:bg-slate-100"
+              >
+                <thead>
+                  <tr class="bg-primary text-white text-center font-bold">
+                    <th class="px-3 py-4 text-center">نام گروه</th>
+                    <th class="px-3 py-4 text-center">نام زیرگروه</th>
+                    <th class="px-3 py-4 text-center">تعداد سوالات</th>
+                    <th class="px-3 py-4 text-center">تعداد جواب (بله)</th>
+                    <th class="px-3 py-4 text-center">تعداد جواب (خیر)</th>
+                    <th class="px-3 py-4 text-center">
+                      میانگین جواب‌های (بله)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (reports.length > 0) { %> <% reports.forEach((report) =>
+                  { %>
+                  <tr class="border-b-2 border-b-ADADAD">
+                    <td class="px-3 py-4 text-center">
+                      <%= report.groupName %>
+                    </td>
+                    <td class="px-3 py-4 text-center">
+                      <%= report.subGroupName %>
+                    </td>
+                    <td class="px-3 py-4 text-center">
+                      <%= report.questionsCount %>
+                    </td>
+                    <td class="px-3 py-4 text-center">
+                      <%= report.responsesYes %>
+                    </td>
+                    <td class="px-3 py-4 text-center">
+                      <%= report.responsesNo %>
+                    </td>
+                    <td class="px-3 py-4 text-center">
+                      <%= report.yesAverage.toFixed(2) %>
+                    </td>
+                  </tr>
+                  <% }); %> <% } else { %>
+                  <tr>
+                    <td colspan="6" class="px-3 py-4 text-center">
+                      هیچ گزارشی برای نمایش وجود ندارد. لطفاً بازه تاریخ را
+                      تغییر دهید.
+                    </td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Chart Section -->
+          <div
+            class="w-full min-h-[300px] relative flex flex-col gap-4 justify-center bg-white border rounded-lg mt-8 p-4 border-CBCBCB overflow-auto"
+          >
+            <h2 class="text-primary text-2xl text-bold">
+              نمودار مقایسه ماه‌ها
+            </h2>
+            <p class="text-gray-600 text-sm">
+              این نمودار نشان‌دهنده تعداد پاسخ‌های بله و خیر به تفکیک ماه است.
+            </p>
+            <div class="w-full">
+              <canvas id="monthlyComparisonChart"></canvas>
+            </div>
+            <div class="w-full">
+              <canvas id="reportsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const monthlyComparisonData = <%- JSON.stringify(monthlyComparison) %>;
+
+      const monthlyLabels = monthlyComparisonData.map(data => data.month);
+      const responsesYesData = monthlyComparisonData.map(data => data.responsesYes);
+      const responsesNoData = monthlyComparisonData.map(data => data.responsesNo);
+
+      if (monthlyLabels.length > 1) {
+        const ctxMonthlyComparison = document.getElementById('monthlyComparisonChart').getContext('2d');
+        const monthlyComparisonChart = new Chart(ctxMonthlyComparison, {
+          type: 'line',
+          data: {
+            labels: monthlyLabels,
+            datasets: [
+              {
+                label: 'پاسخ‌های بله',
+                data: responsesYesData,
+                fill: false,
+                borderColor: 'green',
+                tension: 0.1
+              },
+              {
+                label: 'پاسخ‌های خیر',
+                data: responsesNoData,
+                fill: false,
+                borderColor: 'red',
+                tension: 0.1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'نمودار مقایسه ماه‌ها'
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'ماه‌ها'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'تعداد'
+                },
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      } else {
+        const ctxSingleMonth = document.getElementById('monthlyComparisonChart').getContext('2d');
+        const singleMonthChart = new Chart(ctxSingleMonth, {
+          type: 'bar',
+          data: {
+            labels: monthlyLabels,
+            datasets: [
+              {
+                label: 'پاسخ‌های بله',
+                data: responsesYesData,
+                backgroundColor: 'green'
+              },
+              {
+                label: 'پاسخ‌های خیر',
+                data: responsesNoData,
+                backgroundColor: 'red'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'پاسخ‌های بله و خیر'
+              },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'ماه‌ها'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'تعداد'
+                },
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+
+
+                          const reportsData = <%- JSON.stringify(reports) %>;
+                          const groupNames = reportsData.map(report => report.groupName);
+                          const questionCounts = reportsData.map(report => report.questionsCount);
+                          const yesAverage = reportsData.map(report => report.yesAverage);
+
+                          const ctxReports = document.getElementById('reportsChart').getContext('2d');
+                          const reportsChart = new Chart(ctxReports, {
+                            type: 'bar',
+                            data: {
+                              labels: groupNames,
+                              datasets: [{
+                                label: 'تعداد سوالات',
+                                data: questionCounts,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                              }, {
+                                label: 'میانگین پاسخ‌های بله',
+                                data: yesAverage,
+                                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                borderColor: 'rgba(255, 159, 64, 1)',
+                                borderWidth: 1
+                              }]
+                            },
+                            options: {
+                              responsive: true,
+                              plugins: {
+                                title: {
+                                  display: true,
+                                  text: 'گزارشات گروه‌ها'
+                                },
+                                tooltip: {
+                                  mode: 'index',
+                                  intersect: false
+                                }
+                              },
+                              scales: {
+                                x: {
+                                  title: {
+                                    display: true,
+                                    text: 'گروه‌ها'
+                                  }
+                                },
+                                y: {
+                                  title: {
+                                    display: true,
+                                    text: 'تعداد'
+                                  },
+                                  beginAtZero: true
+                                }
+                              }
+                            }
+                          });
+    </script>
+
+    <!-- Jalali Date Picker -->
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"
+    ></script>
+
+    <script>
+      jalaliDatepicker.startWatch();
+    </script>
+
+    <!-- JS PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      const reports = <%- JSON.stringify(reports) %>;
+      const monthName = "<%= monthlyComparison.length > 0 ? monthlyComparison[0].month : 'ماه نامشخص' %>";
+
+      document.getElementById("download-pdf").addEventListener("click", function () {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFillColor(0, 0, 255);
+        doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
+
+        doc.setTextColor(255, 255, 255);
+
+        doc.text("گزارشات برای ماه " + monthName, 10, 10);
+
+        var reportText = JSON.stringify(reports, null, 2);
+
+        doc.text(reportText, 10, 20);
+        doc.save("reports.pdf");
+      });
+    </script>
+  </body>
+</html>

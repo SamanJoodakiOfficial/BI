@@ -2,8 +2,8 @@ require('dotenv').config();
 const Group = require('../models/Group');
 const SubGroup = require('../models/SubGroup');
 const Question = require('../models/Question');
-const fs = require('fs');
 const xlsx = require('xlsx');
+const mongoose = require('mongoose');
 
 exports.generateReport = async () => {
     const report = await Question.aggregate([
@@ -136,7 +136,7 @@ exports.generateBigPicture = async () => {
     }));
 };
 
-exports.getColorForScore = score => {
+exports.getColorForScore = (score) => {
     if (score <= 10) return '#ffcccc'; // قرمز روشن
     if (score <= 20) return '#ff9999';
     if (score <= 30) return '#ff6666';

@@ -12,6 +12,9 @@ router.use('/bi', require('./dashboard/bi'));
 // Big Picture
 router.use('/bigPicture', require('./dashboard/bigPicture'));
 
+// Reports
+router.use('/reports', require('./dashboard/report'));
+
 // Groups
 router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
 
