@@ -80,7 +80,6 @@
           >
             <h2 class="text-primary text-2xl text-bold">نمایش جدول</h2>
             <div class="overflow-x-auto">
-              <!-- نمایش تاریخ شروع و پایان به صورت دینامیک -->
               <div class="w-full bg-white p-4 rounded-lg mb-4">
                 <p class="text-lg font-bold text-404040">
                   گزارشات برای ماه <%= monthlyComparison.length > 0 ?
@@ -147,11 +146,16 @@
               نمودار مقایسه ماه‌ها
             </h2>
             <p class="text-gray-600 text-sm">
-              این نمودار نشان‌دهنده تعداد پاسخ‌های بله و خیر به تفکیک ماه است.
+              این نمودار نشان‌دهنده میانگین پاسخ‌های بله به تفکیک ماه است.
             </p>
             <div class="w-full">
               <canvas id="monthlyComparisonChart"></canvas>
             </div>
+
+            <h2 class="text-primary text-2xl text-bold">نمودار گروه‌ها</h2>
+            <p class="text-gray-600 text-sm">
+              این نمودار نشان‌دهنده تعداد پاسخ های بله نسبت به ماه جاری است
+            </p>
             <div class="w-full">
               <canvas id="reportsChart"></canvas>
             </div>
@@ -161,165 +165,137 @@
     </div>
 
     <script>
-      const monthlyComparisonData = <%- JSON.stringify(monthlyComparison) %>;
+      const monthlyData = <%- JSON.stringify(monthlyComparison) %>;
 
-      const monthlyLabels = monthlyComparisonData.map(data => data.month);
-      const responsesYesData = monthlyComparisonData.map(data => data.responsesYes);
-      const responsesNoData = monthlyComparisonData.map(data => data.responsesNo);
+      console.log(monthlyData);
 
-      if (monthlyLabels.length > 1) {
-        const ctxMonthlyComparison = document.getElementById('monthlyComparisonChart').getContext('2d');
-        const monthlyComparisonChart = new Chart(ctxMonthlyComparison, {
+      const labels = monthlyData.map(item => `${item.groupName} - ${item.subGroupName} (${item.month} ${item.year})`);
+
+      const totalYesData = monthlyData.map(item => item.totalYes || 0);
+      const totalNoData = monthlyData.map(item => item.totalNo || 0);
+
+      const chartData = {
+          labels: labels,
+          datasets: [
+              {
+                  label: 'تعداد بله',
+                  data: totalYesData, 
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.4
+              },
+              {
+                  label: 'تعداد خیر',
+                  data: totalNoData,
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.4 
+              },
+              {
+                  label: 'میانگین بله',
+                  data: monthlyData.map(item => item.averageYesScore || 0),
+                  backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0.4
+              }
+          ]
+      };
+
+      const ctx = document.getElementById('monthlyComparisonChart').getContext('2d');
+
+      const chart = new Chart(ctx, {
           type: 'line',
-          data: {
-            labels: monthlyLabels,
-            datasets: [
-              {
-                label: 'پاسخ‌های بله',
-                data: responsesYesData,
-                fill: false,
-                borderColor: 'green',
-                tension: 0.1
-              },
-              {
-                label: 'پاسخ‌های خیر',
-                data: responsesNoData,
-                fill: false,
-                borderColor: 'red',
-                tension: 0.1
-              }
-            ]
-          },
+          data: chartData,
           options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'نمودار مقایسه ماه‌ها'
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'top',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(context) {
+                              return `${context.label}: ${context.dataset.label} = ${context.raw}`;
+                          }
+                      }
+                  }
               },
-              tooltip: {
-                mode: 'index',
-                intersect: false
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      title: {
+                          display: true,
+                          text: 'تعداد/میانگین'
+                      },
+                  },
+                  x: {
+                      title: {
+                          display: true,
+                          text: 'ماه'
+                      }
+                  }
               }
-            },
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'ماه‌ها'
-                }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'تعداد'
-                },
-                beginAtZero: true
-              }
-            }
           }
-        });
-      } else {
-        const ctxSingleMonth = document.getElementById('monthlyComparisonChart').getContext('2d');
-        const singleMonthChart = new Chart(ctxSingleMonth, {
-          type: 'bar',
-          data: {
-            labels: monthlyLabels,
-            datasets: [
-              {
-                label: 'پاسخ‌های بله',
-                data: responsesYesData,
-                backgroundColor: 'green'
-              },
-              {
-                label: 'پاسخ‌های خیر',
-                data: responsesNoData,
-                backgroundColor: 'red'
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'پاسخ‌های بله و خیر'
-              },
-            },
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: 'ماه‌ها'
-                }
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: 'تعداد'
-                },
-                beginAtZero: true
-              }
-            }
-          }
-        });
-      }
+      });
+                                                                                                                                                                    const reportsData = <%- JSON.stringify(reports) %>;
+                                                                                                                                                                const groupNames = reportsData.map(report => report.groupName);
+                                                                                                                                                                              const questionCounts = reportsData.map(report => report.questionsCount);
+                                                                                                                                                                              const yesAverage = reportsData.map(report => report.yesAverage);
 
-
-
-                          const reportsData = <%- JSON.stringify(reports) %>;
-                          const groupNames = reportsData.map(report => report.groupName);
-                          const questionCounts = reportsData.map(report => report.questionsCount);
-                          const yesAverage = reportsData.map(report => report.yesAverage);
-
-                          const ctxReports = document.getElementById('reportsChart').getContext('2d');
-                          const reportsChart = new Chart(ctxReports, {
-                            type: 'bar',
-                            data: {
-                              labels: groupNames,
-                              datasets: [{
-                                label: 'تعداد سوالات',
-                                data: questionCounts,
-                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
-                              }, {
-                                label: 'میانگین پاسخ‌های بله',
-                                data: yesAverage,
-                                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                                borderColor: 'rgba(255, 159, 64, 1)',
-                                borderWidth: 1
-                              }]
-                            },
-                            options: {
-                              responsive: true,
-                              plugins: {
-                                title: {
-                                  display: true,
-                                  text: 'گزارشات گروه‌ها'
-                                },
-                                tooltip: {
-                                  mode: 'index',
-                                  intersect: false
-                                }
-                              },
-                              scales: {
-                                x: {
-                                  title: {
-                                    display: true,
-                                    text: 'گروه‌ها'
-                                  }
-                                },
-                                y: {
-                                  title: {
-                                    display: true,
-                                    text: 'تعداد'
-                                  },
-                                  beginAtZero: true
-                                }
-                              }
-                            }
-                          });
+                                                                                                                                                                              const ctxReports = document.getElementById('reportsChart').getContext('2d');
+                                                                                                                                                                              const reportsChart = new Chart(ctxReports, {
+                                                                                                                                                                                type: 'bar',
+                                                                                                                                                                                data: {
+                                                                                                                                                                                  labels: groupNames,
+                                                                                                                                                                                  datasets: [{
+                                                                                                                                                                                    label: 'تعداد سوالات',
+                                                                                                                                                                                    data: questionCounts,
+                                                                                                                                                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                                                                                                                                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                                                                                                                                                                    borderWidth: 1
+                                                                                                                                                                                  }, {
+                                                                                                                                                                                    label: 'میانگین پاسخ‌های بله',
+                                                                                                                                                                                    data: yesAverage,
+                                                                                                                                                                                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                                                                                                                                                                    borderColor: 'rgba(255, 159, 64, 1)',
+                                                                                                                                                                                    borderWidth: 1
+                                                                                                                                                                                  }]
+                                                                                                                                                                                },
+                                                                                                                                                                                options: {
+                                                                                                                                                                                  responsive: true,
+                                                                                                                                                                                  plugins: {
+                                                                                                                                                                                    title: {
+                                                                                                                                                                                      display: true,
+                                                                                                                                                                                      text: 'گزارشات گروه‌ها'
+                                                                                                                                                                                    },
+                                                                                                                                                                                    tooltip: {
+                                                                                                                                                                                      mode: 'index',
+                                                                                                                                                                                      intersect: false
+                                                                                                                                                                                    }
+                                                                                                                                                                                  },
+                                                                                                                                                                                  scales: {
+                                                                                                                                                                                    x: {
+                                                                                                                                                                                      title: {
+                                                                                                                                                                                        display: true,
+                                                                                                                                                                                        text: 'گروه‌ها'
+                                                                                                                                                                                      }
+                                                                                                                                                                                    },
+                                                                                                                                                                                    y: {
+                                                                                                                                                                                      title: {
+                                                                                                                                                                                        display: true,
+                                                                                                                                                                                        text: 'تعداد'
+                                                                                                                                                                                      },
+                                                                                                                                                                                      beginAtZero: true
+                                                                                                                                                                                    }
+                                                                                                                                                                                  }
+                                                                                                                                                                                }
+                                                                                                                                                                              });
     </script>
 
     <!-- Jalali Date Picker -->

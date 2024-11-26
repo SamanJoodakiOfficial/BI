@@ -121,6 +121,7 @@ exports.handleAddQuestion = async (req, res) => {
             groupID: subgroup.groupID._id,
             subGroupID: subGroup,
             userID: userId,
+            code: code ? code : code,
             text,
             description,
         });

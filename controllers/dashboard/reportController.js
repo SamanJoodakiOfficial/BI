@@ -1,6 +1,7 @@
+const PersianDate = require('persian-date');
+const moment = require('moment-jalaali');
 const Group = require('../../models/Group');
 const Response = require('../../models/Response');
-const moment = require('moment-jalaali');
 
 exports.renderReports = async (req, res) => {
     try {
@@ -23,7 +24,12 @@ exports.renderReports = async (req, res) => {
                     as: "subGroups",
                 },
             },
-            { $unwind: { path: "$subGroups", preserveNullAndEmptyArrays: true } },
+            {
+                $unwind: {
+                    path: "$subGroups",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
             {
                 $lookup: {
                     from: "questions",
@@ -90,13 +96,57 @@ exports.renderReports = async (req, res) => {
 
         const monthlyComparison = await Response.aggregate([
             {
-                $match: {
-                    createdAt: { $gte: start, $lte: end },
+                $lookup: {
+                    from: "questions",
+                    localField: "questionID",
+                    foreignField: "_id",
+                    as: "questions",
                 },
             },
             {
+                $unwind: {
+                    path: "$questions",
+                    preserveNullAndEmptyArrays: true,
+                }
+            },
+            {
+                $lookup: {
+                    from: "subgroups",
+                    localField: "questions.subGroupID",
+                    foreignField: "_id",
+                    as: "subgroups",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$subgroups",
+                    preserveNullAndEmptyArrays: true,
+                }
+            },
+            {
+                $lookup: {
+                    from: "groups",
+                    localField: "subgroups.groupID",
+                    foreignField: "_id",
+                    as: "groups",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$groups",
+                    preserveNullAndEmptyArrays: true,
+                }
+            },
+            {
                 $group: {
-                    _id: { $month: "$createdAt" },
+                    _id: {
+                        groupId: "$groups._id",
+                        groupName: "$groups.name",
+                        subGroupId: "$subgroups._id",
+                        subGroupName: "$subgroups.name",
+                        month: { $month: "$createdAt" },
+                        year: { $year: "$createdAt" },
+                    },
                     totalYes: {
                         $sum: {
                             $cond: [{ $gte: ["$score", 1] }, 1, 0],
@@ -107,9 +157,26 @@ exports.renderReports = async (req, res) => {
                             $cond: [{ $eq: ["$score", 0] }, 1, 0],
                         },
                     },
+                    averageYesScore: {
+                        $avg: "$score",
+                    },
                 },
             },
-            { $sort: { _id: 1 } },
+            {
+                $project: {
+                    _id: 1,
+                    groupId: "$_id.groupId",
+                    groupName: "$_id.groupName",
+                    subGroupId: "$_id.subGroupId",
+                    subGroupName: "$_id.subGroupName",
+                    year: "$_id.year",
+                    month: "$_id.month",
+                    totalYes: 1,
+                    totalNo: 1,
+                    averageYesScore: 1,
+                }
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } },
         ]);
 
         const persianMonths = [
@@ -117,17 +184,31 @@ exports.renderReports = async (req, res) => {
             "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
         ];
 
+        const toPersianYear = (year) => {
+            return moment({ year }).jYear();
+        };
+
         const monthlyData = monthlyComparison.map((item) => {
-            const monthIndex = moment().month(item._id - 1).jMonth();
+            const currentYear = toPersianYear(item._id.year);
+            const currentMonth = item._id.month;
+
+            const date = moment({ year: currentYear, month: currentMonth, day: 1 }).locale('fa');
+
+            const monthIndex = date.jMonth();
+
             return {
-                month: persianMonths[monthIndex],
+                year: currentYear + 1,
+                month: persianMonths[monthIndex] || "ماه نامشخص",
+                groupName: item._id.groupName,
+                subGroupName: item._id.subGroupName,
                 totalYes: item.totalYes || 0,
                 totalNo: item.totalNo || 0,
+                averageYesScore: item.averageYesScore || 0,
             };
         });
 
-        const formattedStartDate = moment(start).format("jYYYY/jMM/jDD");
-        const formattedEndDate = moment(end).format("jYYYY/jMM/jDD");
+        const formattedStartDate = new PersianDate(start).format("YYYY/MM/DD");
+        const formattedEndDate = new PersianDate(end).format("YYYY/MM/DD");
 
         res.render("./dashboard/report/reports", {
             title: 'گزارشات',
