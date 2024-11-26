@@ -1,5 +1,7 @@
 const PersianDate = require('persian-date');
-const moment = require('moment-jalaali');
+const jalaali = require('jalaali-js');
+const moment = require('moment-timezone');
+moment.tz.setDefault("Asia/Tehran");
 const Group = require('../../models/Group');
 const Response = require('../../models/Response');
 
@@ -14,6 +16,7 @@ exports.renderReports = async (req, res) => {
         const end = endDate
             ? moment(endDate, "jYYYY/jMM/jDD").endOf('day').toDate()
             : moment().endOf('day').toDate();
+
 
         const reports = await Group.aggregate([
             {
@@ -184,21 +187,15 @@ exports.renderReports = async (req, res) => {
             "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
         ];
 
-        const toPersianYear = (year) => {
-            return moment({ year }).jYear();
-        };
-
         const monthlyData = monthlyComparison.map((item) => {
-            const currentYear = toPersianYear(item._id.year);
+            const currentYear = item._id.year;
             const currentMonth = item._id.month;
 
-            const date = moment({ year: currentYear, month: currentMonth, day: 1 }).locale('fa');
-
-            const monthIndex = date.jMonth();
+            const { jy: persianYear, jm: persianMonth } = jalaali.toJalaali(currentYear, currentMonth, 1);
 
             return {
-                year: currentYear + 1,
-                month: persianMonths[monthIndex] || "ماه نامشخص",
+                year: persianYear,
+                month: persianMonths[persianMonth] || "ماه نامشخص",
                 groupName: item._id.groupName,
                 subGroupName: item._id.subGroupName,
                 totalYes: item.totalYes || 0,
