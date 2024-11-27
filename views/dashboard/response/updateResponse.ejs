@@ -63,16 +63,11 @@
 
             <div class="flex flex-col gap-2">
               <label for="answer" class="text-sm">پاسخ شما</label>
-              <input
-                type="number"
-                class="w-full sm:w-28 h-12 border rounded-lg border-CBCBCB text-606060 bg-primaryBackground focus:ring-2 focus:ring-primary text-center outline-none px-4"
-                placeholder="0 - 100"
-                min="0"
-                max="100"
-                name="score"
-                id="answer"
-                value="<%= response.score || 'داده‌ای یافت نشد' %>"
-              />
+              <input type="number" class="w-full sm:w-28 h-12 border rounded-lg
+              border-CBCBCB text-606060 bg-primaryBackground focus:ring-2
+              focus:ring-primary text-center outline-none px-4" placeholder="0 - 100" min="0" max="100" name="score" id="answer" value="<%=
+              response.score !== undefined ? response.score : 'داده‌ای یافت نشد'
+              %>" " />
               <span class="text-warning text-sm">0 نشانه خیر است</span>
             </div>
 
@@ -84,8 +79,8 @@
                 name="description"
                 id="description"
               >
-<%= response.description || 'داده‌ای یافت نشد' %>
-              </textarea>
+<%= response.description || 'داده‌ای یافت نشد' %></textarea
+              >
             </div>
 
             <div class="flex flex-col gap-2">

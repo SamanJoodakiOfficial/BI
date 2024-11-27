@@ -132,7 +132,7 @@
       const showOpenAIResult = document.getElementById("show");
 
       const openai = async (prompt) => {
-        const CHATGPT_API_KEY = "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";
+        const CHATGPT_API_KEY = "<%- openaiApiKey %>";
         try {
           const options = {
             method: "POST",

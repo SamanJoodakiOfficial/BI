@@ -113,13 +113,11 @@
             <% } %>
           </span></p>
 
-          <p class="text-404040">پاسخ : <span class="text-606060">
-            <% if (response.score) { %>
-              <%= response.score %>
-            <% } else { %>
-              داده‌ای یافت نشد
-            <% } %>
-          </span> درصد</p>
+          <p class="text-404040">پاسخ : 
+            <span class="text-606060">
+            <%= response.score !== undefined ? response.score : 'داده‌ای یافت نشد' %> درصد
+          </span>
+          </p>
 
           <p class="text-404040">توضیحات : <span class="text-606060">
             <% if (response.description) { %>

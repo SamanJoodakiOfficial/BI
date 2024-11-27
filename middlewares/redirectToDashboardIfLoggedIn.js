@@ -25,6 +25,21 @@ exports.redirectToDashboardIfLoggedIn = async (req, res, next) => {
             });
         }
 
+        // Can be removed, depends on ways
+
+        const validRoles = ['user', 'admin'];
+
+        if (!validRoles.includes(user.role)) {
+            res.clearCookie('connect.sid');
+            return req.session.destroy((err) => {
+                if (err) {
+                    console.error('Error destroying session:', err);
+                    return next(err);
+                }
+                return res.redirect('/auth/login');
+            });
+        }
+
         next();
     } catch (error) {
         console.error(error.message);
