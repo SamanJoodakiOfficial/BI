@@ -1,0 +1,6 @@
+Install,
+
+Visual Studio Code
+Git
+Mongodb
+Nodejs
