@@ -42,7 +42,7 @@ OPENAI_API_KEY= کلید API OPENAI برای تجزیه و تحلیل و حتم�
 
 ### 4. **اجرای پروژه**  
 ```bash
-npm start
+npm startDev (Nodemon) or npm start (Node)
 ```
 
 ---
