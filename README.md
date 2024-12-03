@@ -70,4 +70,3 @@ npm startDev (Nodemon) or npm start (Node)
 <div align="center">
   طراحی شده توسط سامان جودکی - استادراهنما: استاد مهرداد حمیدزاده
 </div>
-```
