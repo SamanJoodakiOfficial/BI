@@ -4,5 +4,6 @@ const bigPictureController = require('../../controllers/dashboard/bigPictureCont
 const router = express.Router();
 
 router.get('/', bigPictureController.renderBigPicture);
+router.post('/process-colors', bigPictureController.renderBigPicture);
 
 module.exports = router;

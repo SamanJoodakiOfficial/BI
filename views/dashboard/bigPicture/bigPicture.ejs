@@ -17,22 +17,46 @@
 
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4 mt-4">
-          <div
-            class="w-full min-h-20 rounded-lg flex justify-between items-center gap-1 md:flex-row flex-col"
-          >
-            <% if (colorGuide && colorGuide.length > 0) { %> <%
-            colorGuide.forEach((color) => { %>
-            <div
-              class="text-xs text-center rounded-lg"
-              style="background-color: <%= color.color %>"
-            >
-              <p>طیف رنگ: <%= color.range %></p>
-              <p>توضیح رنگ: <%= color.description %></p>
+          <form action="/dashboard/bigPicture/process-colors" method="POST" class="w-full rounded-lg mt-8 flex gap-4 flex-col">
+            <div class="flex flex-col gap-2">
+              <label for="numberOfRanges" class="text-202020"
+                >تعداد طیف‌های رنگی:</label
+              >
+              <input
+                type="number"
+                id="numberOfRanges"
+                class="h-10 lg:h-12 border rounded-lg text-center border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none px-4"
+                name="numberOfRanges"
+                min="2"
+                max="20"
+                value="5"
+                required
+              />
             </div>
-            <% }) } else { %>
-            <p class="text-lg mt-4 text-primary"><%= 'داده‌ای یافت نشد' %></p>
-            <% } %> %>
-          </div>
+
+            <div class="w-full flex flex-col gap-2">
+              <label for="colors" class="text-202020"
+                >رنگ‌ها (با کاما جدا کنید):</label
+              >
+              <input
+                type="text"
+                id="colors"
+                class="w-full h-10 lg:h-12 border rounded-lg text-center border-CBCBCB text-606060 bg-white focus:ring-2 focus:ring-primary outline-none px-4"
+                name="colors"
+                placeholder="#ff0000,#00ff00,#0000ff"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+            >
+              اعمال تنظیمات
+            </button>
+          </form>
+
+          <hr />
 
           <div
             class="w-full min-h-[100px] rounded-lg grid grid-cols-1 gap-2 md:grid-cols-4"

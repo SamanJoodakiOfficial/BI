@@ -15,7 +15,6 @@ exports.renderEditProfile = async (req, res) => {
         res.render('./dashboard/profile/editPersonalInformation', { title: 'ویرایش اطلاعات کاربری' });
     } catch (error) {
         console.error(error);
-        res.redirect('/dashboard/profile');
     }
 };
 
@@ -77,6 +76,5 @@ exports.handleEditProfile = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         req.flash('error', 'خطایی رخ داد، لطفاً دوباره تلاش کنید');
-        res.redirect('/dashboard/profile');
     }
 };

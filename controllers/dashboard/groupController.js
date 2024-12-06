@@ -39,7 +39,6 @@ exports.renderGroups = async (req, res) => {
         res.render('./dashboard/group/groups', { title: 'مدیریت گروه‌ها', groups, text, currentPage: page, query, limit, totalPages, totalGroups });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/groups');
     }
 };
 
@@ -60,18 +59,17 @@ exports.handleAddGroup = async (req, res) => {
         const existingGroup = await Group.findOne({ name });
 
         if (existingGroup) {
-            req.flash('error', `گروه ${name} وجود دارد`);
-            return res.redirect('/dashboard/groups/addGroup');
+            req.flash('error', `گروه با ${name} از قبل در سیستم وجود دارد.`);
+            return res.redirect('/dashboard/groups/add');
         }
 
         const newGroup = new Group({ userID: userId, name });
 
         await newGroup.save();
         req.flash('success', `گروه ${name} با موفقیت ثبت شد`);
-        res.redirect('/dashboard/groups/addGroup');
+        res.redirect('/dashboard/groups/add');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/groups/addGroup');
     }
 };
 
@@ -82,13 +80,13 @@ exports.renderUpdateGroup = async (req, res) => {
         const existingGroup = await Group.findById(groupId);
 
         if (!existingGroup) {
-            return res.render("./dashboard/group/groups", { title: "مدیریت گروه‌ها" });
+            req.flash('error', `گروه با شناسه ${groupId} یافت نشد.`);
+            return res.redirect('/dashboard/groups');
         }
 
         res.render('./dashboard/group/updateGroup', { title: `ویرایش گروه ${existingGroup.name}`, group: existingGroup });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/groups');
     }
 };
 
@@ -134,7 +132,6 @@ exports.handleUpdateGroup = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         req.flash('error', 'خطایی در ویرایش گروه رخ داد');
-        res.redirect('/dashboard/groups');
     }
 };
 
@@ -153,6 +150,5 @@ exports.handleDeleteGroup = async (req, res) => {
         res.redirect('/dashboard/groups');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/groups');
     }
 };

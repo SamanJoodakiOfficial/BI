@@ -71,7 +71,6 @@ exports.renderQuestions = async (req, res) => {
         res.render('./dashboard/question/questions', { title: 'بانک سوالات', questions, text, currentPage: page, query, limit, totalPages, totalQuestions });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
     }
 };
 
@@ -93,7 +92,6 @@ exports.renderAddQuestion = async (req, res) => {
         res.render('./dashboard/question/addQuestion', { title: 'اضافه کردن سوال جدید', groups, subGroups });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
     }
 };
 
@@ -129,7 +127,7 @@ exports.handleAddQuestion = async (req, res) => {
         await newQuestion.save();
 
         req.flash('success', `سوال ${text} با موفقیت ثبت شد`);
-        res.redirect('/dashboard/questions/addQuestion');
+        res.redirect('/dashboard/questions/add');
     } catch (error) {
         if (error.code === 11000) {
             req.flash('error', 'این سوال قبلاً طراحی شده است.');
@@ -137,7 +135,7 @@ exports.handleAddQuestion = async (req, res) => {
             console.error(error.message);
             req.flash('error', 'خطای داخلی سرور. لطفاً دوباره تلاش کنید.');
         }
-        res.redirect('/dashboard/questions/addQuestion');
+        res.redirect('/dashboard/questions/add');
     }
 };
 
@@ -164,7 +162,6 @@ exports.renderUpdateQuestion = async (req, res) => {
         res.render('./dashboard/question/updateQuestion', { title: `ویرایش سوال ${question.text}`, groups, subGroups, question });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
     }
 };
 
@@ -207,7 +204,6 @@ exports.handleUpdateQuestion = async (req, res) => {
         res.redirect('/dashboard/questions');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
     }
 };
 
@@ -224,7 +220,6 @@ exports.handleDeleteQuestion = async (req, res) => {
         res.redirect('/dashboard/questions');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/questions');
     }
 };
 

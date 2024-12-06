@@ -1,12 +1,13 @@
 const express = require('express');
-const userController = require('../../controllers/dashboard/userController');
 const { body } = require('express-validator');
+
+const userController = require('../../controllers/dashboard/userController');
 
 const router = express.Router();
 
 router.get('/', userController.renderUsers);
-router.get('/addUser', userController.renderAddUser);
-router.post('/addUser',
+router.get('/add', userController.renderAddUser);
+router.post('/add',
     body("email")
         .trim()
         .isEmail()
@@ -22,7 +23,7 @@ router.post('/addUser',
         .isIn(['user', 'admin'])
         .withMessage("نقش معتبر نیست (فقط user یا admin قابل قبول است)"),
     userController.handleAddUser);
-router.get('/updateUser/:uid', userController.renderUpdateUser);
-router.post('/updateUser/:uid', userController.handleUpdateUser);
-router.get('/deleteUser/:uid', userController.handleDeleteUser);
+router.get('/edit/:uid', userController.renderUpdateUser);
+router.post('/edit/:uid', userController.handleUpdateUser);
+router.get('/delete/:uid', userController.handleDeleteUser);
 module.exports = router;

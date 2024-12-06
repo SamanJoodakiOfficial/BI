@@ -50,7 +50,6 @@ exports.renderUsers = async (req, res) => {
         res.render('./dashboard/user/users', { title: 'مدیریت کاربران', users: userStats, text, currentPage: page, query, limit, totalPages, totalUsers });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/users');
     }
 };
 
@@ -71,7 +70,7 @@ exports.handleAddUser = async (req, res) => {
 
         if (existingUser) {
             req.flash('error', `کاربر با ایمیل ${email} در سیستم ثبت شده است`);
-            return res.redirect('/dashboard/users/addUser');
+            return res.redirect('/dashboard/users/add');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -80,7 +79,7 @@ exports.handleAddUser = async (req, res) => {
 
         if (!validRoles.includes(role)) {
             req.flash('error', `${role} در سیستم ثبت نشده است`);
-            return res.redirect('/dashboard/users/addUser');
+            return res.redirect('/dashboard/users/add');
         }
 
         const newUser = new User({
@@ -90,10 +89,9 @@ exports.handleAddUser = async (req, res) => {
         });
         await newUser.save();
         req.flash('success', `کاربر با ایمیل ${email} و به عنوان ${role} با موفقیت ثبت نام شد`);
-        res.redirect('/dashboard/users/addUser');
+        res.redirect('/dashboard/users/add');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/users/addUser');
     }
 };
 
@@ -111,7 +109,6 @@ exports.renderUpdateUser = async (req, res) => {
         res.render('./dashboard/user/updateUser', { title: `ویرایش کاربر با شناسه ${uid}`, selectedUser });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/users');
     }
 };
 
@@ -134,13 +131,13 @@ exports.handleUpdateUser = async (req, res) => {
         const currentUser = await User.findById(uid);
         if (!currentUser) {
             req.flash('error', `کاربر با شناسه ${uid} در سیستم ثبت نشده است`);
-            return res.redirect('/dashboard/users/addUser');
+            return res.redirect('/dashboard/users/add');
         }
 
         const validRoles = ['user', 'admin'];
         if (!validRoles.includes(role)) {
             req.flash('error', `${role} در سیستم ثبت نشده است`);
-            return res.redirect(`/dashboard/users/updateUser/${uid}`);
+            return res.redirect(`/dashboard/users/edit/${uid}`);
         }
 
         if (
@@ -149,15 +146,13 @@ exports.handleUpdateUser = async (req, res) => {
             role !== 'admin'
         ) {
             req.flash('error', `شما ادمین هستید و نمی‌توانید نقش خود را تغییر دهید`);
-            return res.redirect(`/dashboard/users/updateUser/${uid}`);
+            return res.redirect(`/dashboard/users/edit/${uid}`);
         }
 
-        // فقط اگر رمز عبور وارد شده باشد، آن را به‌روزرسانی کنید
         if (password && password.trim() !== '') {
             currentUser.password = await bcrypt.hash(password, 10);
         }
 
-        // به‌روزرسانی نقش
         currentUser.role = role;
 
         await currentUser.save();
@@ -165,11 +160,10 @@ exports.handleUpdateUser = async (req, res) => {
             'success',
             `کاربر با ایمیل ${currentUser.email} و به عنوان ${role} با موفقیت ویرایش شد`
         );
-        res.redirect(`/dashboard/users/updateUser/${uid}`);
+        res.redirect(`/dashboard/users/edit/${uid}`);
     } catch (error) {
         console.error(error.message);
         req.flash('error', `خطا در ویرایش کاربر`);
-        res.redirect(`/dashboard/users/updateUser/${uid}`);
     }
 };
 
@@ -202,6 +196,5 @@ exports.handleDeleteUser = async (req, res) => {
     } catch (error) {
         console.error('Error deleting user:', error.message);
         req.flash('error', 'خطا در حذف کاربر');
-        res.redirect('/dashboard/users');
     }
 };

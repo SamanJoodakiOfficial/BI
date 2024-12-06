@@ -56,7 +56,6 @@ exports.renderResponses = async (req, res) => {
         res.render('./dashboard/response/responses', { title: 'مدیریت پاسخ‌ها', responses, text, currentPage: page, query, limit, totalPages, totalResponses });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/responses');
     }
 };
 
@@ -82,7 +81,6 @@ exports.renderUpdateResponse = async (req, res) => {
         res.render('./dashboard/response/updateResponse', { title: 'ویرایش پاسخ', response });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/responses');
     }
 };
 
@@ -123,14 +121,14 @@ exports.handleUpdateResponse = async (req, res) => {
 
         if (uploadedFiles.length > 10) {
             req.flash('error', 'شما نمی‌توانید بیش از 10 فایل به صورت یکجا آپلود کنید');
-            return res.redirect(`/dashboard/responses/updateResponse/${responseId}`);
+            return res.redirect(`/dashboard/responses/edit/${responseId}`);
         }
 
         const updatedDocuments = [...response.documents, ...uploadedFiles];
 
         if (updatedDocuments.length > 10) {
             req.flash('error', 'شما نمی‌توانید بیش از 10 فایل برای یک پاسخ آپلود کنید');
-            return res.redirect(`/dashboard/responses/updateResponse/${responseId}`);
+            return res.redirect(`/dashboard/responses/edit/${responseId}`);
         }
 
         const updatedResponse = await Response.findByIdAndUpdate(
@@ -154,8 +152,6 @@ exports.handleUpdateResponse = async (req, res) => {
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
-        req.flash('error', 'خطای سرور رخ داد.');
-        res.redirect('/dashboard/responses');
     }
 };
 
@@ -207,8 +203,6 @@ exports.handleAddResponseByAdmin = async (req, res) => {
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
-        req.flash('error', 'خطایی در ثبت پاسخ رخ داد.');
-        res.redirect('/dashboard/responses');
     }
 };
 
@@ -227,6 +221,5 @@ exports.handleDeleteResponse = async (req, res) => {
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/responses');
     }
 };

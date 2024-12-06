@@ -15,7 +15,6 @@ exports.renderAddResponse = async (req, res) => {
         res.render('./dashboard/response/addResponse', { title: `اضافه کردن پاسخ جدید برای سوال ${question._id}`, question });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/responses');
     }
 };
 
@@ -78,7 +77,5 @@ exports.handleAddResponse = async (req, res) => {
         }
     } catch (error) {
         console.error(error.message);
-        req.flash('error', 'مشکلی در پردازش پاسخ به وجود آمد.');
-        return res.redirect('/dashboard/responses');
     }
 };

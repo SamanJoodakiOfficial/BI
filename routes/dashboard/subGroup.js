@@ -6,18 +6,18 @@ const subGroupController = require('../../controllers/dashboard/subGroupControll
 const router = express.Router();
 
 router.get('/', subGroupController.renderSubGroups);
-router.get('/addSubGroup', subGroupController.renderAddSubGroup);
-router.post('/addSubGroup',
+router.get('/add', subGroupController.renderAddSubGroup);
+router.post('/add',
     body("name").trim().notEmpty().withMessage("نام زیرگروه اجباری است")
     , subGroupController.handleAddSubGroup);
 
-router.get('/updateSubGroup/:subGroupId',
+router.get('/edit/:subGroupId',
     subGroupController.renderUpdateSubGroup
 );
-router.post('/updateSubGroup/:subGroupId',
+router.post('/edit/:subGroupId',
     body("name").trim().notEmpty().withMessage("نام زیرگروه اجباری است"),
     subGroupController.handleUpdateSubGroup
 );
-router.get('/deleteSubGroup/:subGroupId', subGroupController.handleDeleteSubGroup);
+router.get('/delete/:subGroupId', subGroupController.handleDeleteSubGroup);
 
 module.exports = router;

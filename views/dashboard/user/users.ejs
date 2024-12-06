@@ -16,7 +16,7 @@
             کاربران ثبت شده
           </h2>
           <a
-            href="/dashboard/users/addUser"
+            href="/dashboard/users/add"
             class="h-10 px-4 lg:h-12 lg:px-6 bg-primary text-white flex items-center justify-center font-bold rounded-lg shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
             ><i class="ri-add-line"></i
             ><span class="hidden sm:inline">ثبت کاربر جدید</span></a
@@ -108,14 +108,14 @@
             <!-- user actions -->
             <div class="flex items-center gap-2 flex-wrap">
               <a
-                href="/dashboard/users/updateUser/<%= usr._id %>"
+                href="/dashboard/users/edit/<%= usr._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-success text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
               >
                 ویرایش کاربر
               </a>
 
               <a
-                href="/dashboard/users/deleteUser/<%= usr._id %>"
+                href="/dashboard/users/delete/<%= usr._id %>"
                 class="md:w-[150px] w-full h-12 lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-error text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
               >
                 حذف کاربر

@@ -3,7 +3,6 @@ const Group = require('../models/Group');
 const SubGroup = require('../models/SubGroup');
 const Question = require('../models/Question');
 const xlsx = require('xlsx');
-const mongoose = require('mongoose');
 
 exports.generateReport = async () => {
     const report = await Question.aggregate([
@@ -148,22 +147,6 @@ exports.getColorForScore = (score) => {
     if (score <= 90) return '#33ff33';
     if (score <= 100) return '#00ff00';
     return '#ffffff'; // سفید
-};
-
-exports.getScoreColorGuide = () => {
-    return [
-        { range: '0-10', color: '#ffcccc', description: 'قرمز روشن' },
-        { range: '11-20', color: '#ff9999', description: 'قرمز کم‌رنگ' },
-        { range: '21-30', color: '#ff6666', description: 'قرمز متوسط' },
-        { range: '31-40', color: '#ff3333', description: 'قرمز تیره' },
-        { range: '41-50', color: '#ff0000', description: 'قرمز پررنگ' },
-        { range: '51-60', color: '#ccffcc', description: 'سبز روشن' },
-        { range: '61-70', color: '#99ff99', description: 'سبز کم‌رنگ' },
-        { range: '71-80', color: '#66ff66', description: 'سبز متوسط' },
-        { range: '81-90', color: '#33ff33', description: 'سبز تیره' },
-        { range: '91-100', color: '#00ff00', description: 'سبز پررنگ' },
-        { range: 'بیش از 100', color: '#ffffff', description: 'سفید' },
-    ];
 };
 
 exports.processFile = async (file) => {

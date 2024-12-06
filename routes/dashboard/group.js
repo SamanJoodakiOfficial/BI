@@ -6,17 +6,17 @@ const groupController = require('../../controllers/dashboard/groupController');
 const router = express.Router();
 
 router.get('/', groupController.renderGroups);
-router.get('/addGroup', groupController.renderAddGroup);
-router.post('/addGroup',
+router.get('/add', groupController.renderAddGroup);
+router.post('/add',
     body("name").trim().notEmpty().withMessage("نام گروه اجباری است")
     , groupController.handleAddGroup);
-router.get('/updateGroup/:groupId',
+router.get('/edit/:groupId',
     groupController.renderUpdateGroup
 );
-router.post('/updateGroup/:groupId',
+router.post('/edit/:groupId',
     body("name").trim().notEmpty().withMessage("نام گروه اجباری است"),
     groupController.handleUpdateGroup
 );
-router.get('/deleteGroup/:groupId', groupController.handleDeleteGroup);
+router.get('/delete/:groupId', groupController.handleDeleteGroup);
 
 module.exports = router;

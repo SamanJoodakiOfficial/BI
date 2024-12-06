@@ -2,35 +2,22 @@ const express = require('express');
 
 const router = express.Router();
 
+// Base Route
 router.get('/', (req, res) => {
     res.redirect('/dashboard/bi');
 });
 
-// Business Intelligence
+// Public Routes
 router.use('/bi', require('./dashboard/bi'));
-
-// Big Picture
 router.use('/bigPicture', require('./dashboard/bigPicture'));
-
-// Reports
 router.use('/reports', require('./dashboard/report'));
-
-// Groups
-router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
-
-// Sub Groups
-router.use('/subGroups', require('../middlewares/isAdmin'), require('./dashboard/subGroup'));
-
-// Questions
 router.use('/questions', require('./dashboard/question'));
-
-// Responses
-router.use('/responses', require('../middlewares/isAdmin'), require('./dashboard/responseProtected'));
-
-// Users
-router.use('/users', require('../middlewares/isAdmin'), require('./dashboard/user'));
-
-// Profile
 router.use('/profile', require('./dashboard/profile'));
+
+// Admin Routes
+router.use('/groups', require('../middlewares/isAdmin'), require('./dashboard/group'));
+router.use('/subGroups', require('../middlewares/isAdmin'), require('./dashboard/subGroup'));
+router.use('/responses', require('../middlewares/isAdmin'), require('./dashboard/responseProtected'));
+router.use('/users', require('../middlewares/isAdmin'), require('./dashboard/user'));
 
 module.exports = router;

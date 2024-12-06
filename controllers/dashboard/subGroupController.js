@@ -42,7 +42,6 @@ exports.renderSubGroups = async (req, res) => {
         res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه‌ها', subGroups, text, currentPage: page, query, limit, totalPages, totalSubGroups });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups');
     }
 };
 
@@ -58,7 +57,6 @@ exports.renderAddSubGroup = async (req, res) => {
         res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه جدید', groups });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups');
     }
 };
 
@@ -85,8 +83,7 @@ exports.handleAddSubGroup = async (req, res) => {
             const exisitingSubGroup = await Group.find({});
 
             req.flash('error', 'این زیرگروه قبلا ثبت شده است');
-            // return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `زیرگروه ${name} قبلا ثبت شده است`, exisitingSubGroup, groups });
-            return res.redirect('/dashboard/subGroups/addSubGroup');
+            return res.redirect('/dashboard/subGroups/add');
         }
 
         const newSubGroup = SubGroup({
@@ -98,10 +95,9 @@ exports.handleAddSubGroup = async (req, res) => {
         await newSubGroup.save();
         req.flash('success', `زیرگروه ${name} با موفقیت ثبت شد`);
         const groups = await Group.find({});
-        res.redirect('/dashboard/subGroups/addSubGroup');
+        res.redirect('/dashboard/subGroups/add');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups/addSubGroup');
     }
 };
 
@@ -112,7 +108,8 @@ exports.renderUpdateSubGroup = async (req, res) => {
         const subGroup = await SubGroup.findById(subGroupId);
 
         if (!subGroup) {
-            return res.render('./dashboard/subGroup/subGroups', { title: 'مدیریت زیرگروه', subGroup });
+            req.flash('error', `زیرگروه با شناسه ${subGroupId} یافت نشد.`);
+            return res.redirect('/dashboard/subGroups');
         }
 
         const groups = await Group.find({});
@@ -125,7 +122,6 @@ exports.renderUpdateSubGroup = async (req, res) => {
         res.render('./dashboard/subGroup/updateSubGroup', { title: `ویرایش زیرگروه ${subGroup.name}`, groups, subGroup });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups');
     }
 };
 
@@ -178,7 +174,6 @@ exports.handleUpdateSubGroup = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         req.flash('error', 'خطایی در ویرایش زیرگروه رخ داد');
-        res.redirect('/dashboard/subGroups');
     }
 };
 
@@ -198,6 +193,5 @@ exports.handleDeleteSubGroup = async (req, res) => {
         res.redirect('/dashboard/subGroups');
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/subGroups');
     }
 };

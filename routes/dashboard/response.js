@@ -7,8 +7,8 @@ const responseController = require('../../controllers/dashboard/responseControll
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/addResponse', responseController.renderAddResponse);
-router.post('/addResponse',
+router.get('/add', responseController.renderAddResponse);
+router.post('/add',
     upload.array('files', 10),
     (err, req, res, next) => {
         if (err instanceof multer.MulterError) {
