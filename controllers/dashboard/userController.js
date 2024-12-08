@@ -1,8 +1,9 @@
+const { validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+
 const User = require('../../models/User');
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
-const { validationResult } = require('express-validator');
-const bcrypt = require('bcrypt');
 
 exports.renderUsers = async (req, res) => {
     try {
@@ -42,7 +43,7 @@ exports.renderUsers = async (req, res) => {
 
         let text = '';
         if (users.length <= 0) {
-            text = 'کاربری یافت نشد';
+            text = 'متاسفانه هیچ کاربری با مشخصات وارد شده پیدا نشد. لطفاً دوباره تلاش کنید!';
         }
 
         const totalPages = Math.ceil(totalUsers / limit);
@@ -69,7 +70,7 @@ exports.handleAddUser = async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            req.flash('error', `کاربر با ایمیل ${email} در سیستم ثبت شده است`);
+            req.flash('error', `کاربر با ایمیل ${email} قبلاً در سیستم ثبت شده است. لطفاً ایمیل دیگری وارد کنید.`);
             return res.redirect('/dashboard/users/add');
         }
 
@@ -78,7 +79,7 @@ exports.handleAddUser = async (req, res) => {
         const validRoles = ['user', 'admin'];
 
         if (!validRoles.includes(role)) {
-            req.flash('error', `${role} در سیستم ثبت نشده است`);
+            req.flash('error', `نقش ${role} نامعتبر است. لطفاً یکی از نقش‌های معتبر (کاربر یا ادمین) را انتخاب کنید.`);
             return res.redirect('/dashboard/users/add');
         }
 
@@ -88,7 +89,7 @@ exports.handleAddUser = async (req, res) => {
             role
         });
         await newUser.save();
-        req.flash('success', `کاربر با ایمیل ${email} و به عنوان ${role} با موفقیت ثبت نام شد`);
+        req.flash('success', `با موفقیت کاربر با ایمیل ${email} به عنوان ${role} اضافه شد. خوش آمدید!`);
         res.redirect('/dashboard/users/add');
     } catch (error) {
         console.error(error.message);
@@ -130,13 +131,13 @@ exports.handleUpdateUser = async (req, res) => {
     try {
         const currentUser = await User.findById(uid);
         if (!currentUser) {
-            req.flash('error', `کاربر با شناسه ${uid} در سیستم ثبت نشده است`);
+            req.flash('error', `کاربر با شناسه ${uid} در سیستم یافت نشد. لطفاً مجدداً بررسی کنید.`);
             return res.redirect('/dashboard/users/add');
         }
 
         const validRoles = ['user', 'admin'];
         if (!validRoles.includes(role)) {
-            req.flash('error', `${role} در سیستم ثبت نشده است`);
+            req.flash('error', `نقش جدید ${role} نامعتبر است. تنها دو نقش معتبر "کاربر" و "ادمین" هستند.`);
             return res.redirect(`/dashboard/users/edit/${uid}`);
         }
 
@@ -145,7 +146,7 @@ exports.handleUpdateUser = async (req, res) => {
             currentUser.role === 'admin' &&
             role !== 'admin'
         ) {
-            req.flash('error', `شما ادمین هستید و نمی‌توانید نقش خود را تغییر دهید`);
+            req.flash('error', `شما نمی‌توانید نقش خود را تغییر دهید. ادمین‌ها نمی‌توانند به نقش غیر ادمین تغییر پیدا کنند.`);
             return res.redirect(`/dashboard/users/edit/${uid}`);
         }
 
@@ -156,10 +157,7 @@ exports.handleUpdateUser = async (req, res) => {
         currentUser.role = role;
 
         await currentUser.save();
-        req.flash(
-            'success',
-            `کاربر با ایمیل ${currentUser.email} و به عنوان ${role} با موفقیت ویرایش شد`
-        );
+        req.flash('success', `اطلاعات کاربر با ایمیل ${currentUser.email} و به عنوان ${role} با موفقیت به روزرسانی شد.`);
         res.redirect(`/dashboard/users/edit/${uid}`);
     } catch (error) {
         console.error(error.message);
@@ -180,18 +178,18 @@ exports.handleDeleteUser = async (req, res) => {
         }
 
         if (existingUser._id.toString() === uid) {
-            req.flash('error', 'شما نمی‌توانید حساب خود را حذف کنید');
+            req.flash('error', 'شما نمی‌توانید حساب خود را حذف کنید. برای حذف حساب دیگران از پنل مدیریت استفاده کنید.');
             return res.redirect('/dashboard/users');
         }
 
         const deletedUser = await User.findByIdAndDelete(uid);
 
         if (!deletedUser) {
-            req.flash('error', `کاربری با شناسه ${uid} یافت نشد`);
+            req.flash('error', `کاربر با شناسه ${uid} در سیستم یافت نشد. ممکن است قبلاً حذف شده باشد.`);
             return res.redirect('/dashboard/users');
         }
 
-        req.flash('success', `کاربر با شناسه ${uid} با موفقیت حذف شد`);
+        req.flash('success', `کاربر با شناسه ${uid} به طور کامل از سیستم حذف شد. عملیات با موفقیت انجام شد.`);
         res.redirect('/dashboard/users');
     } catch (error) {
         console.error('Error deleting user:', error.message);

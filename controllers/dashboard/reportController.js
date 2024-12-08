@@ -2,6 +2,7 @@ const PersianDate = require('persian-date');
 const jalaali = require('jalaali-js');
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Tehran");
+
 const Group = require('../../models/Group');
 const Response = require('../../models/Response');
 
@@ -195,7 +196,7 @@ exports.renderReports = async (req, res) => {
 
             return {
                 year: persianYear,
-                month: persianMonths[persianMonth] || "ماه نامشخص",
+                month: persianMonths[persianMonth - 1] || "ماه نامشخص",
                 groupName: item._id.groupName,
                 subGroupName: item._id.subGroupName,
                 totalYes: item.totalYes || 0,

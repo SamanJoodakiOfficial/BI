@@ -1,7 +1,7 @@
+const { validationResult } = require('express-validator');
+
 const SubGroup = require('../../models/SubGroup');
 const Group = require('../../models/Group');
-
-const { validationResult } = require('express-validator');
 
 exports.renderSubGroups = async (req, res) => {
     try {
@@ -34,7 +34,7 @@ exports.renderSubGroups = async (req, res) => {
 
         let text = '';
         if (subGroups.length <= 0) {
-            text = 'زیرگروهی یافت نشد';
+            text = 'هیچ زیرگروهی پیدا نشد';
         }
 
         const totalPages = Math.ceil(totalSubGroups / limit);
@@ -50,7 +50,7 @@ exports.renderAddSubGroup = async (req, res) => {
         const groups = await Group.find({});
 
         if (groups.length <= 0) {
-            req.flash('error', 'ابتدا باید گروه‌ها را اضافه کنید');
+            req.flash('error', 'برای اضافه کردن زیرگروه، ابتدا باید گروه‌ها را اضافه کنید');
             return res.redirect('/dashboard/groups');
         }
 
@@ -67,22 +67,20 @@ exports.handleAddSubGroup = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const groups = await Group.find({});
-        return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن گروه جدید', errors: errors.array(), groups });
+        return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه جدید', errors: errors.array(), groups });
     }
 
     try {
         const existingGroup = await Group.findById(group);
         if (!existingGroup) {
             const groups = await Group.find({});
-            return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `گروه ${group} یافت نشد`, groups });
+            return res.render('./dashboard/subGroup/addSubGroup', { title: 'اضافه کردن زیرگروه', error: `گروه ${group} پیدا نشد`, groups });
         }
 
         const exisitingSubGroup = await SubGroup.findOne({ name });
         if (exisitingSubGroup) {
             const groups = await Group.find({});
-            const exisitingSubGroup = await Group.find({});
-
-            req.flash('error', 'این زیرگروه قبلا ثبت شده است');
+            req.flash('error', 'این زیرگروه قبلاً ثبت شده است');
             return res.redirect('/dashboard/subGroups/add');
         }
 
@@ -93,7 +91,7 @@ exports.handleAddSubGroup = async (req, res) => {
         });
 
         await newSubGroup.save();
-        req.flash('success', `زیرگروه ${name} با موفقیت ثبت شد`);
+        req.flash('success', `زیرگروه ${name} با موفقیت اضافه شد`);
         const groups = await Group.find({});
         res.redirect('/dashboard/subGroups/add');
     } catch (error) {
@@ -108,14 +106,14 @@ exports.renderUpdateSubGroup = async (req, res) => {
         const subGroup = await SubGroup.findById(subGroupId);
 
         if (!subGroup) {
-            req.flash('error', `زیرگروه با شناسه ${subGroupId} یافت نشد.`);
+            req.flash('error', `زیرگروه با شناسه ${subGroupId} پیدا نشد.`);
             return res.redirect('/dashboard/subGroups');
         }
 
         const groups = await Group.find({});
 
         if (!groups.length) {
-            req.flash('error', 'برای اضافه یا ویرایش کردن زیرگروه می‌بایست حداقل یک گروه وجود داشته باشد');
+            req.flash('error', 'برای ویرایش یا اضافه کردن زیرگروه، باید حداقل یک گروه موجود باشد');
             return res.redirect('/dashboard/groups');
         }
 
@@ -173,7 +171,7 @@ exports.handleUpdateSubGroup = async (req, res) => {
         res.redirect('/dashboard/subGroups');
     } catch (error) {
         console.error(error.message);
-        req.flash('error', 'خطایی در ویرایش زیرگروه رخ داد');
+        req.flash('error', 'خطا در ویرایش زیرگروه');
     }
 };
 
@@ -185,7 +183,7 @@ exports.handleDeleteSubGroup = async (req, res) => {
         const deletedSubGroup = await SubGroup.findByIdAndDelete(subGroupId);
 
         if (!deletedSubGroup) {
-            req.flash('error', 'زیرگروه یافت نشد');
+            req.flash('error', 'زیرگروه پیدا نشد');
             res.redirect('/dashboard/subGroups');
         }
 

@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=dotenv,node
 
 ### Uploads ###
-Uploads/
+uploads/
 
 ### dotenv ###
 .env

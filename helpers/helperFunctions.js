@@ -108,7 +108,27 @@ exports.generateBigPicture = async () => {
                 _id: 1,
                 groupID: 1,
                 subGroupID: 1,
-                avgScore: { $avg: '$responses.score' },
+                filteredResponses: {
+                    $ifNull: [
+                        {
+                            $filter: {
+                                input: '$responses',
+                                as: 'response',
+                                cond: { $gt: ['$$response.score', 0] }, // فیلتر کردن فقط پاسخ‌هایی که score بزرگتر از 0 دارند
+                            },
+                        },
+                        [], // اگر هیچ پاسخی وجود نداشته باشد، یک آرایه خالی قرار می‌دهیم
+                    ],
+                },
+                avgScore: {
+                    $cond: {
+                        if: { $gt: [{ $size: { $ifNull: ['$filteredResponses', []] } }, 0] }, // بررسی اینکه آرایه خالی نباشد
+                        then: {
+                            $avg: '$filteredResponses.score', // محاسبه میانگین از میانگین scores پاسخ‌های فیلتر شده
+                        },
+                        else: 0, // در صورت نبود پاسخ، میانگین برابر با 0 می‌شود
+                    },
+                },
             },
         },
     ]);
@@ -121,15 +141,31 @@ exports.generateBigPicture = async () => {
                 const relatedQuestions = questionsWithScores.filter(
                     q => q.subGroupID.toString() === subGroup._id.toString()
                 );
+
+                // محاسبه میانگین امتیازها برای همه سوالات مرتبط با هر زیرگروه
                 const avgScore =
                     relatedQuestions.length > 0
-                        ? relatedQuestions.reduce((sum, q) => sum + (q.avgScore || 0), 0) /
-                        relatedQuestions.length
+                        ? relatedQuestions.reduce((sum, q) => sum + q.filteredResponses.reduce((s, r) => s + r.score, 0), 0) / relatedQuestions.reduce((s, q) => s + q.filteredResponses.length, 0)
                         : 0;
+
+                // محاسبه تعداد پاسخ‌های بله (پاسخ‌هایی که امتیاز آن‌ها 1 است)
+                const totalYesCount = relatedQuestions.reduce((total, q) => {
+                    return total + (q.filteredResponses.filter(response => response.score === 1).length || 0);
+                }, 0);
+
+                // محاسبه تعداد کل پاسخ‌ها
+                const totalResponses = relatedQuestions.reduce((total, q) => {
+                    return total + (q.responses ? q.responses.length : 0);
+                }, 0);
+
+                // محاسبه درصد بله‌ها
+                const yesPercentage = totalResponses > 0 ? (totalYesCount / totalResponses) * 100 : 0;
 
                 return {
                     subGroupName: subGroup.name,
                     score: avgScore,
+                    yesPercentage, // درصد بله‌ها
+                    color: '#ffcccc', // رنگ به صورت پیش‌فرض
                 };
             }),
     }));

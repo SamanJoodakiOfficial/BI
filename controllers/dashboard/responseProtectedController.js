@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
-const { validationResult } = require('express-validator');
 
 exports.renderResponses = async (req, res) => {
     try {
@@ -48,7 +49,7 @@ exports.renderResponses = async (req, res) => {
 
         let text = '';
         if (responses.length <= 0) {
-            text = 'پاسخی یافت نشد';
+            text = 'هیچ پاسخی برای نمایش موجود نیست. لطفاً تلاش کنید که پاسخ‌های بیشتری ثبت کنید!';
         }
 
         const totalPages = Math.ceil(totalResponses / limit);
@@ -74,7 +75,7 @@ exports.renderUpdateResponse = async (req, res) => {
             });
 
         if (!response || !response.questionID) {
-            req.flash('error', `پاسخ با شناسه ${responseId} یافت نشد یا مطعلق به سوالی نیست.`);
+            req.flash('error', `پاسخ با شناسه ${responseId} پیدا نشد یا این پاسخ مربوط به سوال خاصی نیست.`);
             return res.redirect('/dashboard/responses');
         }
 
@@ -105,7 +106,7 @@ exports.handleUpdateResponse = async (req, res) => {
             });
 
         if (!response) {
-            req.flash('error', 'پاسخی با این شناسه یافت نشد');
+            req.flash('error', 'پاسخی با این شناسه یافت نشد. لطفاً دوباره امتحان کنید!');
             return res.redirect('/dashboard/responses');
         }
 
@@ -120,14 +121,14 @@ exports.handleUpdateResponse = async (req, res) => {
         }
 
         if (uploadedFiles.length > 10) {
-            req.flash('error', 'شما نمی‌توانید بیش از 10 فایل به صورت یکجا آپلود کنید');
+            req.flash('error', 'شما نمی‌توانید بیش از 10 فایل به صورت همزمان آپلود کنید.');
             return res.redirect(`/dashboard/responses/edit/${responseId}`);
         }
 
         const updatedDocuments = [...response.documents, ...uploadedFiles];
 
         if (updatedDocuments.length > 10) {
-            req.flash('error', 'شما نمی‌توانید بیش از 10 فایل برای یک پاسخ آپلود کنید');
+            req.flash('error', 'حداکثر تعداد فایل‌ها برای یک پاسخ 10 فایل است. لطفاً فایل‌های اضافی را حذف کنید.');
             return res.redirect(`/dashboard/responses/edit/${responseId}`);
         }
 
@@ -144,11 +145,11 @@ exports.handleUpdateResponse = async (req, res) => {
         );
 
         if (!updatedResponse) {
-            req.flash('error', 'ویرایش پاسخ با شکست مواجه شد');
+            req.flash('error', 'ویرایش پاسخ با خطا مواجه شد. لطفاً دوباره تلاش کنید.');
             return res.redirect('/dashboard/responses');
         }
 
-        req.flash('success', `پاسخ ${parsedScore} با شناسه ${updatedResponse._id} با موفقیت ویرایش شد.`);
+        req.flash('success', `پاسخ با شناسه ${updatedResponse._id} با موفقیت ویرایش شد. امتیاز جدید: ${parsedScore}`);
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
@@ -178,14 +179,14 @@ exports.handleAddResponseByAdmin = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(questionId)) {
             return res.render(`./dashboard/response/addResponseByAdmin`, {
                 title: `اضافه کردن پاسخ جدید برای سوال ${questionId}`,
-                errors: [{ msg: `شناسه سوال ${questionId} نامعتبر است` }],
+                errors: [{ msg: `شناسه سوال ${questionId} معتبر نمی‌باشد. لطفاً شناسه صحیح را وارد کنید.` }],
             });
         }
 
         const existingResponse = await Question.findById(questionId);
 
         if (!existingResponse) {
-            req.flash('error', `سوال با شناسه ${questionId} یافت نشد`);
+            req.flash('error', `سوالی با شناسه ${questionId} پیدا نشد. لطفاً شناسه صحیح را وارد کنید.`);
             return res.redirect('/dashboard/responses/addResponseByAdmin');
         }
 
@@ -199,13 +200,12 @@ exports.handleAddResponseByAdmin = async (req, res) => {
 
         await newResponse.save();
 
-        req.flash('success', `جواب ${score} برای سوال ${questionId} با موفقیت ثبت شد`);
+        req.flash('success', `پاسخ جدید برای سوال ${questionId} با امتیاز ${score} با موفقیت ثبت شد.`);
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);
     }
 };
-
 
 exports.handleDeleteResponse = async (req, res) => {
     const responseId = req.params.responseId;
@@ -217,7 +217,7 @@ exports.handleDeleteResponse = async (req, res) => {
             return res.render('./dashboard/response/responses', { title: 'مدیریت پاسخ‌ها' });
         }
 
-        req.flash('success', `پاسخ با شناسه ${deletedResponse._id} با موفقیت حذف شد`);
+        req.flash('success', `پاسخ با شناسه ${deletedResponse._id} با موفقیت حذف شد. این پاسخ دیگر در دسترس نخواهد بود.`);
         res.redirect('/dashboard/responses');
     } catch (error) {
         console.error(error.message);

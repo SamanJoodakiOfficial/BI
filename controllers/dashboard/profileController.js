@@ -1,20 +1,31 @@
-const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
+
+const User = require('../../models/User');
+
+const renderProfileForm = (res, title, errors = [], success = null) => {
+    res.render('./dashboard/profile/editPersonalInformation', {
+        title,
+        errors,
+        success,
+    });
+};
 
 exports.renderEditProfile = async (req, res) => {
     const userId = req.session.userId;
 
     try {
         const currentUser = await User.findById(userId);
-
         if (!currentUser) {
-            return res.render('./dashboard/profile/editPersonalInformation', { title: 'ویرایش اطلاعات کاربری' });
+            return renderProfileForm(res, 'ویرایش اطلاعات کاربری', [
+                { msg: 'متأسفیم! کاربر موردنظر پیدا نشد.' },
+            ]);
         }
-
-        res.render('./dashboard/profile/editPersonalInformation', { title: 'ویرایش اطلاعات کاربری' });
+        renderProfileForm(res, 'ویرایش اطلاعات کاربری');
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching user profile:', error);
+        req.flash('error', 'یک خطای غیرمنتظره رخ داده است. لطفاً دوباره تلاش کنید.');
+        res.redirect('/dashboard/profile');
     }
 };
 
@@ -24,57 +35,45 @@ exports.handleEditProfile = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('./dashboard/profile/editPersonalInformation', {
-            title: 'ویرایش اطلاعات حساب کاربری',
-            errors: errors.array()
-        });
+        return renderProfileForm(res, 'ویرایش اطلاعات حساب کاربری', errors.array());
     }
 
     try {
         const currentUser = await User.findById(userId);
-
         if (!currentUser) {
-            req.flash('error', 'کاربر یافت نشد');
+            req.flash('error', 'کاربر شناسایی نشد! لطفاً دوباره وارد شوید.');
             return res.redirect('/dashboard/profile');
         }
 
-        const searchUser = await User.findOne({ email, _id: { $ne: userId } });
-        if (searchUser) {
-            return res.render('./dashboard/profile/editPersonalInformation', {
-                title: 'ویرایش اطلاعات حساب کاربری',
-                errors: [{ msg: 'کاربری با این ایمیل از قبل وجود دارد' }]
-            });
+        if (email && (await User.findOne({ email, _id: { $ne: userId } }))) {
+            return renderProfileForm(res, 'ویرایش اطلاعات حساب کاربری', [
+                { msg: 'ایمیل وارد شده قبلاً ثبت شده است. لطفاً ایمیل دیگری امتحان کنید.' },
+            ]);
         }
 
-        if (email) {
-            currentUser.email = email;
-        }
+        if (email) currentUser.email = email;
 
-        const isPasswordCorrect = await bcrypt.compare(currentPassword, currentUser.password);
-        if (!isPasswordCorrect) {
-            return res.render('./dashboard/profile/editPersonalInformation', {
-                title: 'ویرایش اطلاعات حساب کاربری',
-                errors: [{ msg: 'رمز عبور فعلی اشتباه است' }]
-            });
+        if (!(await bcrypt.compare(currentPassword, currentUser.password))) {
+            return renderProfileForm(res, 'ویرایش اطلاعات حساب کاربری', [
+                { msg: 'رمز عبور فعلی نادرست است. لطفاً دوباره تلاش کنید.' },
+            ]);
         }
 
         if (newPassword) {
             if (newPassword !== confirmNewPassword) {
-                return res.render('./dashboard/profile/editPersonalInformation', {
-                    title: 'ویرایش اطلاعات حساب کاربری',
-                    errors: [{ msg: 'رمز عبور جدید و تکرار آن مطابقت ندارند' }]
-                });
+                return renderProfileForm(res, 'ویرایش اطلاعات حساب کاربری', [
+                    { msg: 'رمز عبور جدید و تکرار آن مطابقت ندارند. لطفاً بررسی کنید.' },
+                ]);
             }
-
-            const hashedPassword = await bcrypt.hash(newPassword, 10);
-            currentUser.password = hashedPassword;
+            currentUser.password = await bcrypt.hash(newPassword, 10);
         }
 
         await currentUser.save();
-        req.flash('success', 'حساب شما با موفقیت بروزرسانی شد');
+        req.flash('success', 'اطلاعات حساب شما با موفقیت به‌روزرسانی شد!');
         res.redirect('/dashboard/profile');
     } catch (error) {
-        console.error(error.message);
-        req.flash('error', 'خطایی رخ داد، لطفاً دوباره تلاش کنید');
+        console.error('Error updating profile:', error.message);
+        req.flash('error', 'خطایی در پردازش درخواست شما رخ داد. لطفاً دوباره تلاش کنید.');
+        res.redirect('/dashboard/profile');
     }
 };

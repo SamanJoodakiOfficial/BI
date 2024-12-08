@@ -1,9 +1,10 @@
+const { validationResult } = require('express-validator');
+const fs = require('fs');
+
 const Group = require('../../models/Group');
 const SubGroup = require('../../models/SubGroup');
 const Question = require('../../models/Question');
 const Response = require('../../models/Response');
-const { validationResult } = require('express-validator');
-const fs = require('fs');
 const { processFile, validateData, removeDuplicateTexts } = require('../../helpers/helperFunctions');
 
 const {
@@ -15,7 +16,7 @@ exports.renderQuestions = async (req, res) => {
     const userId = req.session.userId;
 
     try {
-        const query = req.query.questionName;
+        const query = req.query.questionText;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
 
@@ -23,7 +24,7 @@ exports.renderQuestions = async (req, res) => {
         let totalQuestions;
 
         if (query) {
-            questions = await Question.find({ name: new RegExp(query, 'i') })
+            questions = await Question.find({ text: new RegExp(query, 'i') })
                 .populate('groupID', 'name')
                 .populate('subGroupID', 'name')
                 .populate('userID', 'name')
@@ -63,7 +64,7 @@ exports.renderQuestions = async (req, res) => {
 
         let text = '';
         if (questions.length <= 0) {
-            text = 'سوالی یافت نشد';
+            text = 'متأسفیم! هیچ سوالی با شرایط شما پیدا نشد. لطفاً دوباره امتحان کنید.';
         }
 
         const totalPages = Math.ceil(totalQuestions / limit);
@@ -80,12 +81,12 @@ exports.renderAddQuestion = async (req, res) => {
         const subGroups = await SubGroup.find({});
 
         if (groups.length <= 0) {
-            req.flash('error', 'ابتدا باید گروه‌ها را اضافه کنید');
+            req.flash('error', 'ابتدا باید گروه‌ها را ایجاد کنید تا بتوانید سوالات اضافه کنید!');
             return res.redirect('/dashboard/groups');
         }
 
         if (subGroups.length <= 0) {
-            req.flash('error', 'ابتدا باید زیرگروه‌ها را اضافه کنید');
+            req.flash('error', 'ابتدا باید زیرگروه‌ها را ایجاد کنید تا سوالات را اضافه کنید!');
             return res.redirect('/dashboard/subGroups');
         }
 
@@ -126,14 +127,14 @@ exports.handleAddQuestion = async (req, res) => {
 
         await newQuestion.save();
 
-        req.flash('success', `سوال ${text} با موفقیت ثبت شد`);
+        req.flash('success', `سوال «${text}» با موفقیت ثبت شد!`);
         res.redirect('/dashboard/questions/add');
     } catch (error) {
         if (error.code === 11000) {
-            req.flash('error', 'این سوال قبلاً طراحی شده است.');
+            req.flash('error', 'این سوال قبلاً ثبت شده است. لطفاً سوال جدیدی طراحی کنید.');
         } else {
             console.error(error.message);
-            req.flash('error', 'خطای داخلی سرور. لطفاً دوباره تلاش کنید.');
+            req.flash('error', 'خطای سرور. لطفاً کمی بعد دوباره تلاش کنید.');
         }
         res.redirect('/dashboard/questions/add');
     }
@@ -200,7 +201,7 @@ exports.handleUpdateQuestion = async (req, res) => {
             return res.redirect('/dashboard/questions');
         }
 
-        req.flash('success', `سوال با شناسه ${updatedQuestion._id} با موفقیت ویرایش شد`);
+        req.flash('success', `سوال با شناسه «${updatedQuestion._id}» با موفقیت به‌روزرسانی شد!`);
         res.redirect('/dashboard/questions');
     } catch (error) {
         console.error(error.message);
@@ -216,7 +217,7 @@ exports.handleDeleteQuestion = async (req, res) => {
         if (!deletedQuestion) {
             return res.render('./dashboard/question/questions', { title: 'بانک سوالات' });
         }
-        req.flash('success', `سوال با شناسه ${deletedQuestion._id} با موفقیت حذف شد`);
+        req.flash('success', `سوال با شناسه «${deletedQuestion._id}» با موفقیت حذف شد.`);
         res.redirect('/dashboard/questions');
     } catch (error) {
         console.error(error.message);
@@ -233,7 +234,7 @@ exports.handleImport = async (req, res) => {
         ];
 
         if (!uploadedFiles.length) {
-            req.flash('error', 'هیچ فایلی آپلود نشده است');
+            req.flash('error', 'هیچ فایلی آپلود نشده است. لطفاً دوباره امتحان کنید.');
             return res.redirect('/dashboard/questions');
         }
 
@@ -340,11 +341,7 @@ exports.handleImport = async (req, res) => {
             }
         }
 
-        req.flash(
-            'success',
-            `تعداد ${uniqueData.length} سوال با موفقیت ذخیره شد. تعداد ${invalidData.length} سوال نامعتبر بودند. ${duplicateQuestions.size > 0 ? `تعداد ${duplicateQuestions.size} سوال تکراری بودند و ذخیره نشدند.` : ''
-            }`
-        );
+        req.flash('success', `تعداد ${uniqueData.length} سوال با موفقیت ذخیره شدند. سوالات نامعتبر: ${invalidData.length}. ${duplicateQuestions.size > 0 ? `تکراری‌ها: ${duplicateQuestions.size} سوال.` : ''}`);
 
         res.redirect('/dashboard/questions');
     } catch (error) {

@@ -17,7 +17,12 @@
 
         <!-- BI Details -->
         <div class="w-full grid items-center grid-cols-1 gap-4 mt-4">
-          <form action="/dashboard/bigPicture/process-colors" method="POST" class="w-full rounded-lg mt-8 flex gap-4 flex-col">
+          <%- include('../../partials/announcement') %>
+          <form
+            action="/dashboard/bigPicture/process-colors"
+            method="POST"
+            class="w-full rounded-lg mt-8 flex gap-4 flex-col"
+          >
             <div class="flex flex-col gap-2">
               <label for="numberOfRanges" class="text-202020"
                 >تعداد طیف‌های رنگی:</label
@@ -29,7 +34,7 @@
                 name="numberOfRanges"
                 min="2"
                 max="20"
-                value="5"
+                value="2"
                 required
               />
             </div>
@@ -48,12 +53,21 @@
               />
             </div>
 
-            <button
-              type="submit"
-              class="md:w-[150px] h-12 sm:w-full lg:h-10 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
-            >
-              اعمال تنظیمات
-            </button>
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+              <button
+                type="submit"
+                class="w-auto h-auto px-4 py-2 flex items-center gap-1 justify-center rounded-lg bg-primary text-center text-white font-bold shadow-lg shadow-primary/30 hover:shadow-xl transition-all duration-200"
+              >
+                اعمال تنظیمات
+              </button>
+
+              <a
+                href="/dashboard/bigPicture"
+                class="w-auto h-auto px-4 py-2 flex items-center gap-1 justify-center rounded-lg bg-warning text-center text-white font-bold shadow-lg shadow-warning/30 hover:shadow-xl transition-all duration-200"
+              >
+                بازگشت به تنظیمات پیش‌فرض رنگ‌ها
+              </a>
+            </div>
           </form>
 
           <hr />

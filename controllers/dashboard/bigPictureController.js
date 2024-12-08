@@ -6,17 +6,20 @@ exports.renderBigPicture = async (req, res) => {
         const { colors, numberOfRanges } = req.body;
         const report = await generateBigPicture();
 
-        const colorRanges = colors
-            ? colors.split(',')
-            : null;
+        const colorRanges = colors ? colors.split(',') : null;
+        const rangeCount = numberOfRanges || 2;
 
-        const rangeCount = numberOfRanges || 5;
+        if (colorRanges && colorRanges.length != rangeCount) {
+            req.flash('error', `تعداد طیف‌ها ${rangeCount} مطابقت با تعداد کد‌های رنگ ها ندارد ${colorRanges}.`);
+            return res.redirect('/dashboard/bigPicture');
+        }
 
         report.forEach(group => {
             group.subGroups.forEach(subGroup => {
                 if (colorRanges) {
-                    const colorIndex = Math.floor((subGroup.score / 100) * (rangeCount - 1));
-                    subGroup.color = colorRanges[colorIndex];
+                    const rangeSize = 100 / rangeCount;
+                    const colorIndex = Math.floor(subGroup.score / rangeSize);
+                    subGroup.color = colorRanges[Math.min(colorIndex, rangeCount - 1)];
                 } else {
                     subGroup.color = getColorForScore(subGroup.score);
                 }
@@ -28,6 +31,6 @@ exports.renderBigPicture = async (req, res) => {
         res.render('./dashboard/bigPicture/bigPicture', { title: 'تصویر بزرگ - هوش مصنوعی', report, openaiApiKey });
     } catch (error) {
         console.error(error.message);
-        res.redirect('/dashboard/bigPicture');
+        res.status(400).send({ error: error.message }); // ارسال خطا به کاربر
     }
 };

@@ -1,6 +1,7 @@
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const { validationResult } = require('express-validator');
+
+const User = require('../models/User');
 
 exports.renderRegister = async (req, res) => {
     res.render('./auth/register', { title: 'ثبت نام' });
@@ -17,11 +18,19 @@ exports.handleRegister = async (req, res) => {
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.render('./auth/register', { title: 'ثبت نام', error: 'نام کاربری قبلا ثبت نام شده است', filled: req.body });
+            return res.render('./auth/register', {
+                title: 'ثبت نام',
+                error: 'این ایمیل قبلاً ثبت شده است. لطفاً از ایمیل دیگری استفاده کنید!',
+                filled: req.body
+            });
         }
 
         if (password !== confirmPassword) {
-            return res.render('./auth/register', { title: 'ثبت نام', error: 'کلمه عبور و تایید کلمه عبور مطابقت ندارند', filled: req.body });
+            return res.render('./auth/register', {
+                title: 'ثبت نام',
+                error: 'رمز عبور و تکرار آن مطابقت ندارند. لطفاً دوباره بررسی کنید!',
+                filled: req.body
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,16 +40,20 @@ exports.handleRegister = async (req, res) => {
         });
         await newUser.save();
 
-        req.flash('success', `کاربر با ${email} با موفقیت ثبت نام شد`);
+        req.flash('success', `کاربر ${email} با موفقیت ثبت شد. به دنیای ما خوش آمدید!`);
         res.redirect('/auth/login');
     } catch (error) {
         console.error(error.message);
-        res.render('./auth/register', { title: 'ثبت نام', error: 'مشکلی در سرور رخ داده است. لطفاً دوباره تلاش کنید', filled: req.body });
+        res.render('./auth/register', {
+            title: 'ثبت نام',
+            error: 'متأسفانه مشکلی پیش آمد. لطفاً چند لحظه دیگر دوباره تلاش کنید.',
+            filled: req.body
+        });
     }
 };
 
 exports.renderLogin = async (req, res) => {
-    res.render('./auth/login', { title: 'ورود کاربر', });
+    res.render('./auth/login', { title: 'ورود کاربر' });
 };
 
 exports.handleLogin = async (req, res) => {
@@ -48,19 +61,31 @@ exports.handleLogin = async (req, res) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('./auth/login', { title: 'ورود کاربر', errors: errors.array(), filled: req.body });
+        return res.render('./auth/login', {
+            title: 'ورود کاربر',
+            errors: errors.array(),
+            filled: req.body
+        });
     }
 
     try {
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
-            return res.render('./auth/login', { title: 'ورود کاربر', error: 'نام کاربری در سیستم یافت نشد', filled: req.body });
+            return res.render('./auth/login', {
+                title: 'ورود کاربر',
+                error: 'کاربری با این ایمیل پیدا نشد. مطمئن شوید که ایمیل خود را درست وارد کرده‌اید!',
+                filled: req.body
+            });
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordCorrect) {
-            return res.render('./auth/login', { title: 'ورود کاربر', error: 'کلمه عبور صحیح نیست', filled: req.body });
+            return res.render('./auth/login', {
+                title: 'ورود کاربر',
+                error: 'رمز عبور اشتباه است. لطفاً دوباره تلاش کنید!',
+                filled: req.body
+            });
         } else {
             req.session.userId = existingUser._id;
             res.redirect('/dashboard/questions');
@@ -68,7 +93,11 @@ exports.handleLogin = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        res.render('./auth/login', { title: 'ورود کاربر', error: 'مشکلی در سرور رخ داده است. لطفاً دوباره تلاش کنید.', filled: req.body });
+        res.render('./auth/login', {
+            title: 'ورود کاربر',
+            error: 'مشکلی پیش آمد. لطفاً کمی صبر کنید و دوباره تلاش کنید.',
+            filled: req.body
+        });
     }
 };
 
