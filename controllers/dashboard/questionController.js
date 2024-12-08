@@ -244,8 +244,6 @@ exports.handleImport = async (req, res) => {
         const groupSubGroupMap = new Map();
         const duplicateQuestions = new Set();
 
-        let fileData;
-
         for (const file of uploadedFiles) {
             if (!validFileTypes.includes(file.mimetype)) {
                 invalidFiles.push(file.originalname);
@@ -253,7 +251,7 @@ exports.handleImport = async (req, res) => {
             }
 
             try {
-                fileData = await processFile(file);
+                const fileData = await processFile(file);
 
                 fileData.forEach(row => {
                     if (row.groupID && row.subGroupID) {
@@ -268,7 +266,7 @@ exports.handleImport = async (req, res) => {
                 invalidFiles.push(file.originalname);
             } finally {
                 try {
-                    fs.unlinkSync(file.path);
+                    await fs.promises.unlink(file.path);
                 } catch (err) {
                     console.error(`خطا در حذف فایل ${file.path}: ${err.message}`);
                 }
@@ -279,20 +277,20 @@ exports.handleImport = async (req, res) => {
             req.flash('error', 'هیچ groupID یا subGroupID معتبری یافت نشد.');
             return res.redirect('/dashboard/questions');
         }
-
         for (const groupSubGroup of groupSubGroupMap.keys()) {
             const [groupID, subGroupID] = groupSubGroup.split(':');
-            const group = await Group.findOne({ name: groupID });
-            if (!group) {
-                req.flash('error', `گروه معتبر یافت نشد: ${groupID}`);
-                return res.redirect('/dashboard/questions');
-            }
 
-            const subGroup = await SubGroup.findOne({ name: subGroupID, groupID: group._id });
-            if (!subGroup) {
-                req.flash('error', `زیرگروه معتبر یافت نشد یا به گروه مربوطه متصل نیست: ${subGroupID}`);
-                return res.redirect('/dashboard/questions');
-            }
+            const group = await Group.findOneAndUpdate(
+                { name: groupID },
+                { $setOnInsert: { userID: userId, name: groupID } },
+                { upsert: true, new: true }
+            );
+
+            const subGroup = await SubGroup.findOneAndUpdate(
+                { name: subGroupID, groupID: group._id },
+                { $setOnInsert: { userID: userId, groupID: group._id, name: subGroupID } },
+                { upsert: true, new: true }
+            );
 
             groupSubGroupMap.set(`${groupID}:${subGroupID}`, { groupID: group._id, subGroupID: subGroup._id });
         }
@@ -305,15 +303,11 @@ exports.handleImport = async (req, res) => {
             }
         });
 
-        const uniqueData = [];
-        for (const question of totalData) {
-            const existingQuestion = await Question.findOne({ text: question.text });
-            if (!existingQuestion) {
-                uniqueData.push(question);
-            } else {
-                duplicateQuestions.add(question.text);
-            }
-        }
+        const existingQuestions = await Question.find({ text: { $in: totalData.map(q => q.text) } });
+        const existingTexts = new Set(existingQuestions.map(q => q.text));
+        const uniqueData = totalData.filter(q => !existingTexts.has(q.text));
+
+        uniqueData.forEach(q => duplicateQuestions.add(q.text));
 
         const operations = uniqueData.map(question => ({
             insertOne: {
@@ -332,20 +326,17 @@ exports.handleImport = async (req, res) => {
             try {
                 await Question.bulkWrite(operations, { ordered: false });
             } catch (err) {
-                if (err.code === 11000) {
-                    console.error('خطا در ذخیره داده‌ها: برخی سوالات تکراری هستند');
-                } else {
-                    req.flash('error', `خطا در ذخیره داده‌ها. ${err.message}`);
-                    return res.redirect('/dashboard/questions');
-                }
+                console.error('خطا در ذخیره داده‌ها:', err.message);
+                req.flash('error', `خطا در ذخیره داده‌ها. ${err.message}`);
+                return res.redirect('/dashboard/questions');
             }
         }
 
         req.flash('success', `تعداد ${uniqueData.length} سوال با موفقیت ذخیره شدند. سوالات نامعتبر: ${invalidData.length}. ${duplicateQuestions.size > 0 ? `تکراری‌ها: ${duplicateQuestions.size} سوال.` : ''}`);
-
         res.redirect('/dashboard/questions');
     } catch (error) {
-        console.error(error.message);
+        console.error('خطای کلی:', error.message);
+        req.flash('error', 'خطای غیرمنتظره‌ای رخ داده است. لطفاً دوباره تلاش کنید.');
         res.redirect('/dashboard/questions');
     }
 };
